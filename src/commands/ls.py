@@ -1,0 +1,2 @@
+def ls():
+    raise NotImplementedError()

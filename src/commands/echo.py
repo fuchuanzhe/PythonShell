@@ -1,0 +1,2 @@
+def echo():
+    raise NotImplementedError()

@@ -1,0 +1,2 @@
+def head():
+    raise NotImplementedError()

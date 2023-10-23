@@ -4,6 +4,14 @@ import os
 from os import listdir
 from collections import deque
 from glob import glob
+from commands.cd import cd
+from commands.cat import cat
+from commands.echo import echo
+from commands.grep import grep
+from commands.ls import ls
+from commands.pwd import pwd
+from commands.head import head
+from commands.tail import tail
 
 
 def eval(cmdline, out):
@@ -11,6 +19,7 @@ def eval(cmdline, out):
     for m in re.finditer("([^\"';]+|\"[^\"]*\"|'[^']*')", cmdline):
         if m.group(0):
             raw_commands.append(m.group(0))
+            print(m.group(0))
     for command in raw_commands:
         tokens = []
         for m in re.finditer("[^\\s\"']+|\"([^\"]*)\"|'([^']*)'", command):
