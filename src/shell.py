@@ -19,7 +19,6 @@ def eval(cmdline, out):
     for m in re.finditer("([^\"';]+|\"[^\"]*\"|'[^']*')", cmdline):
         if m.group(0):
             raw_commands.append(m.group(0))
-            print(m.group(0))
     for command in raw_commands:
         tokens = []
         for m in re.finditer("[^\\s\"']+|\"([^\"]*)\"|'([^']*)'", command):
@@ -32,6 +31,7 @@ def eval(cmdline, out):
                     tokens.extend(globbing)
                 else:
                     tokens.append(m.group(0))
+        print(tokens)
         app = tokens[0]
         args = tokens[1:]
         if app == "pwd":
@@ -41,21 +41,24 @@ def eval(cmdline, out):
                 raise ValueError("wrong number of command line arguments")
             os.chdir(args[0])
         elif app == "echo":
-            out.append(" ".join(args) + "\n")
+            echo(out, args)
+            # out.append(" ".join(args) + "\n")
         elif app == "ls":
-            if len(args) == 0:
-                ls_dir = os.getcwd()
-            elif len(args) > 1:
-                raise ValueError("wrong number of command line arguments")
-            else:
-                ls_dir = args[0]
-            for f in listdir(ls_dir):
-                if not f.startswith("."):
-                    out.append(f + "\n")
+            ls(out, args)
+            # if len(args) == 0:
+            #     ls_dir = os.getcwd()
+            # elif len(args) > 1:
+            #     raise ValueError("wrong number of command line arguments")
+            # else:
+            #     ls_dir = args[0]
+            # for f in listdir(ls_dir):
+            #     if not f.startswith("."):
+            #         out.append(f + "\n")
         elif app == "cat":
-            for a in args:
-                with open(a) as f:
-                    out.append(f.read())
+            cat(out, args)
+            # for a in args:
+            #     with open(a) as f:
+            #         out.append(f.read())
         elif app == "head":
             if len(args) != 1 and len(args) != 3:
                 raise ValueError("wrong number of command line arguments")
