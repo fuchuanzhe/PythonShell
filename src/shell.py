@@ -19,7 +19,7 @@ def eval(cmdline, out):
     for m in re.finditer("([^\"';]+|\"[^\"]*\"|'[^']*')", cmdline):
         if m.group(0):
             raw_commands.append(m.group(0))
-            print(m.group(0))
+            # print(m.group(0))
     for command in raw_commands:
         tokens = []
         for m in re.finditer("[^\\s\"']+|\"([^\"]*)\"|'([^']*)'", command):
