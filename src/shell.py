@@ -19,7 +19,6 @@ def eval(cmdline, out):
     for m in re.finditer("([^\"';]+|\"[^\"]*\"|'[^']*')", cmdline):
         if m.group(0):
             raw_commands.append(m.group(0))
-            # print(m.group(0))
     for command in raw_commands:
         tokens = []
         for m in re.finditer("[^\\s\"']+|\"([^\"]*)\"|'([^']*)'", command):
@@ -35,7 +34,9 @@ def eval(cmdline, out):
         app = tokens[0]
         args = tokens[1:]
         if app == "pwd":
-            out.append(os.getcwd())
+            newOut = pwd(out)
+            out = newOut
+            # out.append(os.getcwd() + "\n")
         elif app == "cd":
             out = cd(args, out)
         elif app == "echo":
@@ -59,19 +60,21 @@ def eval(cmdline, out):
         elif app == "tail":
             out = tail(args, out)
         elif app == "grep":
-            if len(args) < 2:
-                raise ValueError("wrong number of command line arguments")
-            pattern = args[0]
-            files = args[1:]
-            for file in files:
-                with open(file) as f:
-                    lines = f.readlines()
-                    for line in lines:
-                        if re.match(pattern, line):
-                            if len(files) > 1:
-                                out.append(f"{file}:{line}")
-                            else:
-                                out.append(line)
+            newOut = grep(args, out)
+            out = newOut
+            # if len(args) < 2:
+            #     raise ValueError("wrong number of command line arguments")
+            # pattern = args[0]
+            # files = args[1:]
+            # for file in files:
+            #     with open(file) as f:
+            #         lines = f.readlines()
+            #         for line in lines:
+            #             if re.match(pattern, line):
+            #                 if len(files) > 1:
+            #                     out.append(f"{file}:{line}")
+            #                 else:
+            #                     out.append(line)
         else:
             raise ValueError(f"unsupported application {app}")
 
