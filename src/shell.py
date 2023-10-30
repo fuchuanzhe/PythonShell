@@ -37,9 +37,7 @@ def eval(cmdline, out):
         if app == "pwd":
             out.append(os.getcwd())
         elif app == "cd":
-            if len(args) == 0 or len(args) > 1:
-                raise ValueError("wrong number of command line arguments")
-            os.chdir(args[0])
+            out = cd(args, out)
         elif app == "echo":
             out.append(" ".join(args) + "\n")
         elif app == "ls":
