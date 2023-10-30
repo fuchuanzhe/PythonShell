@@ -31,6 +31,7 @@ def eval(cmdline, out):
                     tokens.extend(globbing)
                 else:
                     tokens.append(m.group(0))
+        print(tokens)
         app = tokens[0]
         args = tokens[1:]
         if app == "pwd":
@@ -40,21 +41,24 @@ def eval(cmdline, out):
         elif app == "cd":
             out = cd(args, out)
         elif app == "echo":
-            out.append(" ".join(args) + "\n")
+            echo(out, args)
+            # out.append(" ".join(args) + "\n")
         elif app == "ls":
-            if len(args) == 0:
-                ls_dir = os.getcwd()
-            elif len(args) > 1:
-                raise ValueError("wrong number of command line arguments")
-            else:
-                ls_dir = args[0]
-            for f in listdir(ls_dir):
-                if not f.startswith("."):
-                    out.append(f + "\n")
+            ls(out, args)
+            # if len(args) == 0:
+            #     ls_dir = os.getcwd()
+            # elif len(args) > 1:
+            #     raise ValueError("wrong number of command line arguments")
+            # else:
+            #     ls_dir = args[0]
+            # for f in listdir(ls_dir):
+            #     if not f.startswith("."):
+            #         out.append(f + "\n")
         elif app == "cat":
-            for a in args:
-                with open(a) as f:
-                    out.append(f.read())
+            cat(out, args)
+            # for a in args:
+            #     with open(a) as f:
+            #         out.append(f.read())
         elif app == "head":
             out = head(args, out)
         elif app == "tail":
