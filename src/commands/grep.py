@@ -1,2 +1,2 @@
-def grep():
+def grep(args, out):
     raise NotImplementedError()
