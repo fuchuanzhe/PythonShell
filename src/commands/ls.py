@@ -5,7 +5,7 @@ from os import listdir
 # ls .  and ls .. working correctly
 
 
-def ls(out, args):
+def ls(args, out):
     if len(args) == 0:
         ls_dir = os.getcwd()
     elif len(args) > 1:

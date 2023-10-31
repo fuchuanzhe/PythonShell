@@ -34,24 +34,20 @@ def eval(cmdline, out):
 
         app = tokens[0]
         args = tokens[1:]
-        if app == "pwd":
-            newOut = pwd(out)
-            out = newOut
-        elif app == "cd":
-            out = cd(args, out)
-        elif app == "echo":
-            out = echo(out, args)
-        elif app == "ls":
-            out = ls(out, args)
-        elif app == "cat":
-            out = cat(out, args)
-        elif app == "head":
-            out = head(args, out)
-        elif app == "tail":
-            out = tail(args, out)
-        elif app == "grep":
-            newOut = grep(args, out)
-            out = newOut
+        
+        apps = {
+            "pwd": pwd,
+            "cd": cd,
+            "echo": echo,
+            "ls": ls,
+            "cat": cat,
+            "head": head,
+            "tail": tail,
+            "grep": grep
+        }
+
+        if app in apps:
+            out = apps[app](args, out)
         else:
             raise ValueError(f"unsupported application {app}")
 
