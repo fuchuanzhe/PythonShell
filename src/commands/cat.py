@@ -3,7 +3,7 @@ import sys
 # requirement: if no file specified, should use stdin
 
 
-def cat(out, args):
+def cat(args, out):
     if len(args) == 0:
         for line in sys.stdin:
             print(line.strip())  # .strip() to remove new line char

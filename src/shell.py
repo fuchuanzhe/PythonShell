@@ -35,16 +35,15 @@ def eval(cmdline, out):
         app = tokens[0]
         args = tokens[1:]
         if app == "pwd":
-            newOut = pwd(out)
-            out = newOut
+            out = pwd(args, out)
         elif app == "cd":
             out = cd(args, out)
         elif app == "echo":
-            out = echo(out, args)
+            out = echo(args, out)
         elif app == "ls":
-            out = ls(out, args)
+            out = ls(args, out)
         elif app == "cat":
-            out = cat(out, args)
+            out = cat(args, out)
         elif app == "head":
             out = head(args, out)
         elif app == "tail":

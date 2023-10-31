@@ -3,6 +3,6 @@
 # echo hi; echo helllo works
 
 
-def echo(out, args):
+def echo(args, out):
     out.append(" ".join(args) + "\n")
     return out
