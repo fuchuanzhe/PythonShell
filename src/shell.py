@@ -31,34 +31,20 @@ def eval(cmdline, out):
                     tokens.extend(globbing)
                 else:
                     tokens.append(m.group(0))
-        print(tokens)
+
         app = tokens[0]
         args = tokens[1:]
         if app == "pwd":
             newOut = pwd(out)
             out = newOut
-            # out.append(os.getcwd() + "\n")
         elif app == "cd":
             out = cd(args, out)
         elif app == "echo":
-            echo(out, args)
-            # out.append(" ".join(args) + "\n")
+            out = echo(out, args)
         elif app == "ls":
-            ls(out, args)
-            # if len(args) == 0:
-            #     ls_dir = os.getcwd()
-            # elif len(args) > 1:
-            #     raise ValueError("wrong number of command line arguments")
-            # else:
-            #     ls_dir = args[0]
-            # for f in listdir(ls_dir):
-            #     if not f.startswith("."):
-            #         out.append(f + "\n")
+            out = ls(out, args)
         elif app == "cat":
-            cat(out, args)
-            # for a in args:
-            #     with open(a) as f:
-            #         out.append(f.read())
+            out = cat(out, args)
         elif app == "head":
             out = head(args, out)
         elif app == "tail":
@@ -66,19 +52,6 @@ def eval(cmdline, out):
         elif app == "grep":
             newOut = grep(args, out)
             out = newOut
-            # if len(args) < 2:
-            #     raise ValueError("wrong number of command line arguments")
-            # pattern = args[0]
-            # files = args[1:]
-            # for file in files:
-            #     with open(file) as f:
-            #         lines = f.readlines()
-            #         for line in lines:
-            #             if re.match(pattern, line):
-            #                 if len(files) > 1:
-            #                     out.append(f"{file}:{line}")
-            #                 else:
-            #                     out.append(line)
         else:
             raise ValueError(f"unsupported application {app}")
 
