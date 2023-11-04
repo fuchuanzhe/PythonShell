@@ -17,7 +17,8 @@ def grep(args, out):
             for line in lines:
                 if re.match(pattern, line):
                     if len(files) > 1:
-                        out.append(f"{file}:{line}")
+                        out.append(f"{file}:{line.strip()}")
+                        out.append("\n")
                     else:
                         out.append(line)
     # handle case when word is not found 
