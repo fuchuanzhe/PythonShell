@@ -1,6 +1,6 @@
 import unittest
 
-from shell import eval
+from src.shell import eval
 from collections import deque
 
 
