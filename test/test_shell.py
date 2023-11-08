@@ -1,4 +1,5 @@
 import unittest
+import os
 
 from shell import eval
 from collections import deque
@@ -22,6 +23,7 @@ class TestShell(unittest.TestCase):
     def test_cd(self):
         out = deque()
         eval("cd catTest", out)
+        self.assertEqual(os.getcwd(), "/Users/hoshuhan/Documents/UCL/Y2/COMP0010 Software Engineering/code/comp0010-shell-python-p20/test/catTest")
         self.assertEqual(len(out), 0)
 
     def test_echo(self):
