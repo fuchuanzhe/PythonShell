@@ -12,13 +12,15 @@ from commands.ls import ls
 from commands.pwd import pwd
 from commands.head import head
 from commands.tail import tail
+from commands.find import find
+from commands.sort import sort
 
 
 def eval(cmdline, out):
     raw_commands = []
     for m in re.finditer("([^\"';]+|\"[^\"]*\"|'[^']*')", cmdline):
         if m.group(0):
-            raw_commands.append(m.group(0))
+            raw_commands.append(m.group(0))    
     for command in raw_commands:
         tokens = []
         for m in re.finditer("[^\\s\"']+|\"([^\"]*)\"|'([^']*)'", command):
@@ -31,7 +33,6 @@ def eval(cmdline, out):
                     tokens.extend(globbing)
                 else:
                     tokens.append(m.group(0))
-
         app = tokens[0]
         args = tokens[1:]
         
@@ -43,7 +44,9 @@ def eval(cmdline, out):
             "cat": cat,
             "head": head,
             "tail": tail,
-            "grep": grep
+            "grep": grep, 
+            "sort": sort,
+            "find": find
         }
 
         if app in apps:
