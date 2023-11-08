@@ -1,8 +1,5 @@
 import sys
 
-# requirement: if no file specified, should use stdin
-
-
 def cat(args, out):
     if len(args) == 0:
         for line in sys.stdin:
