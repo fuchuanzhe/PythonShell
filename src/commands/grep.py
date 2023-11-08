@@ -17,6 +17,7 @@ def grep(args, out):
     for file in files:
         with open(file) as f:
             # handle case when there is no such filename
+
             try:
                 lines = f.readlines()
                 for line in lines:

@@ -14,6 +14,9 @@ from commands.head import head
 from commands.tail import tail
 from commands.find import find
 from commands.sort import sort
+from commands.uniq import uniq
+from commands.cut import cut
+
 
 
 def eval(cmdline, out):
@@ -47,8 +50,11 @@ def eval(cmdline, out):
             "grep": grep, 
             "sort": sort,
             "find": find
-        }
+            "uniq" : uniq,
+            "cut" : cut
 
+        }
+        
         if app in apps:
             out = apps[app](args, out)
         else:
