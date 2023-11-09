@@ -29,7 +29,7 @@ def sort(args, out):
             "-r": r,
             "-o": o,
             "-n": n,
-            "-nr": nr
+            "-nr": r
             # "-k": k, #to do?
             # "-c": c, #to do?
             # "-u": u, #to do?
