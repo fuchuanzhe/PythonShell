@@ -16,11 +16,7 @@ def head(args, out):
             for i in range(0, min(len(lines), num_lines)):
                 out.append(lines[i])
     except FileNotFoundError:
-        # ask file path from stdin
-        print("File not found. Please enter the file path: ")
-        file = input()
-        with open(file) as f:
-            lines = f.readlines()
-            for i in range(0, min(len(lines), num_lines)):
-                out.append(lines[i])
+        while True:
+            line = input()
+            print(line)
     return out

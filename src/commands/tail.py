@@ -18,13 +18,7 @@ def tail(args, out):
             else:
                 out += lines
     except FileNotFoundError:
-        # ask file path from stdin
-        print("File not found. Please enter the file path: ")
-        file = input()
-        with open(file) as f:
-            lines = f.readlines()
-            if len(lines) >= num_lines:
-                out += lines[-num_lines:]
-            else:
-                out += lines
+        while True:
+            line = input()
+            print(line)
     return out
