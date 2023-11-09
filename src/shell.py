@@ -18,6 +18,7 @@ from commands.uniq import uniq
 from commands.cut import cut
 
 
+
 def eval(cmdline, out):
     raw_commands = []
     for m in re.finditer("([^\"';]+|\"[^\"]*\"|'[^']*')", cmdline):
@@ -46,11 +47,11 @@ def eval(cmdline, out):
             "cat": cat,
             "head": head,
             "tail": tail,
-            "grep": grep,
-            "uniq" : uniq,
-            "cut" : cut, 
+            "grep": grep, 
             "sort": sort,
-            "find": find
+            "find": find,
+            "uniq" : uniq,
+            "cut" : cut
         }
         
         if app in apps:
