@@ -31,13 +31,13 @@ class TestParser(unittest.TestCase):
         self.assertEqual(self.parser.parse("tail -n 15 file.txt"),["tail", "-n", "15", "file.txt"])
 
     def test_parse_grep(self):
-        self.assertEqual(self.parser.parse("grep hello dir1/file1.txt dir1/file2.txt"),["grep", "hello", "15", "dir1/file1.txt", "dir1/file2.txt"])
+        self.assertEqual(self.parser.parse("grep hello dir1/file1.txt dir1/file2.txt"),["grep", "hello", "dir1/file1.txt", "dir1/file2.txt"])
     
     def test_parse_cut(self):
         self.assertEqual(self.parser.parse("cut -b -3,5- ./src/file.txt"),["cut", "-b", "-3,5-", "./src/file.txt"])
 
     def test_parse_find(self):
-        self.assertEqual(self.parser.parse("find . -name *.py"),["find", "./src", "-name", "*.py"])
+        self.assertEqual(self.parser.parse("find . -name *.py"),["find", ".", "-name", "*.py"])
 
     def test_parse_uniq(self):
         self.assertEqual(self.parser.parse("uniq -i file.txt"),["uniq", "-i", "file.txt"])
@@ -55,7 +55,7 @@ class TestParser(unittest.TestCase):
         self.assertEqual(self.parser.parse("echo hi; echo hello"),[["echo", "hi"],["echo", "hello"]])
 
     def test_parse_command_substitution(self):
-        self.assertEqual(self.parser.parse("echo \"hi `echo hello`\""),["echo", "hi `echo hello`\""])
+        self.assertEqual(self.parser.parse("echo \"hi `echo hello`\""),["echo", "\"hi `echo hello`\""])
 
     def test_parse_pipe(self):
         self.assertEqual(self.parser.parse("cat dir/text1.txt | grep hello"),["cat", "dir/text1.txt", "|", "grep", "hello"])
