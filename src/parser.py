@@ -1,19 +1,5 @@
 from lark import Lark, Tree, Token
 
-def extract_strings(tree):
-    if isinstance(tree, Token):
-        if tree.type == 'UNQUOTED_STRING':
-            return [tree.value]
-        else:
-            return []
-    elif isinstance(tree, Tree):
-        strings = []
-        for child in tree.children:
-            strings.extend(extract_strings(child))
-        return strings
-    else:
-        return []
-
 class Parser:
     def __init__(self):
         self.grammar = r"""
@@ -28,9 +14,10 @@ command: UNQUOTED_STRING
 start: value
 
 UNQUOTED_STRING: /[^\s"']+/
-QUOTED_STRING: ESCAPED_STRING | SINGLE_QUOTED_STRING | DOUBLE_QUOTED_STRING
+QUOTED_STRING: ESCAPED_STRING | SINGLE_QUOTED_STRING | DOUBLE_QUOTED_STRING | BACKTICK_QUOTED_STRING
 SINGLE_QUOTED_STRING: /'[^']*'/
 DOUBLE_QUOTED_STRING: /"[^"]*"/
+BACKTICK_QUOTED_STRING: /`[^`]*`/
 
 %import common.ESCAPED_STRING
 %import common.SIGNED_NUMBER
@@ -43,4 +30,20 @@ DOUBLE_QUOTED_STRING: /"[^"]*"/
     
     def parse(self, command):
         tree = self.parser.parse(command)
-        return extract_strings(tree)
+        print(tree)
+        return Parser.extract_strings(tree)
+
+    @staticmethod
+    def extract_strings(tree):
+        if isinstance(tree, Token):
+            if tree.type in ['UNQUOTED_STRING', 'QUOTED_STRING']:
+                return [tree.value]
+            else:
+                return []
+        elif isinstance(tree, Tree):
+            strings = []
+            for child in tree.children:
+                strings.extend(Parser.extract_strings(child))
+            return strings
+        else:
+            return []
