@@ -50,8 +50,8 @@ def eval(cmdline, out):
             "grep": grep, 
             "sort": sort,
             "find": find,
-            "uniq" : uniq,
-            "cut" : cut
+            "uniq": uniq,
+            "cut": cut
         }
         
         if app in apps:

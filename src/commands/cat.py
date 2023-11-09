@@ -6,6 +6,11 @@ def cat(args, out):
             print(line.strip())  # .strip() to remove new line char
     else:
         for a in args:
-            with open(a) as f:
-                out.append(f.read())
+            try:
+                with open(a) as f:
+                    out.append(f.read())
+            except FileNotFoundError:
+                out.append(f"Error: File '{a}' not found.")
+            except Exception as e:
+                out.append(f"Error: {e}")
     return out
