@@ -1,7 +1,7 @@
 import unittest
 import os
 
-from shell import eval
+from src.shell import eval
 from collections import deque
 
 # not too sure about the paths in the test cases

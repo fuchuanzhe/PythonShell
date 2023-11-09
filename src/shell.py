@@ -49,10 +49,9 @@ def eval(cmdline, out):
             "tail": tail,
             "grep": grep, 
             "sort": sort,
-            "find": find
+            "find": find,
             "uniq" : uniq,
             "cut" : cut
-
         }
         
         if app in apps:
