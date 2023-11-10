@@ -30,8 +30,20 @@ BACKTICK_QUOTED_STRING: /`[^`]*`/
     
     def parse(self, command):
         tree = self.parser.parse(command)
-        print(tree)
-        return Parser.extract_strings(tree)
+        all_tokens = Parser.extract_strings(tree)
+        commands = []
+        for index, token in enumerate(all_tokens):
+            # create lists in commands,
+            # when a token ends with semicolon, create new list
+            if index == 0:
+                commands.append([token])
+            elif token[-1] == ';':
+                commands[-1].append(token[:-1])
+                commands.append([])
+            else:
+                commands[-1].append(token)
+        return commands
+
 
     @staticmethod
     def extract_strings(tree):

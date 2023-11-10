@@ -4,6 +4,8 @@ import os
 from os import listdir
 from collections import deque
 from glob import glob
+from parser import Parser
+
 from commands.cd import cd
 from commands.cat import cat
 from commands.echo import echo
@@ -20,24 +22,11 @@ from commands.cut import cut
 
 
 def eval(cmdline, out):
-    raw_commands = []
-    for m in re.finditer("([^\"';]+|\"[^\"]*\"|'[^']*')", cmdline):
-        if m.group(0):
-            raw_commands.append(m.group(0))    
+    parser = Parser()
+    raw_commands = parser.parse(cmdline)
     for command in raw_commands:
-        tokens = []
-        for m in re.finditer("[^\\s\"']+|\"([^\"]*)\"|'([^']*)'", command):
-            if m.group(1) or m.group(2):
-                quoted = m.group(0)
-                tokens.append(quoted[1:-1])
-            else:
-                globbing = glob(m.group(0))
-                if globbing:
-                    tokens.extend(globbing)
-                else:
-                    tokens.append(m.group(0))
-        app = tokens[0]
-        args = tokens[1:]
+        app = command[0]
+        args = command[1:]
         
         apps = {
             "pwd": pwd,
