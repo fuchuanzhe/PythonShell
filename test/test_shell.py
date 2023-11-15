@@ -1,12 +1,21 @@
 import unittest
-from src.shell import eval
+from shell import eval
 from collections import deque
 import os
 
 # left with cd test to figure out
 class TestShell(unittest.TestCase):
+    def setUp(self):
+        self.original_path = os.getcwd()
+        os.chdir("test")
+    
+    def tearDown(self):
+        # Restore the original working directory after the test
+        os.chdir(self.original_path)
+
     def test_cat(self):
         out = deque()
+        print(os.path.abspath(os.getcwd()))
         eval("cat ./catTest/cat1.txt ./catTest/cat2.txt", out)
         self.assertEqual(out.popleft(), "this is cat1.\n")
         self.assertEqual(out.popleft(), "this is cat2.\n")
@@ -53,8 +62,8 @@ class TestShell(unittest.TestCase):
     def test_find2(self):
         out = deque()
         eval("find ./findTest -name *.txt", out)
-        self.assertEqual(out.popleft(), "./findTest/findTest1.txt\n")
         self.assertEqual(out.popleft(), "./findTest/findTest2.txt\n")
+        self.assertEqual(out.popleft(), "./findTest/findTest1.txt\n")
         self.assertEqual(len(out), 0)
 
     def test_grep(self):
@@ -114,25 +123,26 @@ class TestShell(unittest.TestCase):
     def test_ls(self):
         out = deque()
         eval("ls", out)
-        self.assertEqual(out.popleft(), "test_parser.py\n")
-        self.assertEqual(out.popleft(), "sortTest.txt\n")
-        self.assertEqual(out.popleft(), "grepTest\n")
-        self.assertEqual(out.popleft(), "sorted.txt\n")
-        self.assertEqual(out.popleft(), "tailTest.txt\n")
-        self.assertEqual(out.popleft(), "findTest.txt\n")
-        self.assertEqual(out.popleft(), "test_shell2.py\n")
-        self.assertEqual(out.popleft(), "sortTest\n")
-        self.assertEqual(out.popleft(), "test_shell.py\n")
-        self.assertEqual(out.popleft(), "grepTest.txt\n")
-        self.assertEqual(out.popleft(), "findTest\n")
-        self.assertEqual(out.popleft(), "headTest.txt\n")
+        
         self.assertEqual(out.popleft(), "catTest\n")
+        self.assertEqual(out.popleft(), "grepTest.txt\n")
+        self.assertEqual(out.popleft(), "grepTest\n")
+        self.assertEqual(out.popleft(), "sortTest.txt\n")
+        self.assertEqual(out.popleft(), "test_shell.py\n")
+        self.assertEqual(out.popleft(), "sortTest\n")
+        self.assertEqual(out.popleft(), "findTest.txt\n")
+        self.assertEqual(out.popleft(), "test_parser.py\n")
+        self.assertEqual(out.popleft(), "headTest.txt\n")
+        self.assertEqual(out.popleft(), "sorted.txt\n")
+        self.assertEqual(out.popleft(), "findTest\n")
+        self.assertEqual(out.popleft(), "tailTest.txt\n")
+        self.assertEqual(out.popleft(), "__pycache__\n")        
         self.assertEqual(len(out), 0)
 
     def test_pwd(self):
         out = deque()
         eval("pwd", out)
-        self.assertEqual(out.popleft(), "/Users/hoshuhan/Documents/UCL/Y2/COMP0010 Software Engineering/code/comp0010-shell-python-p20/test\n")
+        self.assertEqual(out.popleft(), os.getcwd()+ "\n")
         self.assertEqual(len(out), 0)
 
     def test_sort(self):

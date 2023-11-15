@@ -1,6 +1,5 @@
 import unittest
-from src.parser import Parser
-
+from larkParser import Parser
 
 class TestParser(unittest.TestCase):
     def setUp(self):

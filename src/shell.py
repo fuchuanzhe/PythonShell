@@ -4,7 +4,7 @@ import os
 from os import listdir
 from collections import deque
 from glob import glob
-from parser import Parser
+from larkParser import Parser
 
 from commands.cd import cd
 from commands.cat import cat
