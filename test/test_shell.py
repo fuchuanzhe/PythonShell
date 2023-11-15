@@ -1,10 +1,9 @@
 import unittest
-import os
 from src.shell import eval
 from collections import deque
+import os
 
-# not too sure about the paths in the test cases
-
+# left with cd test to figure out
 class TestShell(unittest.TestCase):
     def test_cat(self):
         out = deque()
@@ -13,36 +12,50 @@ class TestShell(unittest.TestCase):
         self.assertEqual(out.popleft(), "this is cat2.\n")
         self.assertEqual(len(out), 0)
 
-    # def test_cd(self):
-    #     out = deque()
-    #     eval("cd catTest", out)
-    #     self.assertEqual(os.getcwd(), "/Users/hoshuhan/Documents/UCL/Y2/COMP0010 Software Engineering/code/comp0010-shell-python-p20/test/catTest")
-    #     self.assertEqual(len(out), 0)
+    def test_cd(self):
+        out = deque()
+
+        # Get the absolute path of the current working directory
+        current_path = os.path.abspath(os.getcwd())
+        eval("cd catTest", out)
+        cd_path = os.path.abspath(os.getcwd())
+        current_path = os.path.normpath(current_path)
+
+        # Construct the expected path in a platform-independent way
+        expected_path = os.path.join(current_path, "catTest")
+
+        # Use os.path.normpath to normalize the paths and make them consistent
+        expected_path = os.path.normpath(expected_path)
+        cd_path = os.path.normpath(cd_path)
+
+        self.assertEqual(cd_path, expected_path)
+        self.assertEqual(len(out), 0)
+        os.chdir(current_path)
 
     def test_echo(self):
         out = deque()
         eval("echo foo", out)
         self.assertEqual(out.popleft(), "foo\n")
         self.assertEqual(len(out), 0)
-    
+
     def test_find(self):
         out = deque()
         eval("find . -name findTest.txt", out)
         self.assertEqual(out.popleft(), "./findTest.txt\n")
         self.assertEqual(len(out), 0)
-    
+
     def test_find1(self):
         out = deque()
         eval("find ./findTest -name findTest1.txt", out)
         self.assertEqual(out.popleft(), "./findTest/findTest1.txt\n")
         self.assertEqual(len(out), 0)
-    
-    # def test_find2(self):
-    #     out = deque()
-    #     eval("find ./findTest -name *.txt", out)
-    #     self.assertEqual(out.popleft(), "./findTest/findTest1.txt\n")
-    #     self.assertEqual(out.popleft(), "./findTest/findTest2.txt\n")
-    #     self.assertEqual(len(out), 0)
+
+    def test_find2(self):
+        out = deque()
+        eval("find ./findTest -name *.txt", out)
+        self.assertEqual(out.popleft(), "./findTest/findTest1.txt\n")
+        self.assertEqual(out.popleft(), "./findTest/findTest2.txt\n")
+        self.assertEqual(len(out), 0)
 
     def test_grep(self):
         out = deque()
@@ -57,7 +70,7 @@ class TestShell(unittest.TestCase):
         self.assertEqual(out.popleft(), "hihi 1\n")
         self.assertEqual(out.popleft(), "hihi my name 1\n")
         self.assertEqual(len(out), 0)
-    
+
     def test_grep2(self):
         out = deque()
         eval("grep hihi grepTest.txt ./grepTest/grepTest1.txt", out)
@@ -66,7 +79,7 @@ class TestShell(unittest.TestCase):
         self.assertEqual(out.popleft(), "./grepTest/grepTest1.txt:hihi 1\n")
         self.assertEqual(out.popleft(), "./grepTest/grepTest1.txt:hihi my name 1\n")
         self.assertEqual(len(out), 0)
-    
+
     def test_head(self):
         out = deque()
         eval("head headTest.txt", out)
@@ -115,7 +128,7 @@ class TestShell(unittest.TestCase):
         self.assertEqual(out.popleft(), "headTest.txt\n")
         self.assertEqual(out.popleft(), "catTest\n")
         self.assertEqual(len(out), 0)
-    
+
     def test_pwd(self):
         out = deque()
         eval("pwd", out)
@@ -132,7 +145,7 @@ class TestShell(unittest.TestCase):
         self.assertEqual(out.popleft(), "hihi\n")
         self.assertEqual(out.popleft(), "hihi my name\n")
         self.assertEqual(len(out), 0)
-    
+
     def test_sort1(self):
         out = deque()
         eval("sort ./sortTest/sortTest1.txt", out)
@@ -170,7 +183,7 @@ class TestShell(unittest.TestCase):
             fileContent = file.read()
 
         self.assertEqual(fileContent, "HIHI\na\nb\nc\nhihi\nhihi my name\n")
-    
+
     def test_sort4(self):
         out = deque()
         eval("sort -n ./sortTest/sortTest2.txt", out)
@@ -181,7 +194,7 @@ class TestShell(unittest.TestCase):
         self.assertEqual(out.popleft(), "5\n")
 
         self.assertEqual(len(out), 0)
-    
+
     def test_sort5(self):
         out = deque()
         eval("sort -nr ./sortTest/sortTest2.txt", out)
@@ -213,7 +226,7 @@ class TestShell(unittest.TestCase):
         self.assertEqual(out.popleft(), "i\n")
         self.assertEqual(out.popleft(), "j\n")
         self.assertEqual(len(out), 0)
-    
+
     def test_tail2(self):
         out = deque()
         eval("tail -n 4 tailTest.txt", out)
