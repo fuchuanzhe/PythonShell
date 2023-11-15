@@ -22,7 +22,7 @@ def grep(args, out):
               for line in lines:
                   if re.match(pattern, line):
                       if len(files) > 1:
-                          out.append(f"{file}:{line.strip()} \n")
+                          out.append(f"{file}:{line.strip()}\n")
                       else:
                           out.append(line)
           except FileNotFoundError:
