@@ -8,9 +8,9 @@ def uniq(args, out):
         case_insensitive = True
     elif len(args) == 2 and args[0] == "-i":
         case_insensitive = True
-        file = args[1]
+        file = args[1].strip('"').strip("'")
     elif len(args) == 1:
-        file = args[0]
+        file = args[0].strip('"').strip("'")
     elif len(args) == 0:
         pass
     else:

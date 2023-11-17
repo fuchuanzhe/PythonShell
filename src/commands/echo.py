@@ -4,5 +4,10 @@
 
 
 def echo(args, out):
-    out.append(" ".join(args) + "\n")
+    args1 = []
+    for a in args:
+        a = a.strip('"').strip("'")
+        args1.append(a)
+    
+    out.append(" ".join(args1) + "\n")
     return out

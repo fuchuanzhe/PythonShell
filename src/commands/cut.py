@@ -1,4 +1,5 @@
 import sys
+import os
 
 def cut(args, out):
     file = None
@@ -6,11 +7,22 @@ def cut(args, out):
         options = args[1]
     elif len(args) == 3 and args[0] == "-b":
         options = args[1]
-        file = args[-1]
+        file = args[-1].strip('"')
     else:
         raise ValueError("invalid command line arguments")
+    
+    if file[0:2] == '*.':
+        pattern = file
+        files = os.listdir(os.getcwd())
 
-    if file:
+        selected_files = [file for file in files if file.endswith(pattern[1:])]
+        if selected_files:
+            for file in selected_files:
+                with open(file) as f:
+                    lines = f.readlines()
+                    for line in lines:
+                        out.append(cut_helper(line, options) + "\n")
+    elif file:
         with open(file) as f:
             lines = f.readlines()
             for line in lines:

@@ -10,15 +10,16 @@ def tail(args, out):
         else:
             num_lines = int(args[1])
             file = args[2]
-    try:
-        with open(file) as f:
-            lines = f.readlines()
-            if len(lines) >= num_lines:
-                out += lines[-num_lines:]
-            else:
-                out += lines
-    except FileNotFoundError:
-        while True:
-            line = input()
-            print(line)
+    if num_lines != 0:
+        try:
+            with open(file) as f:
+                lines = f.readlines()
+                if len(lines) >= num_lines:
+                    out += lines[-num_lines:]
+                else:
+                    out += lines
+        except FileNotFoundError:
+            while True:
+                line = input()
+                print(line)
     return out

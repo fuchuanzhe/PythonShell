@@ -1,8 +1,8 @@
 import sys
+import os
 from commands.flags.r import r
 from commands.flags.o import o
 from commands.flags.n import n
-from commands.flags.nr import nr
 
 def sort(args, out):
     if len(args) > 2:
@@ -20,30 +20,54 @@ def sort(args, out):
 
     arr = []
 
-    with open(file) as f:
-        lines = f.readlines()
-        for line in lines:
-            arr.append(line.strip())
+    if file[0:2] == '*.':
+        pattern = file
+        files = os.listdir(os.getcwd())
 
-        flags = {
-            "-r": r,
-            "-o": o,
-            "-n": n,
-            "-nr": r
-            # "-k": k, #to do?
-            # "-c": c, #to do?
-            # "-u": u, #to do?
-            # "-M": m #to do?
-        }
+        selected_files = [file for file in files if file.endswith(pattern[1:])]
+        if selected_files:
+            for file in selected_files:
+                with open(file) as f:
+                    lines = f.readlines()
+                    for line in lines:
+                        arr.append(line.strip())
 
-        if flag != '':
-            if flag in flags:
-                out = flags[flag](args, out, arr)
+            flags = {
+                "-r": r,
+                "-o": o,
+                "-n": n,
+                "-nr": r
+            }
+
+            if flag != '':
+                if flag in flags:
+                    out = flags[flag](args, out, arr)
+                else:
+                    raise ValueError(f"unsupported application {flag}")
             else:
-                raise ValueError(f"unsupported application {flag}")
-        else:
-            arr.sort()
-            for a in arr:
-                out.append(a + "\n") 
+                arr.sort()
+                for a in arr:
+                    out.append(a + "\n") 
+    else:
+        with open(file) as f:
+            lines = f.readlines()
+            for line in lines:
+                arr.append(line.strip())
 
+            flags = {
+                "-r": r,
+                "-o": o,
+                "-n": n,
+                "-nr": r
+            }
+
+            if flag != '':
+                if flag in flags:
+                    out = flags[flag](args, out, arr)
+                else:
+                    raise ValueError(f"unsupported application {flag}")
+            else:
+                arr.sort()
+                for a in arr:
+                    out.append(a + "\n") 
     return out 
