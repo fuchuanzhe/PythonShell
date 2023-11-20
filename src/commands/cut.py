@@ -33,3 +33,11 @@ def cut_helper(line, options):
             if 0 <= position < len(line):
                 segments.append(line[position].strip())
     return (''.join(segments))
+
+def _cut(args, out):
+    try:
+        return cut(args, out)
+    except Exception as err:
+        out.clear()
+        print(err)
+        return out
