@@ -4,7 +4,7 @@ import os
 from os import listdir
 from collections import deque
 from glob import glob
-from parser import Parser
+from larkParser import Parser
 
 from commands.cd import cd, _cd
 from commands.cat import cat, _cat
@@ -19,14 +19,25 @@ from commands.sort import sort, _sort
 from commands.uniq import uniq, _uniq
 from commands.cut import cut, _cut
 
+# from colorama import Fore, Style
+# def deb(*args):
+#     print(Fore.BLUE , *args)
+#     print(Style.RESET_ALL)
+
+parser = Parser()
 
 
 def eval(cmdline, out):
-    parser = Parser()
     raw_commands = parser.parse(cmdline)
     for command in raw_commands:
         app = command[0]
         args = command[1:]
+        # handles command substitution
+        for index, arg in enumerate(args):
+            if arg.startswith('`') and arg.endswith('`'):
+                args[index] = list(eval(arg[1:-1], out))[-1]
+                # deb(args[index])
+                out.clear()
         apps = {
             "pwd": pwd,
             "_pwd": _pwd,
@@ -55,6 +66,7 @@ def eval(cmdline, out):
         
         if app in apps:
             out = apps[app](args, out)
+            return out
         else:
             raise ValueError(f"unsupported application {app}")
 
@@ -74,7 +86,14 @@ if __name__ == "__main__":
         while True:
             print(os.getcwd() + "> ", end="")
             cmdline = input()
+
+            if not cmdline:
+                # empty command line
+                continue
+
             out = deque()
             eval(cmdline, out)
+            # print(out)
             while len(out) > 0:
                 print(out.popleft(), end="")
+            print()
