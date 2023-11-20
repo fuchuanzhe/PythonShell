@@ -1,34 +1,38 @@
 import re
 import sys
-import os
-from os import listdir
-from collections import deque
 from glob import glob
 
 def grep(args, out):
-    # if len(args) < 2:
-    #     raise ValueError("wrong number of command line arguments")
-    if len(args) < 2:
+    files = None
+    if len(args) >= 2:
+        pattern = re.compile(args[0])
+        files = args[1:]
+    elif len(args) == 1:
+        pattern = re.compile(args[0])
+    else:
+        raise ValueError("Invalid command line arguments")
+
+    if files:
+        for file in files:
+            with open(file) as f:
+                lines = f.readlines()
+                for line in lines:
+                    if re.search(pattern, line):
+                        if len(files) > 1:
+                            out.append(f"{file}:{line.strip()}\n")
+                        else:
+                            out.append(line)
+    else:
         for line in sys.stdin:
-            print(line.strip())
-    
-    pattern = args[0]
-    files = args[1:]
-    for file in files:
-        with open(file) as f:
-          # handle case when there is no such filename
-          try:
-              lines = f.readlines()
-              for line in lines:
-                  if re.match(pattern, line):
-                      if len(files) > 1:
-                          out.append(f"{file}:{line.strip()} \n")
-                      else:
-                          out.append(line)
-          except FileNotFoundError:
-              raise FileNotFoundError("The specified file was not found.") 
-    # handle case when word is not found 
-    if len(out) == 0:
-        out.append("word not found!")
+            if re.search(pattern, line):
+                print(line.strip())
 
     return out 
+
+def _grep(args, out):
+    try:
+        return grep(args, out)
+    except Exception as err:
+        out.clear()
+        print(err)
+        return out

@@ -47,3 +47,11 @@ def sort(args, out):
                 out.append(a + "\n") 
 
     return out 
+
+def _sort(args, out):
+    try:
+        return sort(args, out)
+    except Exception as err:
+        out.clear()
+        print(err)
+        return out

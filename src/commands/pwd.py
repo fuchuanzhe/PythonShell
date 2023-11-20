@@ -9,3 +9,11 @@ from glob import glob
 def pwd(args, out):
     out.append(os.getcwd() + "\n")
     return out
+
+def _pwd(args, out):
+    try:
+        return pwd(args, out)
+    except Exception as err:
+        out.clear()
+        print(err)
+        return out

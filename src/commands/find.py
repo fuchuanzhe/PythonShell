@@ -1,38 +1,30 @@
-import re
-import sys
+import fnmatch
 import os
-from collections import deque
-from glob import glob
 
-
-# find ./GFG -name sample.txt 
-# find ./GFG -name *.txt 
-# find . -name test.txt
 def find(args, out):
-    
-    if len(args) < 3:
-        for line in sys.stdin:
-            print(line.strip())
-    
-    # for a in args:
-    #     print(a)
-
-    dir = args[0]
-    file = args[2]
-    # print(args[2])
-    # print(index)
-
-    if '*' in file:
-        for filename in os.listdir(dir):
-            # print(filename + "1")
-            if file[1:] == filename[-len(file[1:])]:
-                out.append(dir + "/" + filename + "\n")
+    if len(args) == 2 and args[0] == "-name":
+        dir = "."
+    elif len(args) == 3 and args[1] == "-name":
+        dir = args[0]
     else:
-        for filename in os.listdir(dir):
-            # print(filename + " 2 ")
-            if filename == file:
-                # print(filename + " in ")
-                out.append(dir + "/" + filename + "\n")
-        
-        
+        raise ValueError("Invalid command line arguments")
+    pattern = args[-1]
+    
+    def find_helper(current_path):
+        for item in os.listdir(current_path):
+            item_path = os.path.join(current_path, item)
+            if os.path.isdir(item_path):
+                find_helper(item_path)
+            elif fnmatch.fnmatch(item, pattern):
+                out.append(item_path + "\n")
+
+    find_helper(dir)
     return out 
+
+def _find(args, out):
+    try:
+        return find(args, out)
+    except Exception as err:
+        out.clear()
+        print(err)
+        return out
