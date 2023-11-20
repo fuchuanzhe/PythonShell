@@ -14,20 +14,20 @@ def tail(args, out):
         file = args[2]
     else:
         raise ValueError("Invalid command line arguments")
-    
-    if file:
-        with open(file) as f:
-            lines = f.readlines()
+    if num_lines != 0:
+        if file:
+            with open(file) as f:
+                lines = f.readlines()
+                if len(lines) >= num_lines:
+                    out += lines[-num_lines:]
+                else:
+                    out += lines
+        else:
+            lines = sys.stdin.readlines()
             if len(lines) >= num_lines:
                 out += lines[-num_lines:]
             else:
                 out += lines
-    else:
-        lines = sys.stdin.readlines()
-        if len(lines) >= num_lines:
-            out += lines[-num_lines:]
-        else:
-            out += lines
     return out
 
 def _tail(args, out):
