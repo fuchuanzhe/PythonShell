@@ -4,5 +4,6 @@
 
 
 def echo(args, out):
-    out.append(" ".join(args) + "\n")
+    # print(args)
+    out.append(" ".join(args))
     return out

@@ -1,4 +1,8 @@
 def tail(args, out):
+    if len(args) == 0:
+        while True:
+            line = input()
+            print(line)
     if len(args) != 1 and len(args) != 3:
         raise ValueError("wrong number of command line arguments")
     if len(args) == 1:
@@ -10,15 +14,10 @@ def tail(args, out):
         else:
             num_lines = int(args[1])
             file = args[2]
-    try:
-        with open(file) as f:
-            lines = f.readlines()
-            if len(lines) >= num_lines:
-                out += lines[-num_lines:]
-            else:
-                out += lines
-    except FileNotFoundError:
-        while True:
-            line = input()
-            print(line)
+    with open(file) as f:
+        lines = f.readlines()
+        if len(lines) >= num_lines:
+            out += lines[-num_lines:]
+        else:
+            out += lines
     return out
