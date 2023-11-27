@@ -6,18 +6,18 @@ from collections import deque
 from glob import glob
 from larkParser import Parser
 
-from commands.cd import cd
-from commands.cat import cat
-from commands.echo import echo
-from commands.grep import grep
-from commands.ls import ls
-from commands.pwd import pwd
-from commands.head import head
-from commands.tail import tail
-from commands.find import find
-from commands.sort import sort
-from commands.uniq import uniq
-from commands.cut import cut
+from commands.cd import cd, _cd
+from commands.cat import cat, _cat
+from commands.echo import echo, _echo
+from commands.grep import grep, _grep
+from commands.ls import ls, _ls
+from commands.pwd import pwd, _pwd
+from commands.head import head, _head
+from commands.tail import tail, _tail
+from commands.find import find, _find
+from commands.sort import sort, _sort
+from commands.uniq import uniq, _uniq
+from commands.cut import cut, _cut
 
 # from colorama import Fore, Style
 # def deb(*args):
@@ -39,19 +39,30 @@ def eval_single(command, virtual_input=None):
             # deb(args[index])
 
     apps = {
-        "pwd": pwd,
-        "cd": cd,
-        "echo": echo,
-        "ls": ls,
-        "cat": cat,
-        "head": head,
-        "tail": tail,
-        "grep": grep,
-        "sort": sort,
-        "find": find,
-        "uniq": uniq,
-        "cut": cut
-    }
+            "pwd": pwd,
+            "_pwd": _pwd,
+            "cd": cd,
+            "_cd" : _cd,
+            "echo": echo,
+            "_echo": _echo,
+            "ls": ls,
+            "_ls": _ls,
+            "cat": cat,
+            "_cat": _cat,
+            "head": head,
+            "_head": _head,
+            "tail": tail,
+            "_tail": _tail,
+            "grep": grep, 
+            "sort": sort,
+            "_sort": _sort,
+            "find": find,
+            "_find": _find,
+            "uniq" : uniq,
+            "_uniq": _uniq,
+            "cut" : cut,
+            "_cut": _cut
+        }
 
     if app in apps:
         out = apps[app](args, out, virtual_input)
@@ -138,4 +149,3 @@ if __name__ == "__main__":
             out = eval(cmdline)
             while len(out) > 0:
                 print(out.popleft(), end="")
-                print()
