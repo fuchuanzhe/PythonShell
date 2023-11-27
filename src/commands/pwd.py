@@ -6,6 +6,6 @@ from collections import deque
 from glob import glob
 
 
-def pwd(args, out):
+def pwd(args, out, virtual_input=None):
     out.append(os.getcwd() + "\n")
     return out

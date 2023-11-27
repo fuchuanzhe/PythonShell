@@ -1,8 +1,13 @@
-def tail(args, out):
+def tail(args, out, virtual_input=None):
     if len(args) == 0:
-        while True:
-            line = input()
-            print(line)
+        if virtual_input:
+            print(virtual_input)
+        else:
+            while True:
+                line = input()
+                print(line)
+        return out
+
     if len(args) != 1 and len(args) != 3:
         raise ValueError("wrong number of command line arguments")
     if len(args) == 1:

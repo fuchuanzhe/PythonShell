@@ -4,7 +4,7 @@ from commands.flags.o import o
 from commands.flags.n import n
 from commands.flags.nr import nr
 
-def sort(args, out):
+def sort(args, out, virtual_input=None):
     if len(args) > 2:
         for line in sys.stdin:
             print(line.strip())

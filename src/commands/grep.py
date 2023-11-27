@@ -5,13 +5,17 @@ from os import listdir
 from collections import deque
 from glob import glob
 
-def grep(args, out):
+def grep(args, out, virtual_input=None):
     # if len(args) < 2:
     #     raise ValueError("wrong number of command line arguments")
     if len(args) < 2:
-        for line in sys.stdin:
-            print(line.strip())
-    
+        if virtual_input:
+            for line in virtual_input:
+                print(line.strip())
+        else:
+            for line in sys.stdin:
+                print(line.strip())
+        return out
     pattern = args[0]
     files = args[1:]
     for file in files:

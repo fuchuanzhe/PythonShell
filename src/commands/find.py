@@ -8,11 +8,15 @@ from glob import glob
 # find ./GFG -name sample.txt 
 # find ./GFG -name *.txt 
 # find . -name test.txt
-def find(args, out):
+def find(args, out, virtual_input=None):
     
     if len(args) < 3:
-        for line in sys.stdin:
-            print(line.strip())
+        if virtual_input:
+            for line in virtual_input:
+                print(line.strip())
+        else:
+            for line in sys.stdin:
+                print(line.strip())
 
     dir = args[0]
     file = args[2]

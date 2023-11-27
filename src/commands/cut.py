@@ -1,6 +1,6 @@
 import sys
 
-def cut(args, out):
+def cut(args, out, virtual_input=None):
     file = None
     if len(args) == 2 and args[0] == "-b":
         options = args[1]

@@ -1,9 +1,14 @@
 import sys
 
-def cat(args, out):
+def cat(args, out, virtual_input=None):
     if len(args) == 0:
-        for line in sys.stdin:
-            print(line.strip())  # .strip() to remove new line char
+        # handles pipe input
+        if virtual_input:
+            for line in virtual_input:
+                print(line.strip())
+        else:
+            for line in sys.stdin:
+                print(line.strip())  # .strip() to remove new line char
     else:
         for a in args:
             try:

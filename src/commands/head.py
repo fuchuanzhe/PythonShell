@@ -1,10 +1,15 @@
-def head(args, out):
+import sys
+def head(args, out, virtual_input=None):
     if len(args) == 0:
-        while True:
-            line = input()
-            print(line)
+        if virtual_input:
+            for line in virtual_input:
+                print(line)
+        else:
+            for line in sys.stdin:
+                print(line.strip())
+        return out
     if len(args) != 1 and len(args) != 3:
-        raise ValueError("wrong number of command line arguments")
+        raise ValueError(f"wrong number of command line arguments: {args}")
     if len(args) == 1:
         num_lines = 10
         file = args[0]

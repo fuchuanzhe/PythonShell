@@ -3,7 +3,7 @@
 # echo hi; echo helllo works
 
 
-def echo(args, out):
+def echo(args, out, virtual_input=None):
     # print(args)
-    out.append(" ".join(args))
+    out.append(" ".join(args) + "\n")
     return out

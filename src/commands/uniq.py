@@ -1,6 +1,6 @@
 import sys
 
-def uniq(args, out):
+def uniq(args, out, virtual_input=None):
     case_insensitive = False
     file = None
 
