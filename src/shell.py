@@ -26,7 +26,6 @@ from commands.cut import cut, _cut
 
 parser = Parser()
 
-
 def eval_single(command, virtual_input=None):
     app = command[0]
     args = command[1:]

@@ -5,7 +5,7 @@ def ls(args, out, virtual_input=None):
     if len(args) == 0:
         ls_dir = os.getcwd()
     elif len(args) > 1:
-        raise ValueError("wrong number of command line arguments")
+        raise ValueError("Wrong number of command line arguments")
     else:
         ls_dir = args[0]
     for f in listdir(ls_dir):
