@@ -17,6 +17,8 @@ def sort(args, out, virtual_input=None):
     if len(args) == 2 and args[0] in flags.keys():
         flag = args[0]
         file = args[1]
+    elif len(args) == 1 and args[0] in flags.keys():
+        flag = args[0]
     elif len(args) == 1:
         file = args[0]
     elif len(args) == 0:
