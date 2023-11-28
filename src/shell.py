@@ -90,6 +90,7 @@ class Command:
 
 def eval(cmdline):
     raw_commands = parser.parse(cmdline)
+    print("raw_commands:",raw_commands)
     out = deque()
     for command in raw_commands:
         comm = Command(deque(command))
