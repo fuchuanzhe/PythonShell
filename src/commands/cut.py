@@ -74,3 +74,11 @@ def merge(intervals):
                     newInterval[1] = i[1]      
         res.append(newInterval)
     return res
+
+def _cut(args, out, virtual_input=None):
+    try:
+        return cut(args, out, virtual_input)
+    except Exception as err:
+        out.clear()
+        print(err)
+        return out

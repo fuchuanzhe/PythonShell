@@ -8,7 +8,7 @@ def cat(args, out, virtual_input=None):
                 print(line.strip())
         else:
             for line in sys.stdin:
-                print(line.strip())  # .strip() to remove new line char
+                print(line.strip())  
     else:
         for a in args:
             try:
@@ -19,3 +19,11 @@ def cat(args, out, virtual_input=None):
             except Exception as e:
                 out.append(f"Error: {e}")
     return out
+
+def _cat(args, out, virtual_input=None):
+    try:
+        return cat(args, out, virtual_input)
+    except Exception as err:
+        out.clear()
+        print(err)
+        return out

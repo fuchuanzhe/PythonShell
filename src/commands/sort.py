@@ -5,45 +5,66 @@ from commands.flags.n import n
 from commands.flags.nr import nr
 
 def sort(args, out, virtual_input=None):
-    if len(args) > 2:
-        for line in sys.stdin:
-            print(line.strip())
-
-    file = ''
-    flag = ''
-
-    if len(args) == 1:
-        file = args[0]
-    else:
-        file = args[1]
-        flag = args[0]
-
-    arr = []
-
-    with open(file) as f:
-        lines = f.readlines()
-        for line in lines:
-            arr.append(line.strip())
-
-        flags = {
+    flags = {
             "-r": r,
             "-o": o,
             "-n": n,
             "-nr": r
-            # "-k": k, #to do?
-            # "-c": c, #to do?
-            # "-u": u, #to do?
-            # "-M": m #to do?
         }
+    flag = None
+    file = None
 
-        if flag != '':
-            if flag in flags:
+    if len(args) == 2 and args[0] in flags.keys():
+        flag = args[0]
+        file = args[1]
+    elif len(args) == 1:
+        file = args[0]
+    elif len(args) == 0:
+        if virtual_input:
+            file = virtual_input
+    else:
+        raise ValueError("Invalid command line arguments")
+
+    arr = []
+
+    if file:
+        with open(file) as f:
+            lines = f.readlines()
+            for line in lines:
+                arr.append(line.strip())
+            if flag:
                 out = flags[flag](args, out, arr)
             else:
-                raise ValueError(f"unsupported application {flag}")
+                arr.sort()
+                for a in arr:
+                    out.append(a + "\n") 
+    else:
+        if virtual_input:
+            for line in virtual_input:
+                arr.append(line.strip())
+            if flag:
+                out = flags[flag](args, out, arr)
+            else:
+                arr.sort()
+                for a in arr:
+                    out.append(a + "\n")
         else:
-            arr.sort()
-            for a in arr:
-                out.append(a + "\n") 
+            lines = sys.stdin.readlines()
+            for line in lines:
+                arr.append(line.strip())
+            if flag:
+                out = flags[flag](args, out, arr)
+            else:
+                arr.sort()
+                for a in arr:
+                    out.append(a + "\n")
 
     return out 
+
+def _sort(args, out, virtual_input=None):
+    try:
+        return sort(args, out, virtual_input)
+    except Exception as err:
+        out.clear()
+        print(err)
+        return out

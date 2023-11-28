@@ -1,10 +1,6 @@
 import os
 from os import listdir
 
-# do i need to handle file not found? line 14 kinda handles it
-# ls .  and ls .. working correctly
-
-
 def ls(args, out, virtual_input=None):
     if len(args) == 0:
         ls_dir = os.getcwd()
@@ -16,3 +12,11 @@ def ls(args, out, virtual_input=None):
         if not f.startswith("."):
             out.append(f + "\n")
     return out
+
+def _ls(args, out, virtual_input=None):
+    try:
+        return ls(args, out, virtual_input)
+    except Exception as err:
+        out.clear()
+        print(err)
+        return out

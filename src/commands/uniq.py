@@ -15,6 +15,9 @@ def uniq(args, out, virtual_input=None):
         pass
     else:
         raise ValueError("invalid command line arguments")
+    
+    if virtual_input:
+        file = virtual_input
 
     return uniq_helper(out, file, case_insensitive)
 
@@ -40,3 +43,11 @@ def uniq_helper(out, file, case_insensitive):
             prev_line = line.strip()
         out.append(prev_line + "\n")
     return out
+
+def _uniq(args, out, virtual_input=None):
+    try:
+        return uniq(args, out, virtual_input)
+    except Exception as err:
+        out.clear()
+        print(err)
+        return out
