@@ -22,11 +22,14 @@ def tail(args, out, virtual_input=None):
                     out += lines[-num_lines:]
                 else:
                     out += lines
-        else:
-            if virtual_input:
-                lines = virtual_input
+        elif virtual_input:
+            virtual_input = flatten_newlines(virtual_input)
+            if len(virtual_input) >= num_lines:
+                out += virtual_input[-num_lines:]
             else:
-                lines = sys.stdin.readlines()
+                out += virtual_input
+        else:
+            lines = sys.stdin.readlines()
             if len(lines) >= num_lines:
                 out += lines[-num_lines:]
             else:
@@ -40,3 +43,12 @@ def _tail(args, out, virtual_input=None):
         out.clear()
         print(err)
         return out 
+
+def flatten_newlines(input_list):
+    result = []
+    for string in input_list:
+        lines = string.split("\n")
+        result.extend([line + "\n" for line in lines[:-1]])
+        if lines[-1]:
+            result.append(lines[-1])
+    return result

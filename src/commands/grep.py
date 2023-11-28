@@ -1,5 +1,6 @@
 import re
 import sys
+from collections import deque
 
 def grep(args, out, virtual_input=None):
     files = None
@@ -21,15 +22,15 @@ def grep(args, out, virtual_input=None):
                             out.append(f"{file}:{line.strip()}\n")
                         else:
                             out.append(line)
-    else:
-        if virtual_input:
-            for line in virtual_input:
-                if re.search(pattern, line):
-                    out.append(line.strip())
-        else: 
-            for line in sys.stdin:
-                if re.search(pattern, line):
-                    print(line.strip())
+    elif virtual_input:
+        virtual_input = flatten_newlines(virtual_input)
+        for line in virtual_input:
+            if re.search(pattern, line):
+                out.append(line.strip() + "\n")
+    else: 
+        for line in sys.stdin:
+            if re.search(pattern, line):
+                print(line.strip())
 
     return out 
 
@@ -40,3 +41,12 @@ def _grep(args, out, virtual_input=None):
         out.clear()
         print(err)
         return out
+    
+def flatten_newlines(input_list):
+    result = []
+    for string in input_list:
+        lines = string.split("\n")
+        result.extend([line + "\n" for line in lines[:-1]])
+        if lines[-1]:
+            result.append(lines[-1])
+    return result

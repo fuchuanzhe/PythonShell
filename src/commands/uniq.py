@@ -15,13 +15,10 @@ def uniq(args, out, virtual_input=None):
         pass
     else: #covered by test
         raise ValueError("invalid command line arguments")
-    
-    if virtual_input:
-        file = virtual_input
 
-    return uniq_helper(out, file, case_insensitive)
+    return uniq_helper(out, file, case_insensitive, virtual_input)
 
-def uniq_helper(out, file, case_insensitive):
+def uniq_helper(out, file, case_insensitive, virtual_input):
     prev_line = None
     if file:
         with open(file) as f:
@@ -31,6 +28,14 @@ def uniq_helper(out, file, case_insensitive):
                 line_to_compare = line.strip().lower() if case_insensitive else line.strip()
                 if line_to_compare != prev_line:
                     out.append(line.strip() + "\n")
+    elif virtual_input:
+        virtual_input = flatten_newlines(virtual_input)
+        for line in virtual_input:
+            if len(out) > 0:
+                prev_line = out[-1].strip().lower() if case_insensitive else out[-1].strip()
+            line_to_compare = line.strip().lower() if case_insensitive else line.strip()
+            if line_to_compare != prev_line:
+                out.append(line.strip() + "\n")
     else:
         for line in sys.stdin:
             if not prev_line:
@@ -51,3 +56,12 @@ def _uniq(args, out, virtual_input=None):
         out.clear()
         print(err)
         return out
+
+def flatten_newlines(input_list):
+    result = []
+    for string in input_list:
+        lines = string.split("\n")
+        result.extend([line + "\n" for line in lines[:-1]])
+        if lines[-1]:
+            result.append(lines[-1])
+    return result

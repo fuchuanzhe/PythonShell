@@ -22,7 +22,7 @@ def head(args, out, virtual_input=None):
                 out.append(lines[i])
     else:
         if virtual_input:
-            for n in range(num_lines):
+            for n in range(0, min(len(virtual_input), num_lines)):
                 line = virtual_input[n]
                 print(line.strip())
         else:

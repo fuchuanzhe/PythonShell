@@ -15,6 +15,10 @@ def cut(args, out, virtual_input=None):
             lines = f.readlines()
             for line in lines:
                 out.append(cut_helper(line, options) + "\n")
+    elif virtual_input:
+        virtual_input = flatten_newlines(virtual_input)
+        for line in virtual_input:
+            out.append(cut_helper(line, options) + "\n")
     else:
         for line in sys.stdin:
             print(cut_helper(line, options))
@@ -82,3 +86,12 @@ def _cut(args, out, virtual_input=None):
         out.clear()
         print(err)
         return out
+
+def flatten_newlines(input_list):
+    result = []
+    for string in input_list:
+        lines = string.split("\n")
+        result.extend([line + "\n" for line in lines[:-1]])
+        if lines[-1]:
+            result.append(lines[-1])
+    return result

@@ -11,13 +11,9 @@ def cat(args, out, virtual_input=None):
                 print(line.strip())  
     else:
         for a in args:
-            try:
-                with open(a) as f:
-                    out.append(f.read())
-            except FileNotFoundError:
-                out.append(f"Error: File '{a}' not found.")
-            except Exception as e:
-                out.append(f"Error: {e}")
+            a = a.strip()
+            with open(a) as f:
+                out.append(f.read())
     return out
 
 def _cat(args, out, virtual_input=None):

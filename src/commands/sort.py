@@ -22,8 +22,7 @@ def sort(args, out, virtual_input=None):
     elif len(args) == 1:
         file = args[0]
     elif len(args) == 0:
-        if virtual_input:
-            file = virtual_input
+        pass
     else:
         raise ValueError("Invalid command line arguments")
 
@@ -40,26 +39,26 @@ def sort(args, out, virtual_input=None):
                 arr.sort()
                 for a in arr:
                     out.append(a + "\n") 
-    else:
-        if virtual_input:
-            for line in virtual_input:
-                arr.append(line.strip())
-            if flag:
-                out = flags[flag](args, out, arr)
-            else:
-                arr.sort()
-                for a in arr:
-                    out.append(a + "\n")
+    elif virtual_input:
+        virtual_input = flatten_newlines(virtual_input)
+        for line in virtual_input:
+            arr.append(line.strip())
+        if flag:
+            out = flags[flag](args, out, arr)
         else:
-            lines = sys.stdin.readlines()
-            for line in lines:
-                arr.append(line.strip())
-            if flag:
-                out = flags[flag](args, out, arr)
-            else:
-                arr.sort()
-                for a in arr:
-                    out.append(a + "\n")
+            arr.sort()
+            for a in arr:
+                out.append(a + "\n")
+    else:
+        lines = sys.stdin.readlines()
+        for line in lines:
+            arr.append(line.strip())
+        if flag:
+            out = flags[flag](args, out, arr)
+        else:
+            arr.sort()
+            for a in arr:
+                out.append(a + "\n")
 
     return out 
 
@@ -70,3 +69,12 @@ def _sort(args, out, virtual_input=None):
         out.clear()
         print(err)
         return out
+
+def flatten_newlines(input_list):
+    result = []
+    for string in input_list:
+        lines = string.split("\n")
+        result.extend([line + "\n" for line in lines[:-1]])
+        if lines[-1]:
+            result.append(lines[-1])
+    return result
