@@ -1,19 +1,15 @@
 import os
 
-def cd(args, out):
+def cd(args, out, virtual_input=None):
     if len(args) == 0 or len(args) > 1:
         raise ValueError("Wrong number of command line arguments")
     os.chdir(args[0])
     return out
 
-def _cd(args, out):
+def _cd(args, out, virtual_input=None):
     try:
-        return cd(args, out)
-    except ValueError:
+        return cd(args, out, virtual_input)
+    except Exception as err:
         out.clear()
-        print("Wrong number of command line arguments")
-        return out
-    except FileNotFoundError:
-        out.clear()
-        print("No such file or directory: " + args[0])
+        print(err)
         return out

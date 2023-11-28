@@ -1,7 +1,7 @@
 import os
 from os import listdir
 
-def ls(args, out):
+def ls(args, out, virtual_input=None):
     if len(args) == 0:
         ls_dir = os.getcwd()
     elif len(args) > 1:
@@ -13,9 +13,9 @@ def ls(args, out):
             out.append(f + "\n")
     return out
 
-def _ls(args, out):
+def _ls(args, out, virtual_input=None):
     try:
-        return ls(args, out)
+        return ls(args, out, virtual_input)
     except Exception as err:
         out.clear()
         print(err)

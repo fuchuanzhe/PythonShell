@@ -1,7 +1,7 @@
 import fnmatch
 import os
 
-def find(args, out):
+def find(args, out, virtual_input=None):
     if len(args) == 2 and args[0] == "-name":
         dir = "."
     elif len(args) == 3 and args[1] == "-name":
@@ -19,11 +19,11 @@ def find(args, out):
                 out.append(item_path + "\n")
 
     find_helper(dir)
-    return out 
+    return out  
 
-def _find(args, out):
+def _find(args, out, virtual_input=None):    
     try:
-        return find(args, out)
+        return find(args, out, virtual_input)
     except Exception as err:
         out.clear()
         print(err)

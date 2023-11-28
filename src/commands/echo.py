@@ -1,16 +1,11 @@
-# does not work with "", ', ``
-# will treat echo "hi" as two separate commands
-# echo hi; echo helllo works
 
-
-def echo(args, out):
+def echo(args, out, virtual_input=None):
     out.append(" ".join(args) + "\n")
     return out
 
-def _echo(args, out):
+def _echo(args, out,virtual_input=None):
     try:
-        return echo(args, out)
+        return echo(args, out, virtual_input)
     except Exception as err:
         out.clear()
-        print(err)
         return out

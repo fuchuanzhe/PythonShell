@@ -42,20 +42,39 @@ DOUBLE_QUOTED_STRING: /"[^"]*"/
         # flatten
         all_tokens=[elem for sublist in all_tokens for elem in (sublist if isinstance(sublist, list) else [sublist])]
 
+        def is_quoted(token):
+            return token.startswith('"') and token.endswith('"') or token.startswith("'") and token.endswith("'")
 
-
+        def remove_quotes(token):
+            if is_quoted(token):
+                return token[1:-1]
+            else:
+                return token
 
         commands = []
         for index, token in enumerate(all_tokens):
             # create lists in commands,
             # when a token ends with semicolon, create new list
             if index == 0:
-                commands.append([token.strip('"')])
-            elif token[-1] == ';':
-                # commands[-1].append(token[:-1])
-                commands.append([])
+                if token:
+                    commands.append([remove_quotes(token)])
+            elif ';' in token and not is_quoted(token):
+                semicolon_splited_tokens = token.split(';')
+                # "hi;ls;pwd;echo" -> ["hi", "ls", "pwd", "echo"]
+                # ";" -> ["", ""]
+                for index_,semicolon_splited_token in enumerate(semicolon_splited_tokens):
+                    if index_ == 0:
+                        if semicolon_splited_token:
+                            commands[-1].append(remove_quotes(semicolon_splited_token))
+                    else:
+                        if semicolon_splited_token:
+                            commands.append([remove_quotes(semicolon_splited_token)])
+                        else:
+                            commands.append([])
+
             else:
-                commands[-1].append(token.strip('"'))
+                if token:
+                    commands[-1].append(remove_quotes(token))
         return commands
 
 

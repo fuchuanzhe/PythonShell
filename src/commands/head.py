@@ -1,6 +1,6 @@
 import sys
 
-def head(args, out):
+def head(args, out, virtual_input=None):
     file = None
     if len(args) == 0:
         num_lines = 10
@@ -21,14 +21,19 @@ def head(args, out):
             for i in range(0, min(len(lines), num_lines)):
                 out.append(lines[i])
     else:
-        for n in range(num_lines):
-            line = sys.stdin.readline()
-            print(line.strip())
+        if virtual_input:
+            for n in range(num_lines):
+                line = virtual_input[n]
+                print(line.strip())
+        else:
+            for n in range(num_lines):
+                line = sys.stdin.readline()
+                print(line.strip())
     return out
 
-def _head(args, out):
+def _head(args, out, virtual_input=None):
     try:
-        return head(args, out)
+        return head(args, out, virtual_input)
     except Exception as err:
         out.clear()
         print(err)

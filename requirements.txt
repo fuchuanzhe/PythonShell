@@ -4,3 +4,4 @@ flake8==3.8.0
 flake8-html
 junit2html
 lark==1.1.8
+colorama

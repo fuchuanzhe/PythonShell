@@ -1,6 +1,6 @@
 import sys
 
-def tail(args, out):
+def tail(args, out, virtual_input=None):
     file = None
     if len(args) == 0:
         num_lines = 10
@@ -23,17 +23,20 @@ def tail(args, out):
                 else:
                     out += lines
         else:
-            lines = sys.stdin.readlines()
+            if virtual_input:
+                lines = virtual_input
+            else:
+                lines = sys.stdin.readlines()
             if len(lines) >= num_lines:
                 out += lines[-num_lines:]
             else:
                 out += lines
     return out
 
-def _tail(args, out):
+def _tail(args, out, virtual_input=None):
     try:
-        return tail(args, out)
+        return tail(args, out, virtual_input)
     except Exception as err:
         out.clear()
         print(err)
-        return out
+        return out 

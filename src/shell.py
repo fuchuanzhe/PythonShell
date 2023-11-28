@@ -9,7 +9,7 @@ from larkParser import Parser
 from commands.cd import cd, _cd
 from commands.cat import cat, _cat
 from commands.echo import echo, _echo
-from commands.grep import grep
+from commands.grep import grep, _grep
 from commands.ls import ls, _ls
 from commands.pwd import pwd, _pwd
 from commands.head import head, _head
@@ -26,19 +26,18 @@ from commands.cut import cut, _cut
 
 parser = Parser()
 
+def eval_single(command, virtual_input=None):
+    app = command[0]
+    args = command[1:]
+    out = deque()
+    # handles command substitution
+    for index, arg in enumerate(args):
+        if arg.startswith('`') and arg.endswith('`'):
+            local_out = deque()
+            args[index] = list(eval(arg[1:-1]))[-1]
+            # deb(args[index])
 
-def eval(cmdline, out):
-    raw_commands = parser.parse(cmdline)
-    for command in raw_commands:
-        app = command[0]
-        args = command[1:]
-        # handles command substitution
-        for index, arg in enumerate(args):
-            if arg.startswith('`') and arg.endswith('`'):
-                args[index] = list(eval(arg[1:-1], out))[-1]
-                # deb(args[index])
-                out.clear()
-        apps = {
+    apps = {
             "pwd": pwd,
             "_pwd": _pwd,
             "cd": cd,
@@ -53,7 +52,8 @@ def eval(cmdline, out):
             "_head": _head,
             "tail": tail,
             "_tail": _tail,
-            "grep": grep, 
+            "grep": grep,
+            "_grep" : _grep, 
             "sort": sort,
             "_sort": _sort,
             "find": find,
@@ -63,12 +63,69 @@ def eval(cmdline, out):
             "cut" : cut,
             "_cut": _cut
         }
-        
-        if app in apps:
-            out = apps[app](args, out)
-            return out
+
+    if app in apps:
+        out = apps[app](args, out, virtual_input)
+        return out
+    else:
+        raise ValueError(f"unsupported application {app}")
+
+
+class Command:
+    def __init__(self, command_tokens):
+        self.command_tokens = command_tokens
+
+    def pop_first(self):
+        return self.command_tokens.popleft()
+
+    def peek_first(self):
+        return self.command_tokens[0]
+
+    def __len__(self):
+        return len(self.command_tokens)
+
+    def __str__(self):
+        return str(self.command_tokens)
+
+def eval(cmdline):
+    raw_commands = parser.parse(cmdline)
+    print("raw_commands:",raw_commands)
+    out = deque()
+    for command in raw_commands:
+        comm = Command(deque(command))
+        local_out = None
+        virtual_input = None
+        this_command = []
+        while len(comm) > 0:
+            if comm.peek_first() not in ['|', '>', '<']:
+                this_command.append(comm.pop_first())
+            elif comm.peek_first() == '|':
+                comm.pop_first()
+                local_out = eval_single(this_command, virtual_input)
+                virtual_input = local_out
+                this_command = []
+            elif comm.peek_first() == '>':
+                comm.pop_first()
+                filename = comm.pop_first()
+                local_out = eval_single(this_command, virtual_input)
+                with open(filename, 'w') as f:
+                    while len(local_out) > 0:
+                        f.write(local_out.popleft())
+                virtual_input = None
+                this_command = []
+            elif comm.peek_first() == '<':
+                comm.pop_first()
+                filename = comm.pop_first()
+                with open(filename, 'r') as f:
+                    virtual_input = f.readlines()
+                local_out = eval_single(this_command, virtual_input)
+                virtual_input = local_out
+
+        if len(this_command) > 0:
+            out += eval_single(this_command, virtual_input)
         else:
-            raise ValueError(f"unsupported application {app}")
+            out += local_out
+    return out
 
 
 if __name__ == "__main__":
@@ -78,8 +135,7 @@ if __name__ == "__main__":
             raise ValueError("wrong number of command line arguments")
         if sys.argv[1] != "-c":
             raise ValueError(f"unexpected command line argument {sys.argv[1]}")
-        out = deque()
-        eval(sys.argv[2], out)
+        out = eval(sys.argv[2])
         while len(out) > 0:
             print(out.popleft(), end="")
     else:
@@ -91,9 +147,6 @@ if __name__ == "__main__":
                 # empty command line
                 continue
 
-            out = deque()
-            eval(cmdline, out)
-            # print(out)
+            out = eval(cmdline)
             while len(out) > 0:
                 print(out.popleft(), end="")
-            print()
