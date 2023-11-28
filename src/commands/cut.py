@@ -4,13 +4,13 @@ def cut(args, out, virtual_input=None):
     file = None
     if len(args) == 2 and args[0] == "-b":
         options = args[1]
-    elif len(args) == 3 and args[0] == "-b":
+    elif len(args) == 3 and args[0] == "-b": #covered by test
         options = args[1]
         file = args[-1]
-    else:
+    else: #covered by test
         raise ValueError("invalid command line arguments")
 
-    if file:
+    if file: #covered by test
         with open(file) as f:
             lines = f.readlines()
             for line in lines:

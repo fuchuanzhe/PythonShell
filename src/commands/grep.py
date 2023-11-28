@@ -3,15 +3,15 @@ import sys
 
 def grep(args, out, virtual_input=None):
     files = None
-    if len(args) >= 2:
+    if len(args) >= 2: #covered by test
         pattern = re.compile(args[0])
         files = args[1:]
-    elif len(args) == 1:
+    elif len(args) == 1: #covered by test
         pattern = re.compile(args[0])
-    else:
+    else: #covered by test
         raise ValueError("Invalid command line arguments")
 
-    if files:
+    if files: #covered by test
         for file in files:
             with open(file) as f:
                 lines = f.readlines()
@@ -26,7 +26,7 @@ def grep(args, out, virtual_input=None):
             for line in virtual_input:
                 if re.search(pattern, line):
                     out.append(line.strip())
-        else:
+        else: 
             for line in sys.stdin:
                 if re.search(pattern, line):
                     print(line.strip())

@@ -6,14 +6,14 @@ def uniq(args, out, virtual_input=None):
 
     if len(args) == 1 and args[0] == "-i":
         case_insensitive = True
-    elif len(args) == 2 and args[0] == "-i":
+    elif len(args) == 2 and args[0] == "-i": #covered by test
         case_insensitive = True
         file = args[1]
-    elif len(args) == 1:
+    elif len(args) == 1: #covered by test
         file = args[0]
     elif len(args) == 0:
         pass
-    else:
+    else: #covered by test
         raise ValueError("invalid command line arguments")
     
     if virtual_input:

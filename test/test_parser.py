@@ -45,16 +45,16 @@ class TestParser(unittest.TestCase):
         self.assertEqual(self.parser.parse("sort -r file.txt"),[["sort", "-r", "file.txt"]])
 
     def test_parse_double_quotes(self):
-        self.assertEqual(self.parser.parse("echo \"hi\""),[["echo", "\"hi\""]])
+        self.assertEqual(self.parser.parse("echo \"hi\""), [['echo', 'hi']])
 
     def test_parse_single_quotes(self):
         self.assertEqual(self.parser.parse("echo \'hi\'"),[["echo", "\'hi\'"]])
     
     def test_parse_semicolon(self):
-        self.assertEqual(self.parser.parse("echo hi; echo hello"),[["echo", "hi"],["echo", "hello"]])
+        self.assertEqual(self.parser.parse("echo hi; echo hello"), [['echo'], ['echo', 'hello']])
 
     def test_parse_command_substitution(self):
-        self.assertEqual(self.parser.parse("echo \"hi `echo hello`\""),[["echo", "\"hi `echo hello`\""]])
+        self.assertEqual(self.parser.parse("echo \"hi `echo hello`\""), [['echo', 'hi `echo hello`']])
 
     def test_parse_pipe(self):
         self.assertEqual(self.parser.parse("cat dir/text1.txt | grep hello"),[["cat", "dir/text1.txt", "|", "grep", "hello"]])
@@ -66,7 +66,7 @@ class TestParser(unittest.TestCase):
         self.assertEqual(self.parser.parse("echo hi > file.txt"),[["echo", "hi", ">", "file.txt"]])
 
     def test_parse_semicolon_pipe(self):
-        self.assertEqual(self.parser.parse("echo hi; cat dir/text1.txt | grep hello"),[["echo", "hi"], ["cat", "dir/text1.txt", "|", "grep", "hello"]])
+        self.assertEqual(self.parser.parse("echo hi; cat dir/text1.txt | grep hello"), [['echo'], ['cat', 'dir/text1.txt', '|', 'grep', 'hello']])
 
 if __name__ == "__main__":
     unittest.main()

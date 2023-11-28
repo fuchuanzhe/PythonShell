@@ -8,5 +8,4 @@ def _echo(args, out,virtual_input=None):
         return echo(args, out, virtual_input)
     except Exception as err:
         out.clear()
-        print(err)
         return out
