@@ -39,14 +39,6 @@ def cut_helper(line, options):
             segments.append(line[start:end].strip())
     return (''.join(segments))
 
-def _cut(args, out):
-    try:
-        return cut(args, out)
-    except Exception as err:
-        out.clear()
-        print(err)
-        return out
-
 def split_string_to_list(options):
     res = []
     for option in options.split(','):
@@ -71,10 +63,7 @@ def merge(intervals):
                     newInterval = i
             elif res[-1][1] >= i[0]: 
                 newInterval = res.pop()
-                if len(i) == 1:
-                    if i[0] > newInterval[1]:
-                        newInterval[1] = i[0]
-                elif i[1] > newInterval[1]:
+                if len(i) ==2 and i[1] > newInterval[1]:
                     newInterval[1] = i[1]      
         res.append(newInterval)
     return res

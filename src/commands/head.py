@@ -24,7 +24,7 @@ def head(args, out, virtual_input=None):
         if virtual_input:
             for n in range(0, min(len(virtual_input), num_lines)):
                 line = virtual_input[n]
-                print(line.strip())
+                out.append(line.strip() + "\n")
         else:
             for n in range(num_lines):
                 line = sys.stdin.readline()
