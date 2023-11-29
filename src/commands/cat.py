@@ -5,7 +5,7 @@ def cat(args, out, virtual_input=None):
         # handles pipe input
         if virtual_input:
             for line in virtual_input:
-                print(line.strip())
+                out.append(line.strip() + "\n")
         else:
             for line in sys.stdin:
                 print(line.strip())  
