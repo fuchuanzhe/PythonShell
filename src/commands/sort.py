@@ -2,15 +2,13 @@ import sys
 from commands.flags.r import r
 from commands.flags.o import o
 from commands.flags.n import n
-from commands.flags.nr import nr
 
 def sort(args, out, virtual_input=None):
     flags = {
             "-r": r,
             "-o": o,
-            "-n": n,
-            "-nr": r
-        }
+            "-n": n
+            }
     flag = None
     file = None
 

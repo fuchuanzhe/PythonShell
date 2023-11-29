@@ -2,10 +2,9 @@ import unittest
 from collections import deque
 import os
 from shell import eval
-from unittest.mock import patch
+from unittest.mock import patch, MagicMock
 from io import StringIO
 
-# left with cd test to figure out
 class TestShell(unittest.TestCase):
     def setUp(self):
         self.original_path = os.getcwd()
@@ -16,11 +15,27 @@ class TestShell(unittest.TestCase):
         os.chdir(self.original_path)
 
     def test_cat(self):
-        print(os.path.abspath(os.getcwd()))
         out = eval("cat ./catTest/cat1.txt ./catTest/cat2.txt")
         self.assertEqual(out.popleft(), "this is cat1.\n")
         self.assertEqual(out.popleft(), "this is cat2.\n")
         self.assertEqual(len(out), 0)
+
+    def test__cat(self):
+        out = eval("_cat ./catTest/cat3.txt")
+        self.assertEqual(len(out), 0)
+
+    def test_cat_virtualin(self):
+        out = eval("cat < catTest/cat1.txt")
+        self.assertEqual(out.popleft(), "this is cat1.\n")
+        self.assertEqual(len(out), 0)
+
+    @patch("sys.stdin", StringIO("hello\nhihi\n"))
+    @patch("sys.stdout", new_callable=StringIO)
+    def test_cat_stdin(self, mock_stdout):
+            eval("cat")            
+            output = mock_stdout.getvalue()
+            expected_output = "hello\nhihi\n"
+            self.assertEqual(output, expected_output)
 
     def test_cd(self):
         # Get the absolute path of the current working directory
@@ -130,6 +145,37 @@ class TestShell(unittest.TestCase):
         with self.assertRaises(ValueError):
             out = eval("cut")
 
+    def test_cut6(self):
+        out = eval("echo abc | cut -b -1,2-")
+        self.assertEqual(out.popleft(), "abc\n")
+        self.assertEqual(len(out), 0)
+
+    @patch("sys.stdin", StringIO("abc\ndef\n"))
+    @patch("sys.stdout", new_callable=StringIO)
+    def test_cut_stdin(self, mock_stdout):
+            eval("cut -b 1")            
+            output = mock_stdout.getvalue()
+            expected_output = "a\nd\n"
+            self.assertEqual(output, expected_output)
+
+    def test__cut(self):
+        out = eval("_cut")
+        self.assertEqual(len(out), 0) 
+    
+    def test_cut7(self):
+        out = eval("echo 12345678901 | cut -b 2-4,6,9-")
+        self.assertEqual(out.popleft(), "2346901\n")
+        self.assertEqual(len(out), 0)
+
+    def test_cut8(self):
+        out = eval("echo 12345678901 | cut -b 2-5,4,7,9")
+        self.assertEqual(out.popleft(), "234579\n")
+        self.assertEqual(len(out), 0)
+
+    def test_cut9(self):
+        out = eval("echo 12345678901 | cut -b 1-3,-2,5-")
+        self.assertEqual(out.popleft(), "1235678901\n")
+        self.assertEqual(len(out), 0)
 
 #     # def test_cut5(self):
 #     #     out = deque()
@@ -149,7 +195,7 @@ class TestShell(unittest.TestCase):
         self.assertEqual(len(out), 0)
 
     # def test_echoException(self): #cannot think of errors for echo 
-    #     out = eval("_echo \$10")
+    #     out = eval("_echo \"helloworld")
     #     print(out)
     #     self.assertEqual(len(out), 0)
 
@@ -158,16 +204,38 @@ class TestShell(unittest.TestCase):
         self.assertEqual(out.popleft(), "./findTest.txt\n")
         self.assertEqual(len(out), 0)
 
-    def test_find1(self):
+    def test__find(self):
+        out = eval("_find . -name findTest.txt")
+        self.assertEqual(out.popleft(), "./findTest.txt\n")
+        self.assertEqual(len(out), 0)
+
+    def test_find_dir(self):
         out = eval("find ./findTest -name findTest1.txt")
         self.assertEqual(out.popleft(), "./findTest/findTest1.txt\n")
         self.assertEqual(len(out), 0)
 
-    def test_find2(self):
-        out = eval("find ./findTest -name \"*.txt\"")
+    def test_find_glob(self):
+        out = eval("find ./findTest -name '*.txt'")
         self.assertEqual(out.popleft(), "./findTest/findTest2.txt\n")
         self.assertEqual(out.popleft(), "./findTest/findTest1.txt\n")
         self.assertEqual(len(out), 0)
+
+    # def test_find_current_dir(self):
+    #     out = eval("find -name '*.txt'")
+    #     expected_result = ["./file2.txt\n", "./sortTest.txt\n", "./file1.txt\n",
+    #                        "./grepTest/grepTest2.txt\n", "./grepTest/grepTest1.txt\n",
+    #                        "./uniqTest/uniq1.txt\n", "./uniqTest/uniq2.txt\n", "./uniqTest/uniq3.txt\n",
+    #                        "./sorted.txt\n", "./tailTest.txt\n", "./findTest.txt\n", "./uniqTest.txt\n",
+    #                        "./test.txt\n", "./sortTest/sortTest2.txt\n", "./sortTest/sortTest1.\n",
+    #                        "./cutTest/cut1.txt\n", "./headTest/head1.txt\n", "./tailTest/tail1.txt\n",
+    #                        "./grepTest.txt\n", "./findTest/findTest1.txt\n", "./findTest/findTest2.txt\n",
+    #                        "./headTest.txt\n", "./cutTest.txt\n", "./catTest/catTestFolder/cat3.txt\n", 
+    #                        "./catTest/catTestFolder/cat4.txt\n", "./catTest/cat1.txt\n", "./catTest/cat2.txt\n"]
+    #     self.assertEqual(list(out), expected_result)
+
+    def test_find_wrong_input(self):
+        with self.assertRaises(ValueError):
+            out = eval("find -name")
 
     def test_grep(self):
         out = eval("grep hihi grepTest.txt")
@@ -193,21 +261,23 @@ class TestShell(unittest.TestCase):
         with self.assertRaises(ValueError):
             out = eval("grep")
 
-    # @patch('builtins.print', side_effect=['hihi\n'])
-    # def test_grep_oneCmdArguments(self, mock_input):
-    #     with StringIO() as mock_stdout:
-    #         with patch('sys.stdout', mock_input):
-    #             eval("grep hihi")
-            
-    #         self.assertEqual(mock_stdout.getvalue(), "hihi\n")
-    
-    # @patch('builtins.print', side_effect=['hello\n'])
-    # def test_grep_oneWrongCmdArguments(self, mock_input):
-    #     with StringIO() as mock_stdout:
-    #         with patch('sys.stdout', mock_input):
-    #             eval("grep hihi")
-            
-    #         self.assertEqual(mock_stdout.getvalue(), "")
+    @patch("sys.stdin", StringIO("hello\nhihi\nEOFError"))
+    @patch("sys.stdout", new_callable=StringIO)
+    def test_grep_oneCmdArguments(self, mock_stdout):
+            eval("grep hihi")            
+            output = mock_stdout.getvalue()
+            expected_output = "hihi\n"
+            self.assertEqual(output, expected_output)
+
+    def test_grep5(self): 
+        out = eval("echo hihihi | grep hihi")
+        self.assertEqual(out.popleft(), "hihihi\n")
+        self.assertEqual(len(out), 0)
+
+    def test__grep6(self): 
+        out = eval("_grep")
+        self.assertEqual(len(out), 0)
+
         
 
     def test_head(self):
@@ -236,6 +306,41 @@ class TestShell(unittest.TestCase):
         self.assertEqual(out.popleft(), "HIHI\n")
         self.assertEqual(out.popleft(), "hihi my name\n")
         self.assertEqual(out.popleft(), "a\n")
+        self.assertEqual(len(out), 0)
+
+    def test_head3(self):
+        with self.assertRaises(ValueError):
+            out = eval("head -n 2 hello world")
+    
+    def test__head4(self):
+        out = eval("_head -n 2 headTest .txt")
+        self.assertEqual(len(out), 0)
+
+
+    def test_head4(self):
+        out = eval("head < ./headTest/head2.txt")
+        self.assertEqual(out.popleft(), "hihi\n")
+        self.assertEqual(out.popleft(), "HIHI\n")
+        self.assertEqual(out.popleft(), "hihi my name\n")
+        self.assertEqual(out.popleft(), "a\n")
+        self.assertEqual(out.popleft(), "b\n")
+        self.assertEqual(out.popleft(), "c\n")
+        self.assertEqual(out.popleft(), "d\n")
+        self.assertEqual(out.popleft(), "e\n")
+        self.assertEqual(out.popleft(), "f\n")
+        self.assertEqual(out.popleft(), "g\n")
+        self.assertEqual(len(out), 0)
+
+    @patch("sys.stdin", StringIO("hello\nhihi\nhello1\nhihi1\nEOFError"))
+    @patch("sys.stdout", new_callable=StringIO)
+    def test_head5(self, mock_stdout):
+            eval("head -n 2")         
+            output = mock_stdout.getvalue()
+            expected_output = "hello\nhihi\n"
+            self.assertEqual(output, expected_output)
+    
+    def test_head6(self):
+        out = eval("head -n 0 headTest.txt")
         self.assertEqual(len(out), 0)
 
     def test_ls(self):
@@ -282,6 +387,10 @@ class TestShell(unittest.TestCase):
         out = eval("pwd")
         self.assertEqual(out.popleft(), os.getcwd()+ "\n")
         self.assertEqual(len(out), 0)
+    
+    def test__pwd(self):
+        out = eval("_pwd hello")
+        self.assertEqual(len(out), 0)
 
     def test_sort(self):
         out = eval("sort sortTest.txt")
@@ -293,7 +402,25 @@ class TestShell(unittest.TestCase):
         self.assertEqual(out.popleft(), "hihi my name\n")
         self.assertEqual(len(out), 0)
 
-    def test_sort1(self):
+    def test__sort(self):
+        out = eval("_sort sortTest.txt")
+        self.assertEqual(out.popleft(), "HIHI\n")
+        self.assertEqual(out.popleft(), "a\n")
+        self.assertEqual(out.popleft(), "b\n")
+        self.assertEqual(out.popleft(), "c\n")
+        self.assertEqual(out.popleft(), "hihi\n")
+        self.assertEqual(out.popleft(), "hihi my name\n")
+        self.assertEqual(len(out), 0)
+
+    def test_sort_wrong_input(self):
+        with self.assertRaises(ValueError):
+            out = eval("sort -i sortTest.txt")
+
+    def test__sort_wrong_input(self):
+        out = eval("_sort -i sortTest.txt")
+        self.assertEqual(len(out), 0)
+
+    def test_sort_dir(self):
         out = eval("sort ./sortTest/sortTest1.txt")
         self.assertEqual(out.popleft(), "HIHI\n")
         self.assertEqual(out.popleft(), "a\n")
@@ -303,7 +430,7 @@ class TestShell(unittest.TestCase):
         self.assertEqual(out.popleft(), "hihi my name\n")
         self.assertEqual(len(out), 0)
 
-    def test_sort2(self):
+    def test_sort_r(self):
         out = eval("sort -r sortTest.txt")
         self.assertEqual(out.popleft(), "hihi my name\n")
         self.assertEqual(out.popleft(), "hihi\n")
@@ -312,7 +439,8 @@ class TestShell(unittest.TestCase):
         self.assertEqual(out.popleft(), "a\n")
         self.assertEqual(out.popleft(), "HIHI\n")
         self.assertEqual(len(out), 0)
-    def test_sort3(self): # to check how to check output.txt
+
+    def test_sort_o(self): 
         out = eval("sort -o sortTest.txt")
         self.assertEqual(out.popleft(), "HIHI\n")
         self.assertEqual(out.popleft(), "a\n")
@@ -328,24 +456,50 @@ class TestShell(unittest.TestCase):
 
         self.assertEqual(fileContent, "HIHI\na\nb\nc\nhihi\nhihi my name\n")
 
-    def test_sort4(self):
+    def test_sort_n(self):
         out = eval("sort -n ./sortTest/sortTest2.txt")
         self.assertEqual(out.popleft(), "1\n")
         self.assertEqual(out.popleft(), "2\n")
         self.assertEqual(out.popleft(), "3\n")
         self.assertEqual(out.popleft(), "4\n")
         self.assertEqual(out.popleft(), "5\n")
-
         self.assertEqual(len(out), 0)
 
-    def test_sort5(self):
-        out = eval("sort -nr ./sortTest/sortTest2.txt")
-        self.assertEqual(out.popleft(), "5\n")
-        self.assertEqual(out.popleft(), "4\n")
-        self.assertEqual(out.popleft(), "3\n")
-        self.assertEqual(out.popleft(), "2\n")
-        self.assertEqual(out.popleft(), "1\n")
+    def test_sort_virtual_input(self):
+        out = eval("sort < sortTest.txt")
+        self.assertEqual(out.popleft(), "HIHI\n")
+        self.assertEqual(out.popleft(), "a\n")
+        self.assertEqual(out.popleft(), "b\n")
+        self.assertEqual(out.popleft(), "c\n")
+        self.assertEqual(out.popleft(), "hihi\n")
+        self.assertEqual(out.popleft(), "hihi my name\n")
         self.assertEqual(len(out), 0)
+
+    def test_sort_virtual_input_r(self):
+        out = eval("sort -r < sortTest.txt")
+        self.assertEqual(out.popleft(), "hihi my name\n")
+        self.assertEqual(out.popleft(), "hihi\n")
+        self.assertEqual(out.popleft(), "c\n")
+        self.assertEqual(out.popleft(), "b\n")
+        self.assertEqual(out.popleft(), "a\n")
+        self.assertEqual(out.popleft(), "HIHI\n")
+        self.assertEqual(len(out), 0)
+
+
+    @patch("sys.stdin", StringIO("hello\nhihi\nhello1\nhihi1\n"))
+    @patch("sys.stdout", new_callable=StringIO)
+    def test_sort_stdin(self, mock_stdout):
+            out = eval("sort")         
+            expected_output = "hello\nhello1\nhihi\nhihi1\n"
+            self.assertEqual(''.join(list(out)), expected_output)
+
+    @patch("sys.stdin", StringIO("hello\nhihi\nhello1\nhihi1\n"))
+    @patch("sys.stdout", new_callable=StringIO)
+    def test_sort_stdin_r(self, mock_stdout):
+            out = eval("sort -r")         
+            expected_output = "hihi1\nhihi\nhello1\nhello\n"
+            self.assertEqual(''.join(list(out)), expected_output)
+
 
     def test_tail(self):
         out = eval("tail tailTest.txt")
@@ -368,7 +522,73 @@ class TestShell(unittest.TestCase):
         self.assertEqual(len(out), 0)
 
     def test_tail2(self):
-        out = eval("tail -n 4 tailTest.txt")
+        out = eval("tail -n 23 tailTest.txt")
+        self.assertEqual(out.popleft(), "hihi\n")
+        self.assertEqual(out.popleft(), "HIHI\n")
+        self.assertEqual(out.popleft(), "hihi my name\n")
+        self.assertEqual(out.popleft(), "a\n")
+        self.assertEqual(out.popleft(), "b\n")
+        self.assertEqual(out.popleft(), "c\n")
+        self.assertEqual(out.popleft(), "d\n")
+        self.assertEqual(out.popleft(), "e\n")
+        self.assertEqual(out.popleft(), "f\n")
+        self.assertEqual(out.popleft(), "g\n")
+        self.assertEqual(out.popleft(), "h\n")
+        self.assertEqual(out.popleft(), "i\n")
+        self.assertEqual(out.popleft(), "j\n")
+        self.assertEqual(len(out), 0)
+
+    def test_tail3(self):
+        out = eval("tail < ./tailTest/tail1.txt")
+        self.assertEqual(out.popleft(), "a\n")
+        self.assertEqual(out.popleft(), "b\n")
+        self.assertEqual(out.popleft(), "c\n")
+        self.assertEqual(out.popleft(), "d\n")
+        self.assertEqual(out.popleft(), "e\n")
+        self.assertEqual(out.popleft(), "f\n")
+        self.assertEqual(out.popleft(), "g\n")
+        self.assertEqual(out.popleft(), "h\n")
+        self.assertEqual(out.popleft(), "i\n")
+        self.assertEqual(out.popleft(), "j\n")
+        self.assertEqual(len(out), 0)
+    
+    def test_tail4(self):
+        with self.assertRaises(ValueError):
+            out = eval("tail -n 2 hello world")
+
+    @patch("sys.stdin", StringIO("hello\nhihi\nhello1\nhihi1\n"))
+    @patch("sys.stdout", new_callable=StringIO)
+    def test_tail5(self, mock_stdout):
+            out = eval("tail -n 2")         
+            expected_output = "hello1\nhihi1\n"
+            self.assertEqual(''.join(list(out)), expected_output)
+    
+    def test__tail6(self):
+        out = eval("_tail -n 2 headTest .txt")
+        self.assertEqual(len(out), 0)
+
+    def test_tail7(self):
+        out = eval("tail -n 0 headTest.txt")
+        self.assertEqual(len(out), 0)
+
+    @patch("sys.stdin", StringIO("hello\nhihi\n"))
+    @patch("sys.stdout", new_callable=StringIO)
+    def test_tail8(self, mock_stdout):
+            out = eval("tail -n 4")         
+            expected_output = "hello\nhihi\n"
+            self.assertEqual(''.join(list(out)), expected_output)
+    
+    def test_tail9(self):
+        out = eval("tail -n 20 < ./tailTest/tail1.txt")
+        self.assertEqual(out.popleft(), "hihi\n")
+        self.assertEqual(out.popleft(), "HIHI\n")
+        self.assertEqual(out.popleft(), "hihi my name\n")
+        self.assertEqual(out.popleft(), "a\n")
+        self.assertEqual(out.popleft(), "b\n")
+        self.assertEqual(out.popleft(), "c\n")
+        self.assertEqual(out.popleft(), "d\n")
+        self.assertEqual(out.popleft(), "e\n")
+        self.assertEqual(out.popleft(), "f\n")
         self.assertEqual(out.popleft(), "g\n")
         self.assertEqual(out.popleft(), "h\n")
         self.assertEqual(out.popleft(), "i\n")
@@ -409,53 +629,50 @@ class TestShell(unittest.TestCase):
         self.assertEqual(out.popleft(), "BANANA\n")
         self.assertEqual(len(out), 0)
 
-    # def test_uniq4(self):
-    #     out = eval("uniq")
-    #     self.assertEqual(out.popleft(), "apple\n")
-    #     self.assertEqual(out.popleft(), "banana\n")
-    #     self.assertEqual(out.popleft(), "BANANA\n")
-    #     self.assertEqual(out.popleft(), "orange\n")
-    #     self.assertEqual(out.popleft(), "ORANGE\n")
-    #     self.assertEqual(len(out), 0)
+    @patch("sys.stdin", StringIO("hello\nhihi\nEOFError"))
+    @patch("sys.stdout", new_callable=StringIO)
+    def test_uniq4(self, mock_stdout):
+            eval("uniq")         
+            output = mock_stdout.getvalue()
+            expected_output = "hello\nhihi\n"
+            self.assertEqual(output, expected_output)
 
     def test_uniq5(self):
         with self.assertRaises(ValueError):
             out = eval("uniq -r hello world")
 
-#     # def test_uniq2(self):
-#     #     out = deque()
-#     #     eval("uniq < ./uniqTest/uniq2.txt", out)
-#     #     self.assertEqual(out.popleft(), "apple\n")
-#     #     self.assertEqual(out.popleft(), "banana\n")
-#     #     self.assertEqual(out.popleft(), "BANANA\n")
-#     #     self.assertEqual(out.popleft(), "orange\n")
-#     #     self.assertEqual(out.popleft(), "ORANGE\n")
-#     #     self.assertEqual(len(out), 0)
+    def test_uniq6(self):
+        out = eval("uniq < ./uniqTest/uniq2.txt")
+        self.assertEqual(out.popleft(), "apple\n")
+        self.assertEqual(out.popleft(), "orange\n")
+        self.assertEqual(out.popleft(), "ORANGE\n")
+        self.assertEqual(out.popleft(), "orange\n")
+        self.assertEqual(out.popleft(), "banana\n")
+        self.assertEqual(out.popleft(), "BANANA\n")
+        self.assertEqual(len(out), 0)
 
-#     # def test_uniq3(self):
-#     #     out = deque()
-#     #     eval("sort ./uniqTest/uniq1.txt | uniq", out)
-#     #     self.assertEqual(out.popleft(), "apple\n")
-#     #     self.assertEqual(out.popleft(), "banana\n")
-#     #     self.assertEqual(out.popleft(), "orange\n")
-#     #     self.assertEqual(len(out), 0)
+    def test_uniq7(self):
+        out = eval("_uniq -r hello world")
+        self.assertEqual(len(out), 0)
 
-#     # def test_uniq4(self):
-#     #     out = deque()
-#     #     eval("sort ./uniqTest/uniq1.txt | uniq", out)
-#     #     self.assertEqual(out.popleft(), "apple\n")
-#     #     self.assertEqual(out.popleft(), "banana\n")
-#     #     self.assertEqual(out.popleft(), "orange\n")
-#     #     self.assertEqual(len(out), 0)
+    def test_uniq8(self):
+        out = eval("uniq < ./uniqTest/uniq1.txt")
+        self.assertEqual(out.popleft(), "apple\n")
+        self.assertEqual(out.popleft(), "banana\n")
+        self.assertEqual(out.popleft(), "orange\n")
+        self.assertEqual(len(out), 0)
 
-#     # def test_uniq5(self):
-#     #     out = deque()
-#     #     eval("sort -i ./uniqTest/uniq2.txt | uniq", out)
-#     #     self.assertEqual(out.popleft(), "apple\n")
-#     #     self.assertEqual(out.popleft(), "banana\n")
-#     #     self.assertEqual(out.popleft(), "orange\n")
-#     #     self.assertEqual(len(out), 0)
+    @patch("sys.stdin", StringIO("hello\nHIHI\nhihi\nhihi\nEOFError"))
+    @patch("sys.stdout", new_callable=StringIO)
+    def test_uniq9(self, mock_stdout):
+            eval("uniq -i")         
+            output = mock_stdout.getvalue()
+            expected_output = "hello\nhihi\n"
+            self.assertEqual(output, expected_output)
 
+    def test_shellfile(self):
+        with self.assertRaises(ValueError):
+            out = eval("hello")
 
 if __name__ == "__main__":
     import sys

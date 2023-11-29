@@ -2,7 +2,7 @@ import sys
 
 def cut(args, out, virtual_input=None):
     file = None
-    if len(args) == 2 and args[0] == "-b":
+    if len(args) == 2 and args[0] == "-b": #covered by test
         options = args[1]
     elif len(args) == 3 and args[0] == "-b": #covered by test
         options = args[1]
@@ -15,11 +15,11 @@ def cut(args, out, virtual_input=None):
             lines = f.readlines()
             for line in lines:
                 out.append(cut_helper(line, options) + "\n")
-    elif virtual_input:
+    elif virtual_input: #covered by test
         virtual_input = flatten_newlines(virtual_input)
         for line in virtual_input:
             out.append(cut_helper(line, options) + "\n")
-    else:
+    else: #covered by test
         for line in sys.stdin:
             print(cut_helper(line, options))
     return out
@@ -38,14 +38,6 @@ def cut_helper(line, options):
             end = end if type(end) != float else len(line)
             segments.append(line[start:end].strip())
     return (''.join(segments))
-
-def _cut(args, out):
-    try:
-        return cut(args, out)
-    except Exception as err:
-        out.clear()
-        print(err)
-        return out
 
 def split_string_to_list(options):
     res = []
@@ -79,7 +71,7 @@ def merge(intervals):
         res.append(newInterval)
     return res
 
-def _cut(args, out, virtual_input=None):
+def _cut(args, out, virtual_input=None): #covered by test
     try:
         return cut(args, out, virtual_input)
     except Exception as err:

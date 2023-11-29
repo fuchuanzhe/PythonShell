@@ -1,4 +1,3 @@
-
 def echo(args, out, virtual_input=None):
     out.append(" ".join(args) + "\n")
     return out
