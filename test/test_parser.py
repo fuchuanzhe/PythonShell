@@ -67,6 +67,3 @@ class TestParser(unittest.TestCase):
 
     def test_parse_semicolon_pipe(self):
         self.assertEqual(self.parser.parse("echo hi; cat dir/text1.txt | grep hello"), [['echo', 'hi'], ['cat', 'dir/text1.txt', '|', 'grep', 'hello']])
-
-if __name__ == "__main__":
-    unittest.main()

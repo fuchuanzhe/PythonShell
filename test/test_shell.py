@@ -177,26 +177,13 @@ class TestShell(unittest.TestCase):
         self.assertEqual(out.popleft(), "1235678901\n")
         self.assertEqual(len(out), 0)
 
-#     # def test_cut5(self):
-#     #     out = deque()
-#     #     eval("echo abc | cut -b 1", out)
-#     #     self.assertEqual(out.popleft(), "a\n")
-#     #     self.assertEqual(len(out), 0)
-
-#     # def test_cut6(self):
-#     #     out = deque()
-#     #     eval("echo abc | cut -b -1, 2-", out)
-#     #     self.assertEqual(out.popleft(), "abc\n")
-#     #     self.assertEqual(len(out), 0)
-
     def test_echo(self):
         out = eval("echo foo")
         self.assertEqual(out.popleft(), "foo\n")
         self.assertEqual(len(out), 0)
 
     # def test_echoException(self): #cannot think of errors for echo 
-    #     out = eval("_echo \"helloworld")
-    #     print(out)
+    #     out = eval("_echo")
     #     self.assertEqual(len(out), 0)
 
     def test_find(self):
@@ -220,22 +207,30 @@ class TestShell(unittest.TestCase):
         self.assertEqual(out.popleft(), "./findTest/findTest1.txt\n")
         self.assertEqual(len(out), 0)
 
-    # def test_find_current_dir(self):
-    #     out = eval("find -name '*.txt'")
-    #     expected_result = ["./file2.txt\n", "./sortTest.txt\n", "./file1.txt\n",
-    #                        "./grepTest/grepTest2.txt\n", "./grepTest/grepTest1.txt\n",
-    #                        "./uniqTest/uniq1.txt\n", "./uniqTest/uniq2.txt\n", "./uniqTest/uniq3.txt\n",
-    #                        "./sorted.txt\n", "./tailTest.txt\n", "./findTest.txt\n", "./uniqTest.txt\n",
-    #                        "./test.txt\n", "./sortTest/sortTest2.txt\n", "./sortTest/sortTest1.\n",
-    #                        "./cutTest/cut1.txt\n", "./headTest/head1.txt\n", "./tailTest/tail1.txt\n",
-    #                        "./grepTest.txt\n", "./findTest/findTest1.txt\n", "./findTest/findTest2.txt\n",
-    #                        "./headTest.txt\n", "./cutTest.txt\n", "./catTest/catTestFolder/cat3.txt\n", 
-    #                        "./catTest/catTestFolder/cat4.txt\n", "./catTest/cat1.txt\n", "./catTest/cat2.txt\n"]
-    #     self.assertEqual(list(out), expected_result)
+    def test_find_current_dir(self):
+        out = eval("find -name '*.txt'")
+        expected_result = ['./catTest/catTestFolder/cat3.txt\n', './catTest/catTestFolder/cat4.txt\n', 
+                           './catTest/cat1.txt\n', './catTest/cat2.txt\n', 
+                           './grepTest.txt\n', './cutTest/cut1.txt\n', 
+                           './grepTest/grepTest1.txt\n', './grepTest/grepTest2.txt\n', 
+                           './sortTest.txt\n', './uniqTest.txt\n', 
+                           './sortTest/sortTest1.txt\n', './sortTest/sortTest2.txt\n', 
+                           './findTest.txt\n', './uniqTest/uniq1.txt\n', './uniqTest/uniq2.txt\n', 
+                           './uniqTest/uniq3.txt\n', './test.txt\n', './headTest.txt\n', 
+                           './file2.txt\n', './cutTest.txt\n', './sorted.txt\n', 
+                           './file1.txt\n', './findTest/findTest2.txt\n', './findTest/findTest1.txt\n', 
+                           './headTest/head1.txt\n', './headTest/head2.txt\n', './tailTest.txt\n', 
+                           './tailTest/tail1.txt\n']
+        
+        self.assertEqual(list(out), expected_result)
 
     def test_find_wrong_input(self):
         with self.assertRaises(ValueError):
             out = eval("find -name")
+    
+    def test__find_wrong_input(self):
+        out = eval("_find")
+        self.assertEqual(len(out), 0)
 
     def test_grep(self):
         out = eval("grep hihi grepTest.txt")
@@ -273,12 +268,14 @@ class TestShell(unittest.TestCase):
         out = eval("echo hihihi | grep hihi")
         self.assertEqual(out.popleft(), "hihihi\n")
         self.assertEqual(len(out), 0)
+    
+    def test_grep6(self): 
+        out = eval("echo hello | grep hihi")
+        self.assertEqual(len(out), 0)
 
     def test__grep6(self): 
         out = eval("_grep")
         self.assertEqual(len(out), 0)
-
-        
 
     def test_head(self):
         out = eval("head headTest.txt")
@@ -315,7 +312,6 @@ class TestShell(unittest.TestCase):
     def test__head4(self):
         out = eval("_head -n 2 headTest .txt")
         self.assertEqual(len(out), 0)
-
 
     def test_head4(self):
         out = eval("head < ./headTest/head2.txt")
@@ -674,6 +670,3 @@ class TestShell(unittest.TestCase):
         with self.assertRaises(ValueError):
             out = eval("hello")
 
-if __name__ == "__main__":
-    import sys
-    unittest.main()
