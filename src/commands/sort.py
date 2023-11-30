@@ -8,9 +8,8 @@ def sort(args, out, virtual_input=None):
     flags = {
             "-r": r,
             "-o": o,
-            "-n": n,
-            "-nr": r
-        }
+            "-n": n
+            }
     flag = None
     file = None
 

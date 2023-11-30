@@ -3,7 +3,7 @@ from commands.flatten_list.flatten_virtual_input import flatten_virtual_input
 
 def cut(args, out, virtual_input=None):
     file = None
-    if len(args) == 2 and args[0] == "-b":
+    if len(args) == 2 and args[0] == "-b": #covered by test
         options = args[1]
     elif len(args) == 3 and args[0] == "-b": #covered by test
         options = args[1]
@@ -20,7 +20,7 @@ def cut(args, out, virtual_input=None):
         virtual_input = flatten_virtual_input(virtual_input)
         for line in virtual_input:
             out.append(cut_helper(line, options) + "\n")
-    else:
+    else: #covered by test
         for line in sys.stdin:
             print(cut_helper(line, options))
     return out
@@ -69,7 +69,7 @@ def merge(intervals):
         res.append(newInterval)
     return res
 
-def _cut(args, out, virtual_input=None):
+def _cut(args, out, virtual_input=None): #covered by test
     try:
         return cut(args, out, virtual_input)
     except Exception as err:
