@@ -1,6 +1,7 @@
 import re
 import sys
 from collections import deque
+from commands.flatten_list.flatten_virtual_input import flatten_virtual_input
 
 def grep(args, out, virtual_input=None):
     files = None
@@ -23,7 +24,7 @@ def grep(args, out, virtual_input=None):
                         else:
                             out.append(line)
     elif virtual_input:
-        virtual_input = flatten_newlines(virtual_input)
+        virtual_input = flatten_virtual_input(virtual_input)
         for line in virtual_input:
             if re.search(pattern, line):
                 out.append(line.strip() + "\n")
@@ -41,12 +42,3 @@ def _grep(args, out, virtual_input=None):
         out.clear()
         print(err)
         return out
-    
-def flatten_newlines(input_list):
-    result = []
-    for string in input_list:
-        lines = string.split("\n")
-        result.extend([line + "\n" for line in lines[:-1]])
-        if lines[-1]:
-            result.append(lines[-1])
-    return result

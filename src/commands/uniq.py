@@ -1,4 +1,5 @@
 import sys
+from commands.flatten_list.flatten_virtual_input import flatten_virtual_input
 
 def uniq(args, out, virtual_input=None):
     case_insensitive = False
@@ -29,7 +30,7 @@ def uniq_helper(out, file, case_insensitive, virtual_input):
                 if line_to_compare != prev_line:
                     out.append(line.strip() + "\n")
     elif virtual_input:
-        virtual_input = flatten_newlines(virtual_input)
+        virtual_input = flatten_virtual_input(virtual_input)
         for line in virtual_input:
             if len(out) > 0:
                 prev_line = out[-1].strip().lower() if case_insensitive else out[-1].strip()
@@ -56,12 +57,3 @@ def _uniq(args, out, virtual_input=None):
         out.clear()
         print(err)
         return out
-
-def flatten_newlines(input_list):
-    result = []
-    for string in input_list:
-        lines = string.split("\n")
-        result.extend([line + "\n" for line in lines[:-1]])
-        if lines[-1]:
-            result.append(lines[-1])
-    return result

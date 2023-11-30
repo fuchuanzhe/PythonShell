@@ -1,4 +1,5 @@
 import sys
+from commands.flatten_list.flatten_virtual_input import flatten_virtual_input
 
 def tail(args, out, virtual_input=None):
     file = None
@@ -23,7 +24,7 @@ def tail(args, out, virtual_input=None):
                 else:
                     out += lines
         elif virtual_input:
-            virtual_input = flatten_newlines(virtual_input)
+            virtual_input = flatten_virtual_input(virtual_input)
             if len(virtual_input) >= num_lines:
                 out += virtual_input[-num_lines:]
             else:
@@ -43,12 +44,3 @@ def _tail(args, out, virtual_input=None):
         out.clear()
         print(err)
         return out 
-
-def flatten_newlines(input_list):
-    result = []
-    for string in input_list:
-        lines = string.split("\n")
-        result.extend([line + "\n" for line in lines[:-1]])
-        if lines[-1]:
-            result.append(lines[-1])
-    return result

@@ -2,7 +2,7 @@ import sys
 from commands.flags.r import r
 from commands.flags.o import o
 from commands.flags.n import n
-from commands.flags.nr import nr
+from commands.flatten_list.flatten_virtual_input import flatten_virtual_input
 
 def sort(args, out, virtual_input=None):
     flags = {
@@ -40,7 +40,7 @@ def sort(args, out, virtual_input=None):
                 for a in arr:
                     out.append(a + "\n") 
     elif virtual_input:
-        virtual_input = flatten_newlines(virtual_input)
+        virtual_input = flatten_virtual_input(virtual_input)
         for line in virtual_input:
             arr.append(line.strip())
         if flag:
@@ -69,12 +69,3 @@ def _sort(args, out, virtual_input=None):
         out.clear()
         print(err)
         return out
-
-def flatten_newlines(input_list):
-    result = []
-    for string in input_list:
-        lines = string.split("\n")
-        result.extend([line + "\n" for line in lines[:-1]])
-        if lines[-1]:
-            result.append(lines[-1])
-    return result

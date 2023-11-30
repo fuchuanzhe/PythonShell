@@ -1,4 +1,5 @@
 import sys
+from commands.flatten_list.flatten_virtual_input import flatten_virtual_input
 
 def head(args, out, virtual_input=None):
     file = None
@@ -22,6 +23,7 @@ def head(args, out, virtual_input=None):
                 out.append(lines[i])
     else:
         if virtual_input:
+            virtual_input = flatten_virtual_input(virtual_input)
             for n in range(0, min(len(virtual_input), num_lines)):
                 line = virtual_input[n]
                 out.append(line.strip() + "\n")

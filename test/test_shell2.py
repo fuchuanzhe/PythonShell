@@ -249,81 +249,126 @@
 #     #     self.assertEqual(out.popleft(), os.getcwd()+ "\n")
 #     #     self.assertEqual(len(out), 0)
 
-#     def test_sort(self):
-#         out = eval("sort sortTest.txt")
-#         self.assertEqual(out.popleft(), "HIHI\n")
-#         self.assertEqual(out.popleft(), "a\n")
-#         self.assertEqual(out.popleft(), "b\n")
-#         self.assertEqual(out.popleft(), "c\n")
-#         self.assertEqual(out.popleft(), "hihi\n")
-#         self.assertEqual(out.popleft(), "hihi my name\n")
-#         self.assertEqual(len(out), 0)
+    # def test_sort(self):
+    #     out = eval("sort sortTest.txt")
+    #     self.assertEqual(out.popleft(), "HIHI\n")
+    #     self.assertEqual(out.popleft(), "a\n")
+    #     self.assertEqual(out.popleft(), "b\n")
+    #     self.assertEqual(out.popleft(), "c\n")
+    #     self.assertEqual(out.popleft(), "hihi\n")
+    #     self.assertEqual(out.popleft(), "hihi my name\n")
+    #     self.assertEqual(len(out), 0)
 
-#     def test_sort1(self):
-#         out = eval("sort ./sortTest/sortTest1.txt")
-#         self.assertEqual(out.popleft(), "HIHI\n")
-#         self.assertEqual(out.popleft(), "a\n")
-#         self.assertEqual(out.popleft(), "b\n")
-#         self.assertEqual(out.popleft(), "c\n")
-#         self.assertEqual(out.popleft(), "hihi\n")
-#         self.assertEqual(out.popleft(), "hihi my name\n")
-#         self.assertEqual(len(out), 0)
+    # def test__sort(self):
+    #     out = eval("_sort sortTest.txt")
+    #     self.assertEqual(out.popleft(), "HIHI\n")
+    #     self.assertEqual(out.popleft(), "a\n")
+    #     self.assertEqual(out.popleft(), "b\n")
+    #     self.assertEqual(out.popleft(), "c\n")
+    #     self.assertEqual(out.popleft(), "hihi\n")
+    #     self.assertEqual(out.popleft(), "hihi my name\n")
+    #     self.assertEqual(len(out), 0)
 
-#     def test_sort2(self):
-#         out = eval("sort -r sortTest.txt")
-#         self.assertEqual(out.popleft(), "hihi my name\n")
-#         self.assertEqual(out.popleft(), "hihi\n")
-#         self.assertEqual(out.popleft(), "c\n")
-#         self.assertEqual(out.popleft(), "b\n")
-#         self.assertEqual(out.popleft(), "a\n")
-#         self.assertEqual(out.popleft(), "HIHI\n")
-#         self.assertEqual(len(out), 0)
+    # def test_sort_wrong_input(self):
+    #     with self.assertRaises(ValueError):
+    #         out = eval("sort -i sortTest.txt")
 
-#     def test_sort3(self): # to check how to check output.txt
-#         out = eval("sort -o sortTest.txt")
-#         self.assertEqual(out.popleft(), "HIHI\n")
-#         self.assertEqual(out.popleft(), "a\n")
-#         self.assertEqual(out.popleft(), "b\n")
-#         self.assertEqual(out.popleft(), "c\n")
-#         self.assertEqual(out.popleft(), "hihi\n")
-#         self.assertEqual(out.popleft(), "hihi my name\n")
-#         self.assertEqual(len(out), 0)
+    # def test__sort_wrong_input(self):
+    #     out = eval("_sort -i sortTest.txt")
+    #     self.assertEqual(len(out), 0)
 
-#         file_path = 'sorted.txt'
-#         with open(file_path, 'r') as file:
-#             fileContent = file.read()
+    # def test_sort_dir(self):
+    #     out = eval("sort ./sortTest/sortTest1.txt")
+    #     self.assertEqual(out.popleft(), "HIHI\n")
+    #     self.assertEqual(out.popleft(), "a\n")
+    #     self.assertEqual(out.popleft(), "b\n")
+    #     self.assertEqual(out.popleft(), "c\n")
+    #     self.assertEqual(out.popleft(), "hihi\n")
+    #     self.assertEqual(out.popleft(), "hihi my name\n")
+    #     self.assertEqual(len(out), 0)
 
-#         self.assertEqual(fileContent, "HIHI\na\nb\nc\nhihi\nhihi my name\n")
+    # def test_sort_r(self):
+    #     out = eval("sort -r sortTest.txt")
+    #     self.assertEqual(out.popleft(), "hihi my name\n")
+    #     self.assertEqual(out.popleft(), "hihi\n")
+    #     self.assertEqual(out.popleft(), "c\n")
+    #     self.assertEqual(out.popleft(), "b\n")
+    #     self.assertEqual(out.popleft(), "a\n")
+    #     self.assertEqual(out.popleft(), "HIHI\n")
+    #     self.assertEqual(len(out), 0)
 
-#     def test_sort4(self):
-#         out = eval("sort -n ./sortTest/sortTest2.txt")
-#         self.assertEqual(out.popleft(), "1\n")
-#         self.assertEqual(out.popleft(), "2\n")
-#         self.assertEqual(out.popleft(), "3\n")
-#         self.assertEqual(out.popleft(), "4\n")
-#         self.assertEqual(out.popleft(), "5\n")
+    # def test_sort_o(self): 
+    #     out = eval("sort -o sortTest.txt")
+    #     self.assertEqual(out.popleft(), "HIHI\n")
+    #     self.assertEqual(out.popleft(), "a\n")
+    #     self.assertEqual(out.popleft(), "b\n")
+    #     self.assertEqual(out.popleft(), "c\n")
+    #     self.assertEqual(out.popleft(), "hihi\n")
+    #     self.assertEqual(out.popleft(), "hihi my name\n")
+    #     self.assertEqual(len(out), 0)
 
-#         self.assertEqual(len(out), 0)
+    #     file_path = 'sorted.txt'
+    #     with open(file_path, 'r') as file:
+    #         fileContent = file.read()
 
-#     def test_sort5(self):
-#         out = eval("sort -nr ./sortTest/sortTest2.txt")
-#         self.assertEqual(out.popleft(), "5\n")
-#         self.assertEqual(out.popleft(), "4\n")
-#         self.assertEqual(out.popleft(), "3\n")
-#         self.assertEqual(out.popleft(), "2\n")
-#         self.assertEqual(out.popleft(), "1\n")
-#         self.assertEqual(len(out), 0)
+    #     self.assertEqual(fileContent, "HIHI\na\nb\nc\nhihi\nhihi my name\n")
 
-#     # def test_sort6(self):
-#     #     out = deque()
-#     #     eval("sort < ./sortTest/sortTest1.txt", out)
-#     #     self.assertEqual(out.popleft(), "HIHI\n")
-#     #     self.assertEqual(out.popleft(), "a\n")
-#     #     self.assertEqual(out.popleft(), "b\n")
-#     #     self.assertEqual(out.popleft(), "c\n")
-#     #     self.assertEqual(out.popleft(), "hihi\n")
-#     #     self.assertEqual(out.popleft(), "hihi my name\n")
-#     #     self.assertEqual(len(out), 0)
+    # def test_sort_n(self):
+    #     out = eval("sort -n ./sortTest/sortTest2.txt")
+    #     self.assertEqual(out.popleft(), "1\n")
+    #     self.assertEqual(out.popleft(), "2\n")
+    #     self.assertEqual(out.popleft(), "3\n")
+    #     self.assertEqual(out.popleft(), "4\n")
+    #     self.assertEqual(out.popleft(), "5\n")
+    #     self.assertEqual(len(out), 0)
+
+    # def test_sort_virtual_input(self):
+    #     out = eval("sort < sortTest.txt")
+    #     self.assertEqual(out.popleft(), "HIHI\n")
+    #     self.assertEqual(out.popleft(), "a\n")
+    #     self.assertEqual(out.popleft(), "b\n")
+    #     self.assertEqual(out.popleft(), "c\n")
+    #     self.assertEqual(out.popleft(), "hihi\n")
+    #     self.assertEqual(out.popleft(), "hihi my name\n")
+    #     self.assertEqual(len(out), 0)
+
+    # def test_sort_virtual_input_r(self):
+    #     out = eval("sort -r < sortTest.txt")
+    #     self.assertEqual(out.popleft(), "hihi my name\n")
+    #     self.assertEqual(out.popleft(), "hihi\n")
+    #     self.assertEqual(out.popleft(), "c\n")
+    #     self.assertEqual(out.popleft(), "b\n")
+    #     self.assertEqual(out.popleft(), "a\n")
+    #     self.assertEqual(out.popleft(), "HIHI\n")
+    #     self.assertEqual(len(out), 0)
+
+
+    # @patch("sys.stdin", StringIO("hello\nhihi\nhello1\nhihi1\nEOFError"))
+    # @patch("sys.stdout", new_callable=StringIO)
+    # def test_sort_stdin(self, mock_stdout):
+    #         eval("sort")         
+    #         output = mock_stdout.getvalue()
+    #         expected_output = "hello\nhello1\nhihi\nhihi1\n"
+    #         self.assertEqual(output, expected_output)
+
+    # @patch("sys.stdin", StringIO("hello\nhihi\nhello1\nhihi1\nEOFError"))
+    # @patch("sys.stdout", new_callable=StringIO)
+    # def test_sort_stdin_r(self, mock_stdout):
+    #         eval("sort -r")         
+    #         output = mock_stdout.getvalue()
+    #         expected_output = "hihi1\nhihi\nhello1\nhello\n"
+    #         self.assertEqual(output, expected_output)
+
+    # def test_sort6(self):
+    #     out = deque()
+    #     eval("sort < ./sortTest/sortTest1.txt", out)
+    #     self.assertEqual(out.popleft(), "HIHI\n")
+    #     self.assertEqual(out.popleft(), "a\n")
+    #     self.assertEqual(out.popleft(), "b\n")
+    #     self.assertEqual(out.popleft(), "c\n")
+    #     self.assertEqual(out.popleft(), "hihi\n")
+    #     self.assertEqual(out.popleft(), "hihi my name\n")
+    #     self.assertEqual(len(out), 0)
 
 #     def test_tail(self):
 #         out = eval("tail tailTest.txt")
