@@ -1,4 +1,5 @@
 import sys
+import itertools
 from commands.flatten_list.flatten_virtual_input import flatten_virtual_input
 
 def tail(args, out, virtual_input=None):
@@ -42,7 +43,7 @@ def tail(args, out, virtual_input=None):
                 else:
                     out += lines
         elif virtual_input:
-            virtual_input = flatten_virtual_input(virtual_input)
+            virtual_input = list(flatten_virtual_input(virtual_input))
             if len(virtual_input) >= num_lines:
                 out += virtual_input[-num_lines:]
             else:

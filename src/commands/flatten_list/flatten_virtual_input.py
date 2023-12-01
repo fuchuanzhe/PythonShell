@@ -1,5 +1,7 @@
+from collections import deque
+
 def flatten_virtual_input(input_list):
-    result = []
+    result = deque()
     for string in input_list:
         lines = string.split("\n")
         result.extend([line + "\n" for line in lines[:-1]])

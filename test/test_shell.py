@@ -679,3 +679,8 @@ class TestShell(unittest.TestCase):
         out = eval("echo `echo hi`")
         self.assertEqual(out.popleft().strip(), "hi")
         self.assertEqual(len(out), 0)
+
+    def test_cut_out_of_range(self):
+        out = eval("echo 123 | cut -b 5")
+        self.assertEqual(out.popleft().strip(), "")
+        self.assertEqual(len(out), 0)
