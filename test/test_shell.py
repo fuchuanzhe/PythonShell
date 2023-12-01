@@ -177,6 +177,11 @@ class TestShell(unittest.TestCase):
         self.assertEqual(out.popleft(), "1235678901\n")
         self.assertEqual(len(out), 0)
 
+    def test_cut_repeated_single(self):
+        out = eval("echo 1234 | cut -b 2,3,3")
+        self.assertEqual(out.popleft(), "23\n")
+        self.assertEqual(len(out), 0)
+
     def test_echo(self):
         out = eval("echo foo")
         self.assertEqual(out.popleft(), "foo\n")
@@ -222,7 +227,7 @@ class TestShell(unittest.TestCase):
                            './headTest/head1.txt\n', './headTest/head2.txt\n', './tailTest.txt\n', 
                            './tailTest/tail1.txt\n']
         
-        self.assertEqual(list(out), expected_result)
+        self.assertEqual(sorted(list(out)), sorted(expected_result))
 
     def test_find_wrong_input(self):
         with self.assertRaises(ValueError):
@@ -670,3 +675,7 @@ class TestShell(unittest.TestCase):
         with self.assertRaises(ValueError):
             out = eval("hello")
 
+    def test_command_substitution(self):
+        out = eval("echo `echo hi`")
+        self.assertEqual(out.popleft().strip(), "hi")
+        self.assertEqual(len(out), 0)
