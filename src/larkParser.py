@@ -56,45 +56,29 @@ DOUBLE_QUOTED_STRING: /"[^"]*"/
             # create lists in commands,
             # when a token ends with semicolon, create new list
             if index == 0:
-                if token:
-                    commands.append([remove_quotes(token)])
+                commands.append([remove_quotes(token)])
             elif ';' in token and not is_quoted(token):
                 semicolon_splited_tokens = token.split(';')
                 # "hi;ls;pwd;echo" -> ["hi", "ls", "pwd", "echo"]
                 # ";" -> ["", ""]
                 for index_,semicolon_splited_token in enumerate(semicolon_splited_tokens):
                     if index_ == 0:
-                        if semicolon_splited_token:
-                            commands[-1].append(remove_quotes(semicolon_splited_token))
+                        commands[-1].append(remove_quotes(semicolon_splited_token))
                     else:
-                        if semicolon_splited_token:
-                            commands.append([remove_quotes(semicolon_splited_token)])
-                        else:
-                            commands.append([])
+                        commands.append([])
 
             else:
-                if token:
-                    commands[-1].append(remove_quotes(token))
+                commands[-1].append(remove_quotes(token))
         return commands
 
 
     @staticmethod
     def extract_strings(tree):
         if isinstance(tree, Token):
-            if tree.type in ['UNQUOTED_STRING', 'QUOTED_STRING']:
-                return [tree.value]
-            else:
-                return []
+            return [tree.value]
         elif isinstance(tree, Tree):
             strings = []
             for child in tree.children:
                 strings.extend(Parser.extract_strings(child))
             return strings
-        else:
-            return []
 
-if __name__ == "__main__":
-    parser = Parser()
-    print(parser.parse('echo "hi"'))
-    print(parser.parse('echo "hi"; echo "hello"'))
-    print(parser.parse('cat ../.*ignore'))
