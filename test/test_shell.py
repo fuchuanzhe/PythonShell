@@ -233,7 +233,7 @@ class TestShell(unittest.TestCase):
 						   './headTest/head1.txt\n', './headTest/head2.txt\n', './tailTest.txt\n', 
 						   './tailTest/tail1.txt\n']
 		
-		self.assertEqual(list(out), expected_result)
+		self.assertEqual(sorted(list(out)), sorted(expected_result))
 
 	def test_find_wrong_input(self):
 		with self.assertRaises(ValueError):
