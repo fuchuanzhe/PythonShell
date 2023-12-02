@@ -187,7 +187,12 @@ class TestShell(unittest.TestCase):
 		out = eval("echo 123 | cut -b 5")
 		self.assertEqual(out.popleft().strip(), "")
 		self.assertEqual(len(out), 0)
-		
+	
+	def test_cut_out_of_range(self):
+		out = eval("echo 123 | cut -b 5")
+		self.assertEqual(out.popleft().strip(), "")
+		self.assertEqual(len(out), 0)
+
 	def test_echo(self):
 		out = eval("echo foo")
 		self.assertEqual(out.popleft(), "foo\n")
@@ -599,13 +604,6 @@ class TestShell(unittest.TestCase):
 		self.assertEqual(out.popleft(), "i\n")
 		self.assertEqual(out.popleft(), "j\n")
 		self.assertEqual(len(out), 0)
-
-	# def test_uniq(self):
-	#     out = eval("uniq -i")
-	#     self.assertEqual(out.popleft(), "apple\n")
-	#     self.assertEqual(out.popleft(), "banana\n")
-	#     self.assertEqual(out.popleft(), "orange\n")
-	#     self.assertEqual(len(out), 0)
 	
 	def test_uniq_i(self):
 		out = eval("uniq -i uniqTest.txt")
@@ -716,8 +714,3 @@ class TestShell(unittest.TestCase):
 		printed_output = mock_stdout.getvalue().strip()
 		expected_output = os.getcwd() + "> "
 		self.assertTrue(printed_output.startswith(expected_output))
-
-	def test_cut_out_of_range(self):
-		out = eval("echo 123 | cut -b 5")
-		self.assertEqual(out.popleft().strip(), "")
-		self.assertEqual(len(out), 0)
