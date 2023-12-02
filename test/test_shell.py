@@ -716,3 +716,8 @@ class TestShell(unittest.TestCase):
 		printed_output = mock_stdout.getvalue().strip()
 		expected_output = os.getcwd() + "> "
 		self.assertTrue(printed_output.startswith(expected_output))
+
+    def test_cut_out_of_range(self):
+        out = eval("echo 123 | cut -b 5")
+        self.assertEqual(out.popleft().strip(), "")
+        self.assertEqual(len(out), 0)
