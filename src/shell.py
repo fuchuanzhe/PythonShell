@@ -19,11 +19,6 @@ from commands.sort import sort, _sort
 from commands.uniq import uniq, _uniq
 from commands.cut import cut, _cut
 
-# from colorama import Fore, Style
-# def deb(*args):
-#     print(Fore.BLUE , *args)
-#     print(Style.RESET_ALL)
-
 parser = Parser()
 
 def eval_single(command, virtual_input=None):
@@ -84,8 +79,6 @@ class Command:
     def __len__(self):
         return len(self.command_tokens)
 
-    def __str__(self):
-        return str(self.command_tokens)
 
 def eval(cmdline):
     raw_commands = parser.parse(cmdline)
@@ -126,8 +119,7 @@ def eval(cmdline):
             out += local_out
     return out
 
-
-if __name__ == "__main__":
+def main():
     args_num = len(sys.argv) - 1
     if args_num > 0:
         if args_num != 2:
@@ -142,6 +134,9 @@ if __name__ == "__main__":
             print(os.getcwd() + "> ", end="")
             cmdline = input()
 
+            if cmdline.lower() == 'exit':
+                break
+
             if not cmdline:
                 # empty command line
                 continue
@@ -149,3 +144,6 @@ if __name__ == "__main__":
             out = eval(cmdline)
             while len(out) > 0:
                 print(out.popleft(), end="")
+
+if __name__ == "__main__":
+    main()
