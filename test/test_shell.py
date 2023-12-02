@@ -187,16 +187,20 @@ class TestShell(unittest.TestCase):
 		out = eval("echo 123 | cut -b 5")
 		self.assertEqual(out.popleft().strip(), "")
 		self.assertEqual(len(out), 0)
-	
-	def test_cut_out_of_range(self):
-		out = eval("echo 123 | cut -b 5")
-		self.assertEqual(out.popleft().strip(), "")
-		self.assertEqual(len(out), 0)
 
 	def test_echo(self):
 		out = eval("echo foo")
 		self.assertEqual(out.popleft(), "foo\n")
 		self.assertEqual(len(out), 0)
+
+	def test_echo_output_redirection(self):
+		out = eval("echo foo > echo.txt")
+
+		file_path = 'echo.txt'
+		with open(file_path, 'r') as file:
+			fileContent = file.read()
+
+		self.assertEqual(fileContent, "foo\n")
 
 	# def test_echoException(self): #cannot think of errors for echo 
 	#     out = eval("_echo")
@@ -236,7 +240,7 @@ class TestShell(unittest.TestCase):
 						   './file2.txt\n', './cutTest.txt\n', './sorted.txt\n', 
 						   './file1.txt\n', './findTest/findTest2.txt\n', './findTest/findTest1.txt\n', 
 						   './headTest/head1.txt\n', './headTest/head2.txt\n', './tailTest.txt\n', 
-						   './tailTest/tail1.txt\n']
+						   './tailTest/tail1.txt\n', './echo.txt\n']
 		
 		self.assertEqual(sorted(list(out)), sorted(expected_result))
 
@@ -356,31 +360,10 @@ class TestShell(unittest.TestCase):
 		self.assertEqual(len(out), 0)
 
 	def test_ls(self):
-		out = eval("ls")        
-		self.assertEqual(out.popleft(), "catTest\n")
-		self.assertEqual(out.popleft(), "grepTest.txt\n")
-		self.assertEqual(out.popleft(), "cutTest\n")
-		self.assertEqual(out.popleft(), "grepTest\n")
-		self.assertEqual(out.popleft(), "sortTest.txt\n")
-		self.assertEqual(out.popleft(), "uniqTest.txt\n")
-		self.assertEqual(out.popleft(), "test_shell.py\n")
-		self.assertEqual(out.popleft(), "sortTest\n")
-		self.assertEqual(out.popleft(), "test_shell2.py\n")
-		self.assertEqual(out.popleft(), "findTest.txt\n")
-		self.assertEqual(out.popleft(), "uniqTest\n")
-		self.assertEqual(out.popleft(), "test.txt\n")
-		self.assertEqual(out.popleft(), "test_parser.py\n")
-		self.assertEqual(out.popleft(), "headTest.txt\n")
-		self.assertEqual(out.popleft(), "file2.txt\n")
-		self.assertEqual(out.popleft(), "cutTest.txt\n")
-		self.assertEqual(out.popleft(), "sorted.txt\n")
-		self.assertEqual(out.popleft(), "file1.txt\n")
-		self.assertEqual(out.popleft(), "findTest\n")
-		self.assertEqual(out.popleft(), "headTest\n")
-		self.assertEqual(out.popleft(), "tailTest.txt\n")
-		self.assertEqual(out.popleft(), "tailTest\n")
-		self.assertEqual(out.popleft(), "__pycache__\n")
-		self.assertEqual(len(out), 0)
+		out = eval("ls")
+		out = sorted(list(out))
+		expected_out = ['__pycache__\n', 'catTest\n', 'cutTest\n', 'cutTest.txt\n', 'echo.txt\n', 'file1.txt\n', 'file2.txt\n', 'findTest\n', 'findTest.txt\n', 'grepTest\n', 'grepTest.txt\n', 'headTest\n', 'headTest.txt\n', 'sortTest\n', 'sortTest.txt\n', 'sorted.txt\n', 'tailTest\n', 'tailTest.txt\n', 'test.txt\n', 'test_parser.py\n', 'test_shell.py\n', 'test_shell2.py\n', 'uniqTest\n', 'uniqTest.txt\n']        
+		self.assertEqual(out, expected_out)
 
 	def test_ls_twoArg(self):
 		with self.assertRaises(ValueError):
