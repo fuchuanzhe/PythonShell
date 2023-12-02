@@ -645,13 +645,12 @@ class TestShell(unittest.TestCase):
 			out = eval("uniq -r hello world")
 
 	def test_uniq_redirection(self):
-		out = eval("uniq < ./uniqTest/uniq2.txt")
+		out = eval("uniq < ./uniqTest/uniq3.txt")
 		self.assertEqual(out.popleft(), "apple\n")
-		self.assertEqual(out.popleft(), "orange\n")
-		self.assertEqual(out.popleft(), "ORANGE\n")
-		self.assertEqual(out.popleft(), "orange\n")
 		self.assertEqual(out.popleft(), "banana\n")
 		self.assertEqual(out.popleft(), "BANANA\n")
+		self.assertEqual(out.popleft(), "orange\n")
+		self.assertEqual(out.popleft(), "ORANGE\n")
 		self.assertEqual(len(out), 0)
 
 	def test_uniq_unsafe(self):
