@@ -7,6 +7,9 @@ class Parser:
 value: command
         | QUOTED_STRING
         | UNQUOTED_STRING
+        | REDIRECT_IN
+        | REDIRECT_OUT
+        | PIPE
         | value value
 
 command: UNQUOTED_STRING
@@ -14,7 +17,10 @@ command: UNQUOTED_STRING
 
 start: value
 
-UNQUOTED_STRING: /[^"`\s']+/
+UNQUOTED_STRING: /[^"`><|\s']+/
+REDIRECT_OUT: ">"    // Define redirection output operator as a token
+REDIRECT_IN: "<"     // Define redirection input operator as a token
+PIPE: "|"            // Define pipe operator as a token
 BACKTICK_QUOTED_STRING: /`[^`]*`/
 QUOTED_STRING: ESCAPED_STRING | SINGLE_QUOTED_STRING | DOUBLE_QUOTED_STRING | BACKTICK_QUOTED_STRING
 SINGLE_QUOTED_STRING: /'[^']*'/
@@ -45,6 +51,9 @@ DOUBLE_QUOTED_STRING: /"[^"]*"/
         def is_quoted(token):
             return token.startswith('"') and token.endswith('"') or token.startswith("'") and token.endswith("'")
 
+        def is_substituted(token):
+            return token.startswith('`') and token.endswith('`')
+
         def remove_quotes(token):
             if is_quoted(token):
                 return token[1:-1]
@@ -57,7 +66,7 @@ DOUBLE_QUOTED_STRING: /"[^"]*"/
             # when a token ends with semicolon, create new list
             if index == 0:
                 commands.append([remove_quotes(token)])
-            elif ';' in token and not is_quoted(token):
+            elif ';' in token and not is_quoted(token) and not is_substituted(token):
                 semicolon_splited_tokens = token.split(';')
                 # "hi;ls;pwd;echo" -> ["hi", "ls", "pwd", "echo"]
                 # ";" -> ["", ""]

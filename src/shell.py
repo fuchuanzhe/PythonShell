@@ -19,16 +19,17 @@ from commands.cut import cut, _cut
 parser = Parser()
 
 def eval_single(command, virtual_input=None):
+    # print(command)
     app = command[0]
     args = command[1:]
     out = deque()
     # handles command substitution
+    if app.startswith('`') and app.endswith('`'):
+        app = list(eval(app[1:-1]))[-1].strip()
     for index, arg in enumerate(args):
         if arg.startswith('`') and arg.endswith('`'):
-            local_out = deque()
-            args[index] = list(eval(arg[1:-1]))[-1]
-            # deb(args[index])
-
+            args[index:index+1] = [x.strip() for x in list(eval(arg[1:-1]))]
+    # print(f"app: {app}, args: {args}")
     apps = {
             "pwd": pwd,
             "_pwd": _pwd,
@@ -78,6 +79,7 @@ class Command:
 
 
 def eval(cmdline):
+    # print("evaluating", cmdline)
     raw_commands = parser.parse(cmdline)
     out = deque()
     for command in raw_commands:
@@ -85,6 +87,21 @@ def eval(cmdline):
         local_out = None
         virtual_input = None
         this_command = []
+        if comm.peek_first() in ['>', '<']:
+            # special case: when the first token is a redirection
+            # < file.txt cat == cat < file.txt
+            # > file.txt cat == cat > file.txt
+            if comm.peek_first() == '>':
+                comm.pop_first()
+                filename = comm.pop_first()
+                virtual_input = None
+                this_command = []
+            elif comm.peek_first() == '<':
+                comm.pop_first()
+                filename = comm.pop_first()
+                with open(filename, 'r') as f:
+                    virtual_input = deque(f.readlines())
+                this_command = []
         while len(comm) > 0:
             if comm.peek_first() not in ['|', '>', '<']:
                 this_command.append(comm.pop_first())
