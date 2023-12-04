@@ -15,6 +15,7 @@ from commands.find import find, _find
 from commands.sort import sort, _sort
 from commands.uniq import uniq, _uniq
 from commands.cut import cut, _cut
+from commands.wc import wc, _wc
 
 parser = Parser()
 
@@ -54,7 +55,9 @@ def eval_single(command, virtual_input=None):
             "uniq" : uniq,
             "_uniq": _uniq,
             "cut" : cut,
-            "_cut": _cut
+            "_cut": _cut,
+            "wc" : wc,
+            "_wc" : _wc
         }
 
     if app in apps:

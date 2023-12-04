@@ -696,3 +696,41 @@ class TestShell(unittest.TestCase):
 		printed_output = mock_stdout.getvalue().strip()
 		expected_output = os.getcwd() + "> "
 		self.assertTrue(printed_output.startswith(expected_output))
+
+	def test_wc(self):
+		out = eval("wc ./wcTest/wcTest1.txt")
+		self.assertEqual(out.popleft(), "5\n")
+		self.assertEqual(out.popleft(), "8\n")
+		self.assertEqual(out.popleft(), "28\n")
+		self.assertEqual(len(out), 0)
+
+	def test_wc_multiple_files(self):
+		out = eval("wc ./wcTest/wcTest1.txt ./wcTest/wcTest1.txt")
+		self.assertEqual(out.popleft(), "10\n")
+		self.assertEqual(out.popleft(), "16\n")
+		self.assertEqual(out.popleft(), "56\n")
+		self.assertEqual(len(out), 0)
+
+	def test_wc_l(self):
+		out = eval("wc -l ./wcTest/wcTest1.txt")
+		self.assertEqual(out.popleft(), "5\n")
+		self.assertEqual(len(out), 0)
+
+	def test_wc_w(self):
+		out = eval("wc -w ./wcTest/wcTest1.txt")
+		self.assertEqual(out.popleft(), "8\n")
+		self.assertEqual(len(out), 0)
+	
+	def test_wc_m_redirection(self):
+		out = eval("wc -m < ./wcTest/wcTest1.txt")
+		self.assertEqual(out.popleft(), "28\n")
+		self.assertEqual(len(out), 0)
+
+	@patch("sys.stdin", StringIO("a\nb\nc\nd\nEOFError"))
+	@patch("sys.stdout", new_callable=StringIO)
+	def test_wc_stdin(self, mock_stdout):
+			eval("wc")         
+			output = mock_stdout.getvalue()
+			expected_output = "4\n4\n8\n"
+			self.assertEqual(output, expected_output)
+	
