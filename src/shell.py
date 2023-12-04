@@ -86,9 +86,7 @@ def eval(cmdline):
         virtual_input = None
         this_command = []
         while len(comm) > 0:
-            if comm.peek_first() not in ['|', '>', '<']:
-                this_command.append(comm.pop_first())
-            elif comm.peek_first() == '|':
+            if comm.peek_first() == '|':
                 comm.pop_first()
                 local_out = eval_single(this_command, virtual_input)
                 virtual_input = local_out
@@ -109,6 +107,8 @@ def eval(cmdline):
                     virtual_input = f.readlines()
                 local_out = eval_single(this_command, virtual_input)
                 virtual_input = local_out
+            else:
+                this_command.append(comm.pop_first())
 
         if len(this_command) > 0:
             out += eval_single(this_command, virtual_input)

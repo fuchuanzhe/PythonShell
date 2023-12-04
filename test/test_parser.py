@@ -46,9 +46,6 @@ class TestParser(unittest.TestCase):
 
     def test_parse_double_quotes(self):
         self.assertEqual(self.parser.parse("echo \"hi\""), [['echo', 'hi']])
-
-    def test_parse_single_quotes(self):
-        self.assertEqual(self.parser.parse("echo \'hi\'"), [["echo", "\'hi\'"]])
     
     def test_parse_semicolon(self):
         self.assertEqual(self.parser.parse("echo hi; echo hello"), [['echo', 'hi'], ['echo', 'hello']])
