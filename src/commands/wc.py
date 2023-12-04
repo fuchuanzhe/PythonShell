@@ -1,6 +1,7 @@
 import sys
 from commands.flatten_list.flatten_virtual_input import flatten_virtual_input
 
+
 def wc(args, out, virtual_input=None):
     print(virtual_input)
     files = None
@@ -27,7 +28,7 @@ def wc(args, out, virtual_input=None):
         input_lines = sys.stdin.readlines()
         for content in input_lines:
             lines, words, bytes_counts = wc_helper(content, lines, words, bytes_counts)
-        
+
     if flag == "-l":
         out.append(f"{lines}\n")
     elif flag == "-w":
@@ -41,6 +42,7 @@ def wc(args, out, virtual_input=None):
 
     return out
 
+
 def wc_helper(content, lines, words, bytes_counts):
     content_line = content.count('\n')  # Counting lines
     content_word = len(content.split())  # Counting words
@@ -51,6 +53,7 @@ def wc_helper(content, lines, words, bytes_counts):
     bytes_counts += content_bytes_count
 
     return lines, words, bytes_counts
+
 
 def _wc(args, out, virtual_input):
     try:

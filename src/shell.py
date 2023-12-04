@@ -55,7 +55,7 @@ def eval_single(command, virtual_input=None):
             "_find": _find,
             "uniq": uniq,
             "_uniq": _uniq,
-            "cut" : cut,
+            "cut": cut,
             "_cut": _cut,
             "wc": wc,
             "_wc": _wc
