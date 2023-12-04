@@ -1,7 +1,19 @@
 from lark import Lark, Tree, Token
 from glob import glob
 
+
 class Parser:
+    """
+    A class that represents a parser for shell commands.
+
+    Attributes:
+        grammar (str): The grammar rules for parsing shell commands.
+        parser (Lark): The Lark parser object.
+
+    Methods:
+        parse(command): Parses a shell command and returns a list of commands.
+        extract_strings(tree): Extracts strings from a parse tree.
+    """
     def __init__(self):
         self.grammar = r"""
 value: command
@@ -36,6 +48,15 @@ DOUBLE_QUOTED_STRING: /"[^"]*"/
         self.parser = Lark(self.grammar, start="start")
     
     def parse(self, command):
+        """
+        Parses a shell command and returns a list of commands.
+
+        Args:
+            command (str): The shell command to be parsed.
+
+        Returns:
+            list: A list of commands extracted from the shell command.
+        """
         tree = self.parser.parse(command)
         all_tokens = Parser.extract_strings(tree)
 
@@ -83,6 +104,15 @@ DOUBLE_QUOTED_STRING: /"[^"]*"/
 
     @staticmethod
     def extract_strings(tree):
+        """
+        Extracts strings from a parse tree.
+
+        Args:
+            tree (Token or Tree): The parse tree to extract strings from.
+
+        Returns:
+            list: A list of strings extracted from the parse tree.
+        """
         if isinstance(tree, Token):
             return [tree.value]
         elif isinstance(tree, Tree):
