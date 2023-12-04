@@ -1,5 +1,6 @@
 import os
 
+
 def pwd(args, out, virtual_input=None):
     """
     Print the current working directory.
@@ -11,7 +12,7 @@ def pwd(args, out, virtual_input=None):
 
     Returns:
     - out (deque): The updated deque after appending the current working directory.
-    
+
     Raises:
     - ValueError: If any arguments are given.
     """
@@ -19,6 +20,7 @@ def pwd(args, out, virtual_input=None):
         raise ValueError("Invalid command line arguments")
     out.append(os.getcwd() + "\n")
     return out
+
 
 def _pwd(args, out, virtual_input=None):
     """The unsafe version of pwd"""

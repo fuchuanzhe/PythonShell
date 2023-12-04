@@ -1,10 +1,8 @@
 import unittest
-from collections import deque
-import os, sys
+import os
 from shell import eval, main
 from unittest.mock import patch
 from io import StringIO
-from itertools import cycle
 
 class TestShell(unittest.TestCase):
 	def setUp(self):
@@ -39,16 +37,13 @@ class TestShell(unittest.TestCase):
 			self.assertEqual(output, expected_output)
 
 	def test_cd(self):
-		# Get the absolute path of the current working directory
 		current_path = os.path.abspath(os.getcwd())
 		out = eval("cd catTest")
 		cd_path = os.path.abspath(os.getcwd())
 		current_path = os.path.normpath(current_path)
-
-		# Construct the expected path in a platform-independent way
 		expected_path = os.path.join(current_path, "catTest")
 
-		# Use os.path.normpath to normalize the paths and make them consistent
+		# Normalize the paths and make them consistent
 		expected_path = os.path.normpath(expected_path)
 		cd_path = os.path.normpath(cd_path)
 
@@ -57,8 +52,6 @@ class TestShell(unittest.TestCase):
 		os.chdir(current_path)
 
 	def test_cd_wrongFile(self):
-
-		# Get the absolute path of the current working directory
 		current_path = os.path.abspath(os.getcwd())
 		out = eval("_cd cat")
 
@@ -66,8 +59,6 @@ class TestShell(unittest.TestCase):
 		os.chdir(current_path)
 
 	def test_cd_wrong_cmdlines(self):
-
-		# Get the absolute path of the current working directory
 		current_path = os.path.abspath(os.getcwd())
 		out = eval("_cd catTest hello")
 
@@ -144,15 +135,15 @@ class TestShell(unittest.TestCase):
 
 	def test_cut_wrong_cmdlines(self):
 		with self.assertRaises(ValueError):
-			out = eval("cut")
+			eval("cut")
 
 	@patch("sys.stdin", StringIO("abc\ndef\n"))
 	@patch("sys.stdout", new_callable=StringIO)
 	def test_cut_stdin(self, mock_stdout):
-			eval("cut -b 1")            
-			output = mock_stdout.getvalue()
-			expected_output = "a\nd\n"
-			self.assertEqual(output, expected_output)
+		eval("cut -b 1")            
+		output = mock_stdout.getvalue()
+		expected_output = "a\nd\n"
+		self.assertEqual(output, expected_output)
 
 	def test_cut_unsafe(self):
 		out = eval("_cut")
@@ -179,9 +170,9 @@ class TestShell(unittest.TestCase):
 		self.assertEqual(len(out), 0)
 
 	def test_cut_repeated_single(self):
-			out = eval("echo 1234 | cut -b 2,3,3")
-			self.assertEqual(out.popleft(), "23\n")
-			self.assertEqual(len(out), 0)
+		out = eval("echo 1234 | cut -b 2,3,3")
+		self.assertEqual(out.popleft(), "23\n")
+		self.assertEqual(len(out), 0)
 	
 	def test_cut_out_of_range(self):
 		out = eval("echo 123 | cut -b 5")
@@ -194,17 +185,13 @@ class TestShell(unittest.TestCase):
 		self.assertEqual(len(out), 0)
 
 	def test_echo_output_redirection(self):
-		out = eval("echo foo > echo.txt")
+		eval("echo foo > echo.txt")
 
 		file_path = 'echo.txt'
 		with open(file_path, 'r') as file:
 			fileContent = file.read()
 
 		self.assertEqual(fileContent, "foo\n")
-
-	# def test_echoException(self): #cannot think of errors for echo 
-	#     out = eval("_echo")
-	#     self.assertEqual(len(out), 0)
 
 	def test_find(self):
 		out = eval("find . -name findTest.txt")
@@ -246,7 +233,7 @@ class TestShell(unittest.TestCase):
 
 	def test_find_wrong_input(self):
 		with self.assertRaises(ValueError):
-			out = eval("find -name")
+			eval("find -name")
 	
 	def test_find_unsafe_wrong_input(self):
 		out = eval("_find")
@@ -274,7 +261,7 @@ class TestShell(unittest.TestCase):
 
 	def test_grep_noCmdArguments(self):
 		with self.assertRaises(ValueError):
-			out = eval("grep")
+			eval("grep")
 
 	@patch("sys.stdin", StringIO("hello\nhihi\nEOFError"))
 	@patch("sys.stdout", new_callable=StringIO)
@@ -327,7 +314,7 @@ class TestShell(unittest.TestCase):
 
 	def test_head_wrong_filename(self):
 		with self.assertRaises(ValueError):
-			out = eval("head -n 2 hello world")
+			eval("head -n 2 hello world")
 	
 	def test_head_unsafe(self):
 		out = eval("_head -n 2 headTest .txt")
@@ -367,7 +354,7 @@ class TestShell(unittest.TestCase):
 
 	def test_ls_twoArg(self):
 		with self.assertRaises(ValueError):
-			out = eval("ls hello world")  
+			eval("ls hello world")  
 
 	def test_ls_oneArg(self):
 		out = eval("ls cutTest")
@@ -409,7 +396,7 @@ class TestShell(unittest.TestCase):
 
 	def test_sort_wrong_input(self):
 		with self.assertRaises(ValueError):
-			out = eval("sort -i sortTest.txt")
+			eval("sort -i sortTest.txt")
 
 	def test_sort_unsafe_wrong_input(self):
 		out = eval("_sort -i sortTest.txt")
@@ -483,16 +470,16 @@ class TestShell(unittest.TestCase):
 	@patch("sys.stdin", StringIO("hello\nhihi\nhello1\nhihi1\n"))
 	@patch("sys.stdout", new_callable=StringIO)
 	def test_sort_stdin(self, mock_stdout):
-			out = eval("sort")         
-			expected_output = "hello\nhello1\nhihi\nhihi1\n"
-			self.assertEqual(''.join(list(out)), expected_output)
+		out = eval("sort")         
+		expected_output = "hello\nhello1\nhihi\nhihi1\n"
+		self.assertEqual(''.join(list(out)), expected_output)
 
 	@patch("sys.stdin", StringIO("hello\nhihi\nhello1\nhihi1\n"))
 	@patch("sys.stdout", new_callable=StringIO)
 	def test_sort_stdin_r(self, mock_stdout):
-			out = eval("sort -r")         
-			expected_output = "hihi1\nhihi\nhello1\nhello\n"
-			self.assertEqual(''.join(list(out)), expected_output)
+		out = eval("sort -r")         
+		expected_output = "hihi1\nhihi\nhello1\nhello\n"
+		self.assertEqual(''.join(list(out)), expected_output)
 
 	def test_tail(self):
 		out = eval("tail tailTest.txt")
@@ -547,14 +534,14 @@ class TestShell(unittest.TestCase):
 	
 	def test_tail_wrong_filename(self):
 		with self.assertRaises(ValueError):
-			out = eval("tail -n 2 hello world")
+			eval("tail -n 2 hello world")
 
 	@patch("sys.stdin", StringIO("hello\nhihi\nhello1\nhihi1\n"))
 	@patch("sys.stdout", new_callable=StringIO)
 	def test_tail_stdin(self, mock_stdout):
-			out = eval("tail -n 2")         
-			expected_output = "hello1\nhihi1\n"
-			self.assertEqual(''.join(list(out)), expected_output)
+		out = eval("tail -n 2")         
+		expected_output = "hello1\nhihi1\n"
+		self.assertEqual(''.join(list(out)), expected_output)
 	
 	def test_tail_unsafe(self):
 		out = eval("_tail -n 2 headTest .txt")
@@ -567,9 +554,9 @@ class TestShell(unittest.TestCase):
 	@patch("sys.stdin", StringIO("hello\nhihi\n"))
 	@patch("sys.stdout", new_callable=StringIO)
 	def test_tail_stdin_too_few_lines(self, mock_stdout):
-			out = eval("tail -n 4")         
-			expected_output = "hello\nhihi\n"
-			self.assertEqual(''.join(list(out)), expected_output)
+		out = eval("tail -n 4")         
+		expected_output = "hello\nhihi\n"
+		self.assertEqual(''.join(list(out)), expected_output)
 	
 	def test_tail_redirection_twenty(self):
 		out = eval("tail -n 20 < ./tailTest/tail1.txt")
@@ -618,14 +605,14 @@ class TestShell(unittest.TestCase):
 	@patch("sys.stdin", StringIO("hello\nhihi\nEOFError"))
 	@patch("sys.stdout", new_callable=StringIO)
 	def test_uniq_stdin(self, mock_stdout):
-			eval("uniq")         
-			output = mock_stdout.getvalue()
-			expected_output = "hello\nhihi\n"
-			self.assertEqual(output, expected_output)
+		eval("uniq")         
+		output = mock_stdout.getvalue()
+		expected_output = "hello\nhihi\n"
+		self.assertEqual(output, expected_output)
 
 	def test_uniq_wrong_filename(self):
 		with self.assertRaises(ValueError):
-			out = eval("uniq -r hello world")
+			eval("uniq -r hello world")
 
 	def test_uniq_redirection(self):
 		out = eval("uniq < ./uniqTest/uniq3.txt")
@@ -643,14 +630,14 @@ class TestShell(unittest.TestCase):
 	@patch("sys.stdin", StringIO("hello\nHIHI\nhihi\nhihi\nEOFError"))
 	@patch("sys.stdout", new_callable=StringIO)
 	def test_uniq_stdin_i(self, mock_stdout):
-			eval("uniq -i")         
-			output = mock_stdout.getvalue()
-			expected_output = "hello\nhihi\n"
-			self.assertEqual(output, expected_output)
+		eval("uniq -i")         
+		output = mock_stdout.getvalue()
+		expected_output = "hello\nhihi\n"
+		self.assertEqual(output, expected_output)
 
 	def test_shellfile(self):
 		with self.assertRaises(ValueError):
-			out = eval("hello")
+			eval("hello")
 
 	def test_command_substitution(self):
 		out = eval("echo `echo hi`")
@@ -658,7 +645,7 @@ class TestShell(unittest.TestCase):
 		self.assertEqual(len(out), 0)
 
 	def test_output_redirection(self):
-		out = eval("echo hihi > echo.txt")
+		eval("echo hihi > echo.txt")
 
 		file_path = 'echo.txt'
 		with open(file_path, 'r') as file:
@@ -678,13 +665,13 @@ class TestShell(unittest.TestCase):
 	@patch('sys.argv', ['shell.py', 'pwd'])
 	@patch("sys.stdout", new_callable=StringIO)
 	def test_main_one_argument(self, mock_stdout):
-		with self.assertRaises(ValueError) as cm:
+		with self.assertRaises(ValueError):
 			main()
 
 	@patch('sys.argv', ['shell.py', '-x', 'pwd'])
 	@patch("sys.stdout", new_callable=StringIO)
 	def test_main_incorrect_arguments(self, mock_stdout):
-		with self.assertRaises(ValueError) as cm:
+		with self.assertRaises(ValueError):
 			main()
 	
 	@patch('sys.argv', ['shell.py'])

@@ -1,5 +1,6 @@
 import os
 
+
 def cd(args, out, virtual_input=None):
     """
     Change the current working directory to the specified directory.
@@ -20,6 +21,7 @@ def cd(args, out, virtual_input=None):
         raise ValueError("Invalid command line arguments")
     os.chdir(args[0])
     return out
+
 
 def _cd(args, out, virtual_input=None):
     """The unsafe version of cd"""

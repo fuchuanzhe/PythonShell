@@ -46,7 +46,7 @@ DOUBLE_QUOTED_STRING: /"[^"]*"/
 """
 
         self.parser = Lark(self.grammar, start="start")
-    
+
     def parse(self, command):
         """
         Parses a shell command and returns a list of commands.
@@ -67,7 +67,7 @@ DOUBLE_QUOTED_STRING: /"[^"]*"/
             if glob(token):
                 all_tokens[index] = glob(token)
         # flatten
-        all_tokens=[elem for sublist in all_tokens for elem in (sublist if isinstance(sublist, list) else [sublist])]
+        all_tokens = [elem for sublist in all_tokens for elem in (sublist if isinstance(sublist, list) else [sublist])]
 
         def is_quoted(token):
             return token.startswith('"') and token.endswith('"') or token.startswith("'") and token.endswith("'")
@@ -91,7 +91,7 @@ DOUBLE_QUOTED_STRING: /"[^"]*"/
                 semicolon_splited_tokens = token.split(';')
                 # "hi;ls;pwd;echo" -> ["hi", "ls", "pwd", "echo"]
                 # ";" -> ["", ""]
-                for index_,semicolon_splited_token in enumerate(semicolon_splited_tokens):
+                for index_, semicolon_splited_token in enumerate(semicolon_splited_tokens):
                     if index_ == 0:
                         commands[-1].append(remove_quotes(semicolon_splited_token))
                     else:
@@ -100,7 +100,6 @@ DOUBLE_QUOTED_STRING: /"[^"]*"/
             else:
                 commands[-1].append(remove_quotes(token))
         return commands
-
 
     @staticmethod
     def extract_strings(tree):
@@ -120,4 +119,3 @@ DOUBLE_QUOTED_STRING: /"[^"]*"/
             for child in tree.children:
                 strings.extend(Parser.extract_strings(child))
             return strings
-

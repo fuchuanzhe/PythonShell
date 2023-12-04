@@ -1,7 +1,7 @@
 def echo(args, out, virtual_input=None):
     """
     Print a formatted string by joining the arguments with spaces and append it to the output.
-    
+
     Parameters:
     - args (list): A list of strings to be printed.
     - out (deque): The deque to which the result will be appended.
@@ -13,7 +13,8 @@ def echo(args, out, virtual_input=None):
     out.append(" ".join(args) + "\n")
     return out
 
-def _echo(args, out,virtual_input=None):
+
+def _echo(args, out, virtual_input=None):
     """The unsafe version of echo"""
     try:
         return echo(args, out, virtual_input)

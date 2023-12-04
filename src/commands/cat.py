@@ -1,5 +1,6 @@
 import sys
 
+
 def cat(args, out, virtual_input=None):
     """
     Concatenate and print the contents of files or standard input.
@@ -16,18 +17,19 @@ def cat(args, out, virtual_input=None):
     - FileNotFoundError: If the file given in the arguments could not be found.
     """
     if len(args) == 0:
-        if virtual_input: 
+        if virtual_input:
             for line in virtual_input:
                 out.append(line.strip() + "\n")
         else:
             for line in sys.stdin:
-                print(line.strip())  
+                print(line.strip())
     else: 
         for a in args:
             a = a.strip()
             with open(a) as f:
                 out.append(f.read())
     return out
+
 
 def _cat(args, out, virtual_input=None):
     """The unsafe version of cat"""

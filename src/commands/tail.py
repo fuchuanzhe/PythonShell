@@ -1,6 +1,6 @@
 import sys
-import itertools
 from commands.flatten_list.flatten_virtual_input import flatten_virtual_input
+
 
 def tail(args, out, virtual_input=None):
     """
@@ -8,14 +8,14 @@ def tail(args, out, virtual_input=None):
 
     Parameters:
     - args (list): A list of command-line arguments specifying the number of lines and file.
-                   If no file is given, 'tail' reads from standand input.          
+                   If no file is given, 'tail' reads from standand input.
                    If no arguments are given, the default number of lines is 10.
     - out (list): The list to which the displayed lines will be appended.
     - virtual_input (deque, optional): A deque representing input received from piping or redirection.
 
     Returns:
     - out (list): The updated list after appending the displayed lines.
-    
+
     Raises:
     - ValueError: If the command-line arguments are invalid.
     - FileNotFoundError: If the file given in the arguments could not be found.
@@ -33,7 +33,7 @@ def tail(args, out, virtual_input=None):
         file = args[2]
     else:
         raise ValueError("Invalid command line arguments")
-    
+
     if num_lines != 0:
         if file:
             with open(file) as f:
@@ -56,6 +56,7 @@ def tail(args, out, virtual_input=None):
                 out += lines
     return out
 
+
 def _tail(args, out, virtual_input=None):
     """The unsafe version of tail"""
     try:
@@ -63,4 +64,4 @@ def _tail(args, out, virtual_input=None):
     except Exception as err:
         out.clear()
         print(err)
-        return out 
+        return out

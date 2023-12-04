@@ -1,8 +1,9 @@
 import sys
-from commands.flags.r import r
-from commands.flags.o import o
-from commands.flags.n import n
+from commands.sort_flags.r import r
+from commands.sort_flags.o import o
+from commands.sort_flags.n import n
 from commands.flatten_list.flatten_virtual_input import flatten_virtual_input
+
 
 def sort(args, out, virtual_input=None):
     """
@@ -17,7 +18,7 @@ def sort(args, out, virtual_input=None):
 
     Returns:
     - out (deque): The updated deque after appending the sorted lines.
-    
+
     Raises:
     - ValueError: If the command-line arguments are invalid.
     - FileNotFoundError: If the file given in the arguments could not be found.
@@ -43,7 +44,6 @@ def sort(args, out, virtual_input=None):
         raise ValueError("Invalid command line arguments")
 
     arr = []
-
     if file:
         with open(file) as f:
             lines = f.readlines()
@@ -54,7 +54,7 @@ def sort(args, out, virtual_input=None):
             else:
                 arr.sort()
                 for a in arr:
-                    out.append(a + "\n") 
+                    out.append(a + "\n")
     elif virtual_input:
         virtual_input = flatten_virtual_input(virtual_input)
         for line in virtual_input:
@@ -75,8 +75,8 @@ def sort(args, out, virtual_input=None):
             arr.sort()
             for a in arr:
                 out.append(a + "\n")
+    return out
 
-    return out 
 
 def _sort(args, out, virtual_input=None):
     """The unsafe version of sort"""

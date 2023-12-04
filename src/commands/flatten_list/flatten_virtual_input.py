@@ -1,5 +1,6 @@
 from collections import deque
 
+
 def flatten_virtual_input(input_list):
     result = deque()
     for string in input_list:

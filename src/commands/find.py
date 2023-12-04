@@ -1,6 +1,7 @@
 import fnmatch
 import os
 
+
 def find(args, out, virtual_input=None):
     """
     Recursively search for files in a specified directory and its sub-directories matching a given pattern.
@@ -13,7 +14,7 @@ def find(args, out, virtual_input=None):
 
     Returns:
     - out (deque): The updated deque after appending the matching files.
-    
+
     Raises:
     - ValueError: If the command-line arguments are invalid.
     - FileNotFoundError: If the directory specified in the argument could not be found.
@@ -25,7 +26,7 @@ def find(args, out, virtual_input=None):
     else:
         raise ValueError("Invalid command line arguments")
     pattern = args[-1]
-    
+
     def find_helper(current_path):
         # Recursively search for files matching the pattern
         for item in os.listdir(current_path):
@@ -36,10 +37,11 @@ def find(args, out, virtual_input=None):
                 out.append(item_path + "\n")
 
     find_helper(dir)
-    return out  
+    return out
 
-def _find(args, out, virtual_input=None): 
-    """The unsafe version of find"""   
+
+def _find(args, out, virtual_input=None):
+    """The unsafe version of find"""
     try:
         return find(args, out, virtual_input)
     except Exception as err:

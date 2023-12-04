@@ -1,6 +1,7 @@
 import sys
 from commands.flatten_list.flatten_virtual_input import flatten_virtual_input
 
+
 def uniq(args, out, virtual_input=None):
     """
     Remove duplicate consecutive lines from a file or standard input.
@@ -14,7 +15,7 @@ def uniq(args, out, virtual_input=None):
 
     Returns:
     - out (deque): The updated deque after appending the unique lines.
-    
+
     Raises:
     - ValueError: If the command-line arguments are invalid.
     - FileNotFoundError: If the file given in the arguments could not be found.
@@ -24,17 +25,18 @@ def uniq(args, out, virtual_input=None):
 
     if len(args) == 1 and args[0] == "-i":
         case_insensitive = True
-    elif len(args) == 2 and args[0] == "-i": 
+    elif len(args) == 2 and args[0] == "-i":
         case_insensitive = True
         file = args[1]
     elif len(args) == 1:
         file = args[0]
     elif len(args) == 0:
         pass
-    else: 
+    else:
         raise ValueError("Invalid command line arguments")
 
     return uniq_helper(out, file, case_insensitive, virtual_input)
+
 
 def uniq_helper(out, file, case_insensitive, virtual_input):
     """
@@ -78,6 +80,7 @@ def uniq_helper(out, file, case_insensitive, virtual_input):
             prev_line = line.strip()
         out.append(prev_line + "\n")
     return out
+
 
 def _uniq(args, out, virtual_input=None):
     """The unsafe version of uniq"""

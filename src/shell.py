@@ -18,6 +18,7 @@ from commands.cut import cut, _cut
 
 parser = Parser()
 
+
 def eval_single(command, virtual_input=None):
     # print(command)
     app = command[0]
@@ -34,7 +35,7 @@ def eval_single(command, virtual_input=None):
             "pwd": pwd,
             "_pwd": _pwd,
             "cd": cd,
-            "_cd" : _cd,
+            "_cd": _cd,
             "echo": echo,
             "_echo": _echo,
             "ls": ls,
@@ -46,14 +47,14 @@ def eval_single(command, virtual_input=None):
             "tail": tail,
             "_tail": _tail,
             "grep": grep,
-            "_grep" : _grep, 
+            "_grep": _grep,
             "sort": sort,
             "_sort": _sort,
             "find": find,
             "_find": _find,
-            "uniq" : uniq,
+            "uniq": uniq,
             "_uniq": _uniq,
-            "cut" : cut,
+            "cut": cut,
             "_cut": _cut
         }
 
@@ -133,6 +134,7 @@ def eval(cmdline):
             out += local_out
     return out
 
+
 def main():
     args_num = len(sys.argv) - 1
     if args_num > 0:
@@ -158,6 +160,7 @@ def main():
             out = eval(cmdline)
             while len(out) > 0:
                 print(out.popleft(), end="")
+
 
 if __name__ == "__main__":
     main()
