@@ -1,7 +1,7 @@
 import sys
 import os
 from collections import deque
-from larkParser import Parser
+from lark_parser import Parser
 
 from commands.cd import cd, _cd
 from commands.cat import cat, _cat
@@ -21,7 +21,6 @@ parser = Parser()
 
 
 def eval_single(command, virtual_input=None):
-    # print(command)
     app = command[0]
     args = command[1:]
     out = deque()

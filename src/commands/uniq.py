@@ -50,24 +50,17 @@ def uniq_helper(out, file, case_insensitive, virtual_input):
 
     Returns:
     - out (deque): The updated deque after appending the unique lines.
+
+    Raises:
+    - FileNotFoundError: If the file given in the arguments could not be found.
     """
     prev_line = None
     if file:
         with open(file) as f:
-            for line in f:
-                if len(out) > 0:
-                    prev_line = out[-1].strip().lower() if case_insensitive else out[-1].strip()
-                line_to_compare = line.strip().lower() if case_insensitive else line.strip()
-                if line_to_compare != prev_line:
-                    out.append(line.strip() + "\n")
+            out = remove_consecutive_duplicates(out, f, prev_line, case_insensitive)
     elif virtual_input:
         virtual_input = flatten_virtual_input(virtual_input)
-        for line in virtual_input:
-            if len(out) > 0:
-                prev_line = out[-1].strip().lower() if case_insensitive else out[-1].strip()
-            line_to_compare = line.strip().lower() if case_insensitive else line.strip()
-            if line_to_compare != prev_line:
-                out.append(line.strip() + "\n")
+        out = remove_consecutive_duplicates(out, virtual_input, prev_line, case_insensitive)
     else:
         for line in sys.stdin:
             if not prev_line:
@@ -79,6 +72,27 @@ def uniq_helper(out, file, case_insensitive, virtual_input):
                 print(prev_line)
             prev_line = line.strip()
         out.append(prev_line + "\n")
+    return out
+
+
+def remove_consecutive_duplicates(out, input_lines, prev_line, case_insensitive):
+    """
+    Process a sequence of input lines, filtering and appending unique lines to an output list.
+
+    Parameters:
+    - input_lines (iterable): Iterable containing lines to process.
+    - out (deque): Deque to which unique lines will be appended.
+    - case_insensitive (bool): If True, perform case-insensitive comparison.
+
+    Returns:
+    - out (deque): The updated deque after appending the unique lines.
+    """
+    for line in input_lines:
+        if len(out) > 0:
+            prev_line = out[-1].strip().lower() if case_insensitive else out[-1].strip()
+        line_to_compare = line.strip().lower() if case_insensitive else line.strip()
+        if line_to_compare != prev_line:
+            out.append(line.strip() + "\n")
     return out
 
 

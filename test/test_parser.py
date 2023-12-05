@@ -1,5 +1,5 @@
 import unittest
-from larkParser import Parser
+from lark_parser import Parser
 
 
 class TestParser(unittest.TestCase):

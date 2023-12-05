@@ -44,7 +44,7 @@ def cut(args, out, virtual_input=None):
 
 def cut_helper(line, options_range):
     """
-    A helper function for 'cut', extracts bytes from a line based on specified options.
+    Extract bytes from a line based on specified options.
 
     Parameters:
     - line (str): The input line to be processed.
