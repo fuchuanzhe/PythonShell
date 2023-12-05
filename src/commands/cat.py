@@ -23,7 +23,7 @@ def cat(args, out, virtual_input=None):
         else:
             for line in sys.stdin:
                 print(line.strip())
-    else: 
+    else:
         for a in args:
             a = a.strip()
             with open(a) as f:
