@@ -18,16 +18,6 @@ def cd(args, out, virtual_input=None):
     - FileNotFoundError: If the directory specified in the argument could not be found.
     """
     if len(args) == 0 or len(args) > 1:
-        raise ValueError("Invalid command line arguments")
+        raise ValueError(f"Invalid command line arguments: cd {' '.join(args)}")
     os.chdir(args[0])
     return out
-
-
-def _cd(args, out, virtual_input=None):
-    """The unsafe version of cd"""
-    try:
-        return cd(args, out, virtual_input)
-    except Exception as err:
-        out.clear()
-        print(err)
-        return out

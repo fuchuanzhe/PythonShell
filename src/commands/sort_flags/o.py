@@ -1,7 +1,7 @@
 import sys
 
 
-def o(args, out, arr):
+def o(out, arr):
     # Output the sorted content to a file.
     stdout_fileno = sys.stdout
     sys.stdout = open('sorted.txt', 'w')

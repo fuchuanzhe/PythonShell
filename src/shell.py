@@ -3,19 +3,20 @@ import os
 from collections import deque
 from lark_parser import Parser
 
-from commands.cd import cd, _cd
-from commands.cat import cat, _cat
-from commands.echo import echo, _echo
-from commands.grep import grep, _grep
-from commands.ls import ls, _ls
-from commands.pwd import pwd, _pwd
-from commands.head import head, _head
-from commands.tail import tail, _tail
-from commands.find import find, _find
-from commands.sort import sort, _sort
-from commands.uniq import uniq, _uniq
-from commands.cut import cut, _cut
-from commands.wc import wc, _wc
+from commands.cd import cd
+from commands.cat import cat
+from commands.echo import echo
+from commands.grep import grep
+from commands.ls import ls
+from commands.pwd import pwd
+from commands.head import head
+from commands.tail import tail
+from commands.find import find
+from commands.sort import sort
+from commands.uniq import uniq
+from commands.cut import cut
+from commands.wc import wc
+from unsafe import unsafe
 
 parser = Parser()
 
@@ -30,41 +31,30 @@ def eval_single(command, virtual_input=None):
     for index, arg in enumerate(args):
         if arg.startswith('`') and arg.endswith('`'):
             args[index:index+1] = [x.strip() for x in list(eval(arg[1:-1]))]
-    # print(f"app: {app}, args: {args}")
+
     apps = {
             "pwd": pwd,
-            "_pwd": _pwd,
             "cd": cd,
-            "_cd": _cd,
             "echo": echo,
-            "_echo": _echo,
             "ls": ls,
-            "_ls": _ls,
             "cat": cat,
-            "_cat": _cat,
             "head": head,
-            "_head": _head,
             "tail": tail,
-            "_tail": _tail,
             "grep": grep,
-            "_grep": _grep,
             "sort": sort,
-            "_sort": _sort,
             "find": find,
-            "_find": _find,
             "uniq": uniq,
-            "_uniq": _uniq,
             "cut": cut,
-            "_cut": _cut,
-            "wc": wc,
-            "_wc": _wc
+            "wc": wc
         }
-
-    if app in apps:
+    if app.startswith('_') and app[1:] in apps:
+        out = unsafe(apps[app[1:]], args, out, virtual_input)
+        return out
+    elif app in apps:
         out = apps[app](args, out, virtual_input)
         return out
     else:
-        raise ValueError(f"unsupported application {app}")
+        raise ValueError(f"Unsupported application: {app}")
 
 
 class Command:
@@ -82,7 +72,6 @@ class Command:
 
 
 def eval(cmdline):
-    # print("evaluating", cmdline)
     raw_commands = parser.parse(cmdline)
     out = deque()
     for command in raw_commands:
@@ -127,6 +116,7 @@ def eval(cmdline):
                     virtual_input = f.readlines()
                 local_out = eval_single(this_command, virtual_input)
                 virtual_input = local_out
+                this_command = []
             else:
                 this_command.append(comm.pop_first())
 
@@ -141,9 +131,9 @@ def main():
     args_num = len(sys.argv) - 1
     if args_num > 0:
         if args_num != 2:
-            raise ValueError("wrong number of command line arguments")
+            raise ValueError("Wrong number of command line arguments")
         if sys.argv[1] != "-c":
-            raise ValueError(f"unexpected command line argument {sys.argv[1]}")
+            raise ValueError(f"Unexpected command line argument {sys.argv[1]}")
         out = eval(sys.argv[2])
         while len(out) > 0:
             print(out.popleft(), end="")

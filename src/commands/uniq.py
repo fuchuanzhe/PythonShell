@@ -28,12 +28,12 @@ def uniq(args, out, virtual_input=None):
     elif len(args) == 2 and args[0] == "-i":
         case_insensitive = True
         file = args[1]
-    elif len(args) == 1:
+    elif len(args) == 1 and args[0][0] != "-":
         file = args[0]
     elif len(args) == 0:
         pass
     else:
-        raise ValueError("Invalid command line arguments")
+        raise ValueError(f"Invalid command line arguments: uniq {' '.join(args)}")
 
     return uniq_helper(out, file, case_insensitive, virtual_input)
 
@@ -71,7 +71,7 @@ def uniq_helper(out, file, case_insensitive, virtual_input):
             if line_to_compare != prev_line:
                 print(prev_line)
             prev_line = line.strip()
-        out.append(prev_line + "\n")
+        out.append(f"{prev_line}\n")
     return out
 
 
@@ -92,15 +92,5 @@ def remove_consecutive_duplicates(out, input_lines, prev_line, case_insensitive)
             prev_line = out[-1].strip().lower() if case_insensitive else out[-1].strip()
         line_to_compare = line.strip().lower() if case_insensitive else line.strip()
         if line_to_compare != prev_line:
-            out.append(line.strip() + "\n")
+            out.append(f"{line.strip()}\n")
     return out
-
-
-def _uniq(args, out, virtual_input=None):
-    """The unsafe version of uniq"""
-    try:
-        return uniq(args, out, virtual_input)
-    except Exception as err:
-        out.clear()
-        print(err)
-        return out

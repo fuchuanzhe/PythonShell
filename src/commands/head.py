@@ -23,40 +23,29 @@ def head(args, out, virtual_input=None):
     file = None
     if len(args) == 0:
         num_lines = 10
-    elif len(args) == 1:
+    elif len(args) == 1 and args[0][0] != "-":
         num_lines = 10
         file = args[0]
-    elif len(args) == 2 and args[0] == "-n":
+    elif len(args) == 2 and args[0] == "-n" and args[1].isnumeric():
         num_lines = int(args[1])
-    elif len(args) == 3:
+    elif len(args) == 3 and args[0] == "-n" and args[1].isnumeric():
         num_lines = int(args[1])
         file = args[2]
     else:
-        raise ValueError("Invalid command line arguments")
+        raise ValueError(f"Invalid command line arguments: head {' '.join(args)}")
 
     if file:
         with open(file) as f:
             lines = f.readlines()
             for i in range(0, min(len(lines), num_lines)):
                 out.append(lines[i])
+    elif virtual_input:
+        virtual_input = flatten_virtual_input(virtual_input)
+        for n in range(0, min(len(virtual_input), num_lines)):
+            line = virtual_input[n]
+            out.append(f"{line.strip()}\n")
     else:
-        if virtual_input:
-            virtual_input = flatten_virtual_input(virtual_input)
-            for n in range(0, min(len(virtual_input), num_lines)):
-                line = virtual_input[n]
-                out.append(line.strip() + "\n")
-        else:
-            for n in range(num_lines):
-                line = sys.stdin.readline()
-                print(line.strip())
+        for n in range(num_lines):
+            line = sys.stdin.readline()
+            print(line.strip())
     return out
-
-
-def _head(args, out, virtual_input=None):
-    """The unsafe version of head"""
-    try:
-        return head(args, out, virtual_input)
-    except Exception as err:
-        out.clear()
-        print(err)
-        return out

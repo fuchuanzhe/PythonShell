@@ -17,16 +17,6 @@ def pwd(args, out, virtual_input=None):
     - ValueError: If any arguments are given.
     """
     if len(args) > 0:
-        raise ValueError("Invalid command line arguments")
-    out.append(os.getcwd() + "\n")
+        raise ValueError(f"Invalid command line arguments: pwd {' '.join(args)}")
+    out.append(f"{os.getcwd()}\n")
     return out
-
-
-def _pwd(args, out, virtual_input=None):
-    """The unsafe version of pwd"""
-    try:
-        return pwd(args, out, virtual_input)
-    except Exception as err:
-        out.clear()
-        print(err)
-        return out

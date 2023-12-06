@@ -41,48 +41,29 @@ def sort(args, out, virtual_input=None):
     elif len(args) == 0:
         pass
     else:
-        raise ValueError("Invalid command line arguments")
+        raise ValueError(f"Invalid command line arguments: sort {' '.join(args)}")
 
     arr = []
     if file:
         with open(file) as f:
             lines = f.readlines()
-            for line in lines:
-                arr.append(line.strip())
-            if flag:
-                out = flags[flag](args, out, arr)
-            else:
-                arr.sort()
-                for a in arr:
-                    out.append(a + "\n")
+            out = sort_helper(out, lines, flags, flag, arr)
     elif virtual_input:
         virtual_input = flatten_virtual_input(virtual_input)
-        for line in virtual_input:
-            arr.append(line.strip())
-        if flag:
-            out = flags[flag](args, out, arr)
-        else:
-            arr.sort()
-            for a in arr:
-                out.append(a + "\n")
+        out = sort_helper(out, virtual_input, flags, flag, arr)
     else:
         lines = sys.stdin.readlines()
-        for line in lines:
-            arr.append(line.strip())
-        if flag:
-            out = flags[flag](args, out, arr)
-        else:
-            arr.sort()
-            for a in arr:
-                out.append(a + "\n")
+        out = sort_helper(out, lines, flags, flag, arr)
     return out
 
 
-def _sort(args, out, virtual_input=None):
-    """The unsafe version of sort"""
-    try:
-        return sort(args, out, virtual_input)
-    except Exception as err:
-        out.clear()
-        print(err)
-        return out
+def sort_helper(out, lines, flags, flag, arr):
+    for line in lines:
+        arr.append(line.strip())
+    if flag:
+        out = flags[flag](out, arr)
+    else:
+        arr.sort()
+        for a in arr:
+            out.append(f"{a}\n")
+    return out

@@ -228,7 +228,7 @@ class TestShell(unittest.TestCase):
                            './file2.txt\n', './cutTest.txt\n', './sorted.txt\n',
                            './file1.txt\n', './findTest/findTest2.txt\n', './findTest/findTest1.txt\n',
                            './headTest/head1.txt\n', './headTest/head2.txt\n', './tailTest.txt\n',
-                           './tailTest/tail1.txt\n', './echo.txt\n']
+                           './tailTest/tail1.txt\n', './echo.txt\n', './wcTest/wcTest1.txt\n', './wcTest/wcTest2.txt\n']
 
         self.assertEqual(sorted(list(out)), sorted(expected_result))
 
@@ -357,8 +357,8 @@ class TestShell(unittest.TestCase):
                         'headTest.txt\n', 'sortTest\n', 'sortTest.txt\n',
                         'sorted.txt\n', 'tailTest\n', 'tailTest.txt\n',
                         'test.txt\n', 'test_parser.py\n', 'test_shell.py\n',
-                        'test_shell2.py\n', 'uniqTest\n', 'uniqTest.txt\n']
-        self.assertEqual(out, expected_out)
+                        'uniqTest\n', 'uniqTest.txt\n', 'wcTest\n']
+        self.assertEqual(out, sorted(expected_out))
 
     def test_ls_twoArg(self):
         with self.assertRaises(ValueError):
@@ -448,11 +448,13 @@ class TestShell(unittest.TestCase):
 
     def test_sort_n(self):
         out = eval("sort -n ./sortTest/sortTest2.txt")
+        self.assertEqual(out.popleft(), "a\n")
+        self.assertEqual(out.popleft(), "b\n")
+        self.assertEqual(out.popleft(), "c\n")
         self.assertEqual(out.popleft(), "1\n")
         self.assertEqual(out.popleft(), "2\n")
-        self.assertEqual(out.popleft(), "3\n")
-        self.assertEqual(out.popleft(), "4\n")
-        self.assertEqual(out.popleft(), "5\n")
+        self.assertEqual(out.popleft(), "10\n")
+        self.assertEqual(out.popleft(), "21\n")
         self.assertEqual(len(out), 0)
 
     def test_sort_virtual_input(self):
@@ -654,18 +656,15 @@ class TestShell(unittest.TestCase):
 
     def test_output_redirection(self):
         eval("echo hihi > echo.txt")
-
         file_path = 'echo.txt'
         with open(file_path, 'r') as file:
             fileContent = file.read()
-
         self.assertEqual(fileContent, "hihi\n")
 
     @patch('sys.argv', ['shell.py', '-c', 'pwd'])
     @patch("sys.stdout", new_callable=StringIO)
     def test_main_correct_arguments(self, mock_stdout):
         main()
-
         expected_output = os.getcwd()
         output = mock_stdout.getvalue().strip()
         self.assertEqual(output, expected_output)
@@ -687,7 +686,6 @@ class TestShell(unittest.TestCase):
     @patch('sys.stdout', new_callable=StringIO)
     def test_main_else_branch(self, mock_stdout, mock_input):
         main()
-
         printed_output = mock_stdout.getvalue().strip()
         expected_output = os.getcwd() + "> "
         self.assertTrue(printed_output.startswith(expected_output))
@@ -721,10 +719,18 @@ class TestShell(unittest.TestCase):
         self.assertEqual(out.popleft(), "28\n")
         self.assertEqual(len(out), 0)
 
-    @patch("sys.stdin", StringIO("a\nb\nc\nd\nEOFError"))
+    @patch("sys.stdin", StringIO("a\nb\nc\nd\n"))
     @patch("sys.stdout", new_callable=StringIO)
     def test_wc_stdin(self, mock_stdout):
-        eval("wc")
-        output = mock_stdout.getvalue()
-        expected_output = "4\n4\n8\n"
-        self.assertEqual(output, expected_output)
+        out = eval("wc")
+        self.assertEqual(out.popleft(), "4\n")
+        self.assertEqual(out.popleft(), "4\n")
+        self.assertEqual(out.popleft(), "8\n")
+
+    def test_wc_raise_error(self):
+        with self.assertRaises(ValueError):
+            eval("wc -x ./wcTest/wcTest1.txt")
+
+    def test_wc_unsafe(self):
+        out = eval("_wc -x ./wcTest/wcTest1.txt")
+        self.assertEqual(len(out), 0)

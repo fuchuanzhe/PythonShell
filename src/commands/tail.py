@@ -23,16 +23,16 @@ def tail(args, out, virtual_input=None):
     file = None
     if len(args) == 0:
         num_lines = 10
-    elif len(args) == 1:
+    elif len(args) == 1 and args[0][0] != "-":
         num_lines = 10
         file = args[0]
-    elif len(args) == 2 and args[0] == "-n":
+    elif len(args) == 2 and args[0] == "-n" and args[1].isnumeric():
         num_lines = int(args[1])
-    elif len(args) == 3:
+    elif len(args) == 3 and args[0] == "-n" and args[1].isnumeric():
         num_lines = int(args[1])
         file = args[2]
     else:
-        raise ValueError("Invalid command line arguments")
+        raise ValueError(f"Invalid command line arguments: tail {' '.join(args)}")
 
     if num_lines != 0:
         if file:
@@ -55,13 +55,3 @@ def tail(args, out, virtual_input=None):
             else:
                 out += lines
     return out
-
-
-def _tail(args, out, virtual_input=None):
-    """The unsafe version of tail"""
-    try:
-        return tail(args, out, virtual_input)
-    except Exception as err:
-        out.clear()
-        print(err)
-        return out

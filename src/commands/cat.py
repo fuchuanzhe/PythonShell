@@ -19,7 +19,7 @@ def cat(args, out, virtual_input=None):
     if len(args) == 0:
         if virtual_input:
             for line in virtual_input:
-                out.append(line.strip() + "\n")
+                out.append(f"{line.strip()}\n")
         else:
             for line in sys.stdin:
                 print(line.strip())
@@ -29,13 +29,3 @@ def cat(args, out, virtual_input=None):
             with open(a) as f:
                 out.append(f.read())
     return out
-
-
-def _cat(args, out, virtual_input=None):
-    """The unsafe version of cat"""
-    try:
-        return cat(args, out, virtual_input)
-    except Exception as err:
-        out.clear()
-        print(err)
-        return out

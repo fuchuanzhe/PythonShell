@@ -25,7 +25,7 @@ def cut(args, out, virtual_input=None):
         options = args[1]
         file = args[-1]
     else:
-        raise ValueError("Invalid command line arguments")
+        raise ValueError(f"Invalid command line arguments: cut {' '.join(args)}")
 
     if file:
         with open(file) as f:
@@ -115,13 +115,3 @@ def merge(intervals):
                     newInterval[1] = i[1]
         result.append(newInterval)
     return result
-
-
-def _cut(args, out, virtual_input=None):
-    """The unsafe version of cut"""
-    try:
-        return cut(args, out, virtual_input)
-    except Exception as err:
-        out.clear()
-        print(err)
-        return out

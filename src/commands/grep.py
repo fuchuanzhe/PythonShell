@@ -27,7 +27,7 @@ def grep(args, out, virtual_input=None):
     elif len(args) == 1:
         pattern = re.compile(args[0])
     else:
-        raise ValueError("Invalid command line arguments")
+        raise ValueError(f"Invalid command line arguments: grep {' '.join(args)}")
 
     if files:
         for file in files:
@@ -43,19 +43,9 @@ def grep(args, out, virtual_input=None):
         virtual_input = flatten_virtual_input(virtual_input)
         for line in virtual_input:
             if re.search(pattern, line):
-                out.append(line.strip() + "\n")
+                out.append(f"{line.strip()}\n")
     else:
         for line in sys.stdin:
             if re.search(pattern, line):
                 print(line.strip())
     return out
-
-
-def _grep(args, out, virtual_input=None):
-    """The unsafe version of grep"""
-    try:
-        return grep(args, out, virtual_input)
-    except Exception as err:
-        out.clear()
-        print(err)
-        return out

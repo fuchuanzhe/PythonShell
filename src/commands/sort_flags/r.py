@@ -1,4 +1,4 @@
-def r(args, out, arr):
+def r(out, arr):
     # Reverse the order of the content.
     arr.sort(reverse=True)
     for a in arr:
