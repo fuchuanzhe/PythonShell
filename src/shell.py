@@ -88,7 +88,7 @@ def eval(cmdline):
                 filename = comm.pop_first()
                 virtual_input = None
                 this_command = []
-            elif comm.peek_first() == '<':
+            else:
                 comm.pop_first()
                 filename = comm.pop_first()
                 with open(filename, 'r') as f:
