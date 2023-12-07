@@ -16,7 +16,7 @@ from commands.sort import sort
 from commands.uniq import uniq
 from commands.cut import cut
 from commands.wc import wc
-from unsafe import unsafe
+from commands.unsafe import unsafe
 
 parser = Parser()
 
