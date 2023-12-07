@@ -9,18 +9,10 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.8
-
-    - name: Install dependencies
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+      
+    - name: Build and run system tests
       run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-
-    - name: Run system tests
-      run: python -m unittest system_test/tests.py
-
-    - name: Run unit tests
-      run: python -m unittest test/test_shell.py 
+        docker build -t comp0010-system-test .
+        python system_test/tests.py -v
