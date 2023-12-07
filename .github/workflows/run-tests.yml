@@ -15,9 +15,9 @@ jobs:
     - name: Build and run unit tests
       run: |
         docker build -t shell .
-        docker run -p 80:8000 -ti --rm shell /comp0010/tools/test
+        docker run -p 80:8000 --rm shell /comp0010/tools/test
 
     - name: Build and run system tests
       run: |
         docker build -t comp0010-system-test .
-        docker run -p 80:8000 -ti --rm comp0010-system-test /comp0010/system_test/tests.py
+        docker run -p 80:8000 --rm comp0010-system-test /comp0010/system_test/tests.py
