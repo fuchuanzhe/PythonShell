@@ -1,0 +1,23 @@
+name: Run Tests
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Build and run unit tests
+      run: |
+        docker build -t shell .
+        docker run -p 80:8000 -ti --rm shell /comp0010/tools/test
+
+    - name: Build and run system tests
+      run: |
+        docker build -t comp0010-system-test .
+        docker run -p 80:8000 -ti --rm comp0010-system-test /comp0010/system_test/tests.py
