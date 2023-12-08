@@ -2,6 +2,9 @@ import sys
 import os
 from collections import deque
 from lark_parser import Parser
+from autocomplete import Autocomplete
+from shell_lexer import ShellLexer
+from prompt_toolkit.lexers import PygmentsLexer
 
 from commands.cd import cd
 from commands.cat import cat
@@ -20,19 +23,7 @@ from commands.unsafe import unsafe
 
 parser = Parser()
 
-
-def eval_single(command, virtual_input=None):
-    app = command[0]
-    args = command[1:]
-    out = deque()
-    # handles command substitution
-    if app.startswith('`') and app.endswith('`'):
-        app = list(eval(app[1:-1]))[-1].strip()
-    for index, arg in enumerate(args):
-        if arg.startswith('`') and arg.endswith('`'):
-            args[index:index+1] = [x.strip() for x in list(eval(arg[1:-1]))]
-
-    apps = {
+apps = {
             "pwd": pwd,
             "cd": cd,
             "echo": echo,
@@ -47,6 +38,18 @@ def eval_single(command, virtual_input=None):
             "cut": cut,
             "wc": wc
         }
+
+
+def eval_single(command, virtual_input=None):
+    app = command[0]
+    args = command[1:]
+    out = deque()
+    # handles command substitution
+    if app.startswith('`') and app.endswith('`'):
+        app = list(eval(app[1:-1]))[-1].strip()
+    for index, arg in enumerate(args):
+        if arg.startswith('`') and arg.endswith('`'):
+            args[index:index+1] = [x.strip() for x in list(eval(arg[1:-1]))]
     if app.startswith('_') and app[1:] in apps:
         out = unsafe(apps[app[1:]], args, out, virtual_input)
         return out
@@ -129,6 +132,11 @@ def eval(cmdline):
 
 def main():
     args_num = len(sys.argv) - 1
+    autocomplete = Autocomplete(apps, os.getcwd())
+    history = autocomplete.get_history()
+    session = autocomplete.get_session()
+    current_dir = os.getcwd()
+
     if args_num > 0:
         if args_num != 2:
             raise ValueError("Wrong number of command line arguments")
@@ -139,9 +147,14 @@ def main():
             print(out.popleft(), end="")
     else:
         while True:
-            print(os.getcwd() + "> ", end="")
-            cmdline = input()
-
+            if os.getcwd() != current_dir:
+                current_dir = os.getcwd()
+                autocomplete.update_autocomplete(current_dir)
+            
+            cmdline = session.prompt(f"{current_dir}> ",completer=autocomplete.get_word_completer(),
+                                    complete_while_typing=False, lexer=PygmentsLexer(ShellLexer))
+            history.append_string(cmdline)
+            
             if cmdline.lower() == 'exit':
                 break
 
