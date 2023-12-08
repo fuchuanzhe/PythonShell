@@ -6,3 +6,4 @@ junit2html
 lark==1.1.8
 colorama
 prompt_toolkit
+pygments
