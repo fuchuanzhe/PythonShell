@@ -8,7 +8,7 @@ from io import StringIO
 class TestShell(unittest.TestCase):
     def setUp(self):
         self.original_path = os.getcwd()
-        os.chdir("test")
+        # os.chdir("test")
 
     def tearDown(self):
         # Restore the original working directory after the test
