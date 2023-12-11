@@ -44,7 +44,7 @@ def eval_single(command, virtual_input=None):
     app = command[0]
     args = command[1:]
     out = deque()
-    # handles command substitution
+    # Handles command substitution
     if app.startswith('`') and app.endswith('`'):
         app = list(eval(app[1:-1]))[-1].strip()
     for index, arg in enumerate(args):
@@ -161,7 +161,7 @@ def main():
                 break
 
             if not cmdline:
-                # empty command line
+                # Empty command line
                 continue
 
             out = eval(cmdline)

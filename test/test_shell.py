@@ -352,7 +352,8 @@ class TestShell(unittest.TestCase):
 
         to_remove = ['.DS_Store\n', '.hypothesis\n', '.pytest_cache\n']
         expected_out = [file + '\n' for file in os.listdir(current_dir)]
-        filtered_expected_out = [item for item in expected_out if item not in to_remove]
+        filtered_expected_out = [item for item in expected_out
+                                 if item not in to_remove]
         self.assertEqual(out, sorted(filtered_expected_out))
 
     def test_ls_twoArg(self):
