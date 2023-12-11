@@ -134,7 +134,6 @@ class TestPropertyShell(unittest.TestCase):
         self.original_path = os.getcwd()
         self.temp_dir = "temp_snapshot_directory"
 
-        # Check if the destination directory exists
         if os.path.exists(self.temp_dir):
             shutil.rmtree(self.temp_dir)
 
@@ -249,7 +248,7 @@ class TestPropertyShell(unittest.TestCase):
                 eval_output = eval(f"pwd {pwd_args}")
         else:
             eval_output = eval(pwd_args)
-            # Run the 'pwd command' in the command line and capture the output
+            # Run the pwd command in the command line and capture the output
             process = subprocess.Popen(shlex.split(f"pwd {pwd_args}"),
                                        stdout=subprocess.PIPE,
                                        stderr=subprocess.PIPE,
@@ -269,7 +268,7 @@ class TestPropertyShell(unittest.TestCase):
             self.assertIn("Invalid command line arguments", result)
         else:
             eval_output = eval(pwd_args)
-            # Run the 'pwd command' in the command line and capture the output
+            # Run the pwd command in the command line and capture the output
             process = subprocess.Popen(shlex.split(f"pwd {pwd_args}"),
                                        stdout=subprocess.PIPE,
                                        stderr=subprocess.PIPE,
@@ -288,7 +287,7 @@ class TestPropertyShell(unittest.TestCase):
 
         eval_output = eval(' '.join(cat_command))
 
-        # Run the 'cat_command' in the command line and capture the output
+        # Run the cat_command in the command line and capture the output
         process = subprocess.Popen(
             cat_command, stdout=subprocess.PIPE,
             stderr=subprocess.PIPE, universal_newlines=True)
@@ -313,7 +312,7 @@ class TestPropertyShell(unittest.TestCase):
 
         eval_output = eval(cut_command)
 
-        # Run the cut command using subprocess.run to get the expected output
+        # Run the cut_command using subprocess.run to get the expected output
         process = subprocess.run(shlex.split(
             cut_command), capture_output=True, text=True)
         expected_output_str = process.stdout
@@ -337,7 +336,7 @@ class TestPropertyShell(unittest.TestCase):
     def test_find(self, find_command):
         eval_output = eval(find_command)
 
-        # Run the find command in the command line and capture the output
+        # Run the find_command in the command line and capture the output
         process = subprocess.run(shlex.split(
             find_command), capture_output=True, text=True)
         expected_output_str = process.stdout
@@ -364,7 +363,7 @@ class TestPropertyShell(unittest.TestCase):
 
         eval_output = eval(grep_command)
 
-        # Run the grep command in the command line and capture the output
+        # Run the grep_command in the command line and capture the output
         process = subprocess.run(shlex.split(
             grep_command), capture_output=True, text=True)
         expected_output_str = process.stdout
@@ -393,7 +392,7 @@ class TestPropertyShell(unittest.TestCase):
 
         eval_output = eval(head_command)
 
-        # Run the head command in the command line and capture the output
+        # Run the head_command in the command line and capture the output
         process = subprocess.run(shlex.split(
             head_command), capture_output=True, text=True)
         expected_output_str = process.stdout
@@ -422,7 +421,7 @@ class TestPropertyShell(unittest.TestCase):
 
         eval_output = eval(sort_command)
 
-        # Run the sort command in the command line and capture the output
+        # Run the sort_command in the command line and capture the output
         process = subprocess.run(shlex.split(
             sort_command), capture_output=True, text=True)
         expected_output_str = process.stdout
@@ -449,7 +448,7 @@ class TestPropertyShell(unittest.TestCase):
 
         eval_output = eval(tail_command)
 
-        # Run the tail command in the command line and capture the output
+        # Run the tail_command in the command line and capture the output
         process = subprocess.run(shlex.split(
             tail_command), capture_output=True, text=True)
         expected_output_str = process.stdout
@@ -477,7 +476,7 @@ class TestPropertyShell(unittest.TestCase):
 
         eval_output = eval(uniq_command)
 
-        # Run the uniq command in the command line and capture the output
+        # Run the uniq_command in the command line and capture the output
         process = subprocess.run(shlex.split(
             uniq_command), capture_output=True, text=True)
         expected_output_str = process.stdout
@@ -504,7 +503,7 @@ class TestPropertyShell(unittest.TestCase):
 
         eval_output = eval(wc_command)
 
-        # Run the wc command in the command line and capture the output
+        # Run the wc_command in the command line and capture the output
         process = subprocess.run(shlex.split(
             wc_command), capture_output=True, text=True)
         expected_output_str = process.stdout
