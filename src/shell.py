@@ -132,10 +132,6 @@ def eval(cmdline):
 
 def main():
     args_num = len(sys.argv) - 1
-    autocomplete = Autocomplete(apps, os.getcwd())
-    history = autocomplete.get_history()
-    session = autocomplete.get_session()
-    current_dir = os.getcwd()
 
     if args_num > 0:
         if args_num != 2:
@@ -146,6 +142,11 @@ def main():
         while len(out) > 0:
             print(out.popleft(), end="")
     else:
+        autocomplete = Autocomplete(apps, os.getcwd())
+        history = autocomplete.get_history()
+        session = autocomplete.get_session()
+        current_dir = os.getcwd()
+
         while True:
             if os.getcwd() != current_dir:
                 current_dir = os.getcwd()
