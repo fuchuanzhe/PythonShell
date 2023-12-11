@@ -18,7 +18,7 @@ The latest COMP0010 Shell includes several features:
 
 COMP0010 Shell uses [Lark](https://lark-parser.readthedocs.io/en/stable/) to create a robust and flexible parser. This parser is designed to interpret shell commands in adherence to a predefined grammar, effectively managing different elements such as quoted strings, redirection operators, and pipes.
 
-The parser class (src/lark_parser.py) includes both the grammar rules and the Lark parser instance. The grammar is defined using regular expression.
+The parser class `src/lark_parser.py` includes both the grammar rules and the Lark parser instance. The grammar is defined using regular expression.
 
 ## Autocompletion
 
@@ -30,9 +30,15 @@ The first [Tab] press fills in the common part of all completions and shows all 
 
 COMP0010 Shell includes partial string matching for command history using [Python Prompt Toolkit](https://python-prompt-toolkit.readthedocs.io/en/master/index.html). This allows users to type input, and by using the up and down arrow key, they can filter the command history to show only items starting with the given input text.
 
+## Example-based Testing
+COMP0010 Shell has been tested extensively, using the [Unit Test Framework](https://docs.python.org/3/library/unittest.html), by 117 example-based tests in `test/test_shell.py`. Such tests are beneficial as they test for explicit scenarios and edge cases known to the programmer. These tests, combined with Property Based Testing, has achieved 96% in code coverage. Tests include tests for redirection, pipe and command substitution. 
+
+## Property Based Testing
+COMP0010 Shell has 25 property-based tests in `test/test_property_based.py` to supplement the example-based tests. These property-based tests use the [Unit Test Framework](https://docs.python.org/3/library/unittest.html), [Hypothesis](https://hypothesis.readthedocs.io/en/latest/) library, as well as [Subprocess](https://docs.python.org/3/library/subprocess.html) and [Shlex](https://docs.python.org/3/library/shlex.html). Property-based tests are beneficial as they test against a large randomly generated input space and can uncover edge cases unknown to the programmer. 
+
 ## Syntax Highlighting
 
-COMP0010 Shell includes input syntax highlighting using [Pygments](https://pygments.org). The format and colours of the keywords are defined in regex in src/shell_lexer.py.
+COMP0010 Shell includes input syntax highlighting using [Pygments](https://pygments.org). The format and colours of the keywords are defined in regex in `src/shell_lexer.py`.
 
 1. Commands: The command keyword is formatted in bold and colored in green.
 2. Operator: The operator is colored in grey. (eg. redirection operator, piping operator and command substitution operator)
