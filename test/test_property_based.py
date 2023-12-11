@@ -49,7 +49,8 @@ def create_random_file(file_name):
     with open(file_name, 'w') as file:
         for _ in range(10):
             random_line = ''.join(random.choice(
-                string.ascii_letters + string.digits + string.punctuation + ' ') for _ in range(10))
+                string.ascii_letters +
+                string.digits + string.punctuation + ' ') for _ in range(10))
             file.write(random_line + '\n')
 
 
@@ -58,18 +59,21 @@ def cut_commands_strategy():
         return st.integers(min_value=2, max_value=100)
     filename_strategy = st.from_regex(
         r'^[a-zA-Z0-9]+\$', fullmatch=True).map(lambda x: f"{x}.txt")
-    return st.tuples(lines_strategy(), filename_strategy).map(lambda args: f"cut -b {args[0]} {args[1]}")
+    return st.tuples(lines_strategy(), filename_strategy) \
+           .map(lambda args: f"cut -b {args[0]} {args[1]}")
 
 
 def find_commands_strategy():
     filename_strategy = st.from_regex(
         r'^[a-zA-Z0-9]+\.txt$', fullmatch=True).map(lambda x: f"{x}")
-    return st.builds(lambda filename: f"find . -name {filename}", filename_strategy)
+    return st.builds(lambda filename: f"find . -name {filename}",
+        filename_strategy)
 
 
 def random_search_string():
     # Generate a random string of length 5 using letters and digits
-    return ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(5))
+    return ''.join(random.choice(string.ascii_letters + string.digits) 
+           for _ in range(5))
 
 
 def grep_commands_strategy():
@@ -77,7 +81,8 @@ def grep_commands_strategy():
         r'^[a-zA-Z0-9]+\$', fullmatch=True).map(lambda x: f"{x}")
     search_string_strategy = st.builds(random_search_string)
 
-    return st.builds(lambda search_string, filename: f"grep {search_string} {filename}", search_string_strategy, filename_strategy)
+    return st.builds(lambda search_string, filename: f"grep {search_string} {filename}", 
+        search_string_strategy, filename_strategy)
 
 
 def head_commands_strategy():
@@ -85,7 +90,8 @@ def head_commands_strategy():
         r'^[a-zA-Z0-9]+\$', fullmatch=True).map(lambda x: f"{x}.txt")
     randomNumber_strategy = st.integers(min_value=0, max_value=100)
 
-    return st.builds(lambda randomnumber, filename: f"head -n {randomnumber} {filename}", randomNumber_strategy, filename_strategy)
+    return st.builds(lambda randomnumber, filename: f"head -n {randomnumber} {filename}", 
+        randomNumber_strategy, filename_strategy)
 
 
 def sort_commands_strategy():
@@ -100,7 +106,8 @@ def tail_commands_strategy():
         r'^[a-zA-Z0-9]+\$', fullmatch=True).map(lambda x: f"{x}.txt")
     randomNumber_strategy = st.integers(min_value=0, max_value=100)
 
-    return st.builds(lambda randomnumber, filename: f"tail -n {randomnumber} {filename}", randomNumber_strategy, filename_strategy)
+    return st.builds(lambda randomnumber, filename: f"tail -n {randomnumber} {filename}", 
+        randomNumber_strategy, filename_strategy)
 
 
 def uniq_commands_strategy():
@@ -139,7 +146,8 @@ class TestPropertyShell(unittest.TestCase):
         # Change back to the original directory
         os.chdir(self.original_path)
 
-        # Remove only the contents within the temporary directory created during the test
+        # Remove only the contents within the temporary directory 
+        # created during the test
         for item in os.listdir(self.temp_dir):
             item_path = os.path.join(self.temp_dir, item)
             if os.path.isfile(item_path) or os.path.islink(item_path):
@@ -153,7 +161,8 @@ class TestPropertyShell(unittest.TestCase):
     @given(ls_args=random_string())
     def test_ls(self, ls_args):
         if not os.path.exists(os.path.join(os.getcwd(), ls_args)):
-            with self.assertRaises(FileNotFoundError) or self.assertRaises(ValueError):
+            with self.assertRaises(FileNotFoundError) \
+                 or self.assertRaises(ValueError):
                 eval(f"ls {ls_args}")
         else:
             os.chdir(ls_args)
@@ -222,7 +231,8 @@ class TestPropertyShell(unittest.TestCase):
 
         # Run the echo command in the command line and capture the output
         process = subprocess.Popen(shlex.split(
-            f"echo {echo_args}"), stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+            f"echo {echo_args}"), stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE, universal_newlines=True)
         cmdline_output, _ = process.communicate()
 
         assert ''.join(list(eval_output)) == ''.join(list(cmdline_output))
@@ -230,12 +240,14 @@ class TestPropertyShell(unittest.TestCase):
     @given(pwd_args=random_string())
     def test_pwd(self, pwd_args):
         if len(pwd_args) > 0:
-            with self.assertRaises(ValueError) or self.assertRaises(FileNotFoundError):
+            with self.assertRaises(ValueError) \
+                 or self.assertRaises(FileNotFoundError):
                 eval_output = eval(f"pwd {pwd_args}")
         else:
             eval_output = eval(pwd_args)
             # Run the 'pwd command' in the command line and capture the output
-            process = subprocess.Popen(shlex.split(f"pwd {pwd_args}"), stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+            process = subprocess.Popen(shlex.split(f"pwd {pwd_args}"), 
+                                       stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                                        universal_newlines=True)
             cmdline_output, _ = process.communicate()
             process.wait()
@@ -253,7 +265,8 @@ class TestPropertyShell(unittest.TestCase):
         else:
             eval_output = eval(pwd_args)
             # Run the 'pwd command' in the command line and capture the output
-            process = subprocess.Popen(shlex.split(f"pwd {pwd_args}"), stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+            process = subprocess.Popen(shlex.split(f"pwd {pwd_args}"), 
+                                       stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                                        universal_newlines=True)
             cmdline_output, _ = process.communicate()
             process.wait()
@@ -271,7 +284,8 @@ class TestPropertyShell(unittest.TestCase):
 
         # Run the 'cat_command' in the command line and capture the output
         process = subprocess.Popen(
-            cat_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+            cat_command, stdout=subprocess.PIPE, 
+            stderr=subprocess.PIPE, universal_newlines=True)
         cmdline_output, _ = process.communicate()
         process.wait()
 

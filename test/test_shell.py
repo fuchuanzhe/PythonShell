@@ -216,8 +216,9 @@ class TestShell(unittest.TestCase):
 
     def test_find_current_dir(self):
         current_dir = os.getcwd()
-        expected_result = ['./' + os.path.relpath(os.path.join(root, file), current_dir) + '\n' \
-                           for root, dirs, files in os.walk(current_dir) \
+        expected_result = ['./' + 
+                           os.path.relpath(os.path.join(root, file), current_dir) + '\n'
+                           for root, dirs, files in os.walk(current_dir)
                            for file in files if file.endswith('.txt')]
         expected_result.sort()
 
