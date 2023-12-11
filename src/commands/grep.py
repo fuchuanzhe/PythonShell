@@ -5,13 +5,14 @@ from commands.flatten_list.flatten_virtual_input import flatten_virtual_input
 
 def grep(args, out, virtual_input=None):
     """
-    Search for lines matching a specified regular expression pattern in files or standard input.
+    Search for lines matching a regex pattern in files or standard input.
 
     Parameters:
-    - args (list): A list of command-line arguments specifying the search pattern and files.
+    - args (list): Command-line arguments specifying the pattern and files.
                    If no file is given, 'grep' reads from standand input.
     - out (deque): The deque to which the matching lines will be appended.
-    - virtual_input (deque, optional): A deque representing input received from piping or redirection.
+    - virtual_input (deque, optional): A deque representing input received
+                                       from piping or redirection.
 
     Returns:
     - out (deque): The updated deque after appending the matching lines.
@@ -27,7 +28,8 @@ def grep(args, out, virtual_input=None):
     elif len(args) == 1:
         pattern = re.compile(args[0])
     else:
-        raise ValueError(f"Invalid command line arguments: grep {' '.join(args)}")
+        raise ValueError(
+            f"Invalid command line arguments: grep {' '.join(args)}")
 
     if files:
         for file in files:

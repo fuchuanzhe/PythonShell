@@ -14,6 +14,7 @@ class Parser:
         parse(command): Parses a shell command and returns a list of commands.
         extract_strings(tree): Extracts strings from a parse tree.
     """
+
     def __init__(self):
         self.grammar = r"""
 value: command
@@ -34,7 +35,8 @@ REDIRECT_OUT: ">"    // Define redirection output operator as a token
 REDIRECT_IN: "<"     // Define redirection input operator as a token
 PIPE: "|"            // Define pipe operator as a token
 BACKTICK_QUOTED_STRING: /`[^`]*`/
-QUOTED_STRING: ESCAPED_STRING | SINGLE_QUOTED_STRING | DOUBLE_QUOTED_STRING | BACKTICK_QUOTED_STRING
+QUOTED_STRING: ESCAPED_STRING | SINGLE_QUOTED_STRING \
+    |DOUBLE_QUOTED_STRING | BACKTICK_QUOTED_STRING
 SINGLE_QUOTED_STRING: /'[^']*'/
 DOUBLE_QUOTED_STRING: /"[^"]*"/
 
@@ -67,10 +69,12 @@ DOUBLE_QUOTED_STRING: /"[^"]*"/
             if glob(token):
                 all_tokens[index] = glob(token)
         # flatten
-        all_tokens = [elem for sublist in all_tokens for elem in (sublist if isinstance(sublist, list) else [sublist])]
+        all_tokens = [elem for sublist in all_tokens for elem in (
+            sublist if isinstance(sublist, list) else [sublist])]
 
         def is_quoted(token):
-            return token.startswith('"') and token.endswith('"') or token.startswith("'") and token.endswith("'")
+            return token.startswith('"') and token.endswith('"') \
+                or token.startswith("'") and token.endswith("'")
 
         def is_substituted(token):
             return token.startswith('`') and token.endswith('`')
@@ -87,13 +91,14 @@ DOUBLE_QUOTED_STRING: /"[^"]*"/
             # when a token ends with semicolon, create new list
             if index == 0:
                 commands.append([remove_quotes(token)])
-            elif ';' in token and not is_quoted(token) and not is_substituted(token):
-                semicolon_splited_tokens = token.split(';')
+            elif (';' in token and not is_quoted(token)
+                    and not is_substituted(token)):
+                splited_tokens = token.split(';')
                 # "hi;ls;pwd;echo" -> ["hi", "ls", "pwd", "echo"]
                 # ";" -> ["", ""]
-                for index_, semicolon_splited_token in enumerate(semicolon_splited_tokens):
+                for index_, splited_token in enumerate(splited_tokens):
                     if index_ == 0:
-                        commands[-1].append(remove_quotes(semicolon_splited_token))
+                        commands[-1].append(remove_quotes(splited_token))
                     else:
                         commands.append([])
 

@@ -11,7 +11,8 @@ class Autocomplete:
             self.commands.append("_" + x)
         self.commands.append("exit")
         self.history = InMemoryHistory()
-        self.session = PromptSession(history=self.history, enable_history_search=True)
+        self.session = PromptSession(
+            history=self.history, enable_history_search=True)
         self.word_completer = self.update_autocomplete(current_dir)
 
     def update_autocomplete(self, current_dir):
@@ -21,13 +22,12 @@ class Autocomplete:
                 keywords.append(f)
         self.word_completer = WordCompleter(keywords)
         return self.word_completer
-    
+
     def get_history(self):
         return self.history
-    
+
     def get_session(self):
         return self.session
-    
-    def get_word_completer(self):    
+
+    def get_completer(self):
         return self.word_completer
-    

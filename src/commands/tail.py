@@ -7,11 +7,13 @@ def tail(args, out, virtual_input=None):
     Display the last few lines of a file or standard input.
 
     Parameters:
-    - args (list): A list of command-line arguments specifying the number of lines and file.
+    - args (list): Command-line arguments specifying the flag,
+                   the number of lines and file.
                    If no file is given, 'tail' reads from standand input.
-                   If no arguments are given, the default number of lines is 10.
+                   The default number of lines is 10.
     - out (list): The list to which the displayed lines will be appended.
-    - virtual_input (deque, optional): A deque representing input received from piping or redirection.
+    - virtual_input (deque, optional): A deque representing input received
+                                       from piping or redirection.
 
     Returns:
     - out (list): The updated list after appending the displayed lines.
@@ -32,7 +34,8 @@ def tail(args, out, virtual_input=None):
         num_lines = int(args[1])
         file = args[2]
     else:
-        raise ValueError(f"Invalid command line arguments: tail {' '.join(args)}")
+        raise ValueError(
+            f"Invalid command line arguments: tail {' '.join(args)}")
 
     if num_lines != 0:
         if file:

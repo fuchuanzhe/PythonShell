@@ -9,7 +9,8 @@ def flatten_virtual_input(input_list):
     - input_list (deque): List of strings to be flattened.
 
     Returns:
-    - result (deque): A deque containing flattened strings with preserved line breaks.
+    - result (deque): A deque containing flattened strings
+                      with preserved line breaks.
     """
     result = deque()
     for string in input_list:

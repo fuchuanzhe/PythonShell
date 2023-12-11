@@ -6,9 +6,12 @@ def cat(args, out, virtual_input=None):
     Concatenate and print the contents of files or standard input.
 
     Parameters:
-    - args (list): A list of file to be concatenated. If no file is given, 'cat' reads from standand input.
-    - out (deque): The deque to which the concatenated content will be appended.
-    - virtual_input (deque, optional): A deque representing input received from piping or redirection.
+    - args (list): A list of file to be concatenated.
+                   If no file is given, 'cat' reads from standand input.
+    - out (deque): The deque to which the concatenated content
+                   will be appended.
+    - virtual_input (deque, optional): A deque representing input received
+                                       from piping or redirection.
 
     Returns:
     - out (deque): The updated deque after appending the concatenated content.

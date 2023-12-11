@@ -41,10 +41,9 @@ class TestShell(unittest.TestCase):
         current_path = os.path.abspath(os.getcwd())
         out = eval("cd catTest")
         cd_path = os.path.abspath(os.getcwd())
+
         current_path = os.path.normpath(current_path)
         expected_path = os.path.join(current_path, "catTest")
-
-        # Normalize the paths and make them consistent
         expected_path = os.path.normpath(expected_path)
         cd_path = os.path.normpath(cd_path)
 
@@ -217,19 +216,13 @@ class TestShell(unittest.TestCase):
 
     def test_find_current_dir(self):
         current_dir = os.getcwd()
-
         # Get the output using os.walk
         expected_result = ['./' + os.path.relpath(os.path.join(root, file), current_dir) + '\n' for root, dirs, files in
                            os.walk(current_dir) for file in files if file.endswith('.txt')]
-
-        # Sort the list for consistent comparison
         expected_result.sort()
 
-        # Get the output using the eval method
         out = eval("find -name '*.txt'")
         out = list(out)
-
-        # Sort the list for consistent comparison
         out.sort()
 
         self.assertEqual(out, expected_result)

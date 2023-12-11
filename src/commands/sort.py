@@ -10,11 +10,15 @@ def sort(args, out, virtual_input=None):
     Sort lines of text from files or standard input.
 
     Parameters:
-    - args (list): A list of command-line arguments specifying sorting options and files.
+    - args (list): Command-line arguments specifying sorting options and files.
                    If no file is given, 'sort' reads from standand input.
-                   Sotrting options: '-r' for sort in reverse order, '-o' for output to file 'sorted.txt', '-n' for numerical sort.
+                   Sotrting options:
+                       '-r' for sort in reverse order,
+                       '-o' for output to file 'sorted.txt',
+                       '-n' for numerical sort.
     - out (deque): The deque to which the sorted lines will be appended.
-    - virtual_input (deque, optional): A deque representing input received from piping or redirection.
+    - virtual_input (deque, optional): A deque representing input received
+                                       from piping or redirection.
 
     Returns:
     - out (deque): The updated deque after appending the sorted lines.
@@ -24,10 +28,10 @@ def sort(args, out, virtual_input=None):
     - FileNotFoundError: If the file given in the arguments could not be found.
     """
     flags = {
-            "-r": r,
-            "-o": o,
-            "-n": n
-            }
+        "-r": r,
+        "-o": o,
+        "-n": n
+    }
     flag = None
     file = None
 
@@ -41,7 +45,8 @@ def sort(args, out, virtual_input=None):
     elif len(args) == 0:
         pass
     else:
-        raise ValueError(f"Invalid command line arguments: sort {' '.join(args)}")
+        raise ValueError(
+            f"Invalid command line arguments: sort {' '.join(args)}")
 
     arr = []
     if file:

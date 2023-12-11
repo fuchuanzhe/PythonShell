@@ -1,6 +1,7 @@
 def n(out, arr):
     # Sort the content numerically.
-    # If list contains both numbers and non-numbers, sort the non-numbers first.
+    # If list contains both numbers and non-numbers,
+    # sort the non-numbers first.
     non_numbers = list(filter(lambda x: not x.isnumeric(), arr))
     numbers = list(filter(lambda x: x.isnumeric(), arr))
     numbers.sort(key=int)

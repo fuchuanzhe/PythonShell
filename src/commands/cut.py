@@ -4,12 +4,14 @@ from commands.flatten_list.flatten_virtual_input import flatten_virtual_input
 
 def cut(args, out, virtual_input=None):
     """
-    Process lines and extracts bytes from a file or standard input based on specified options.
+    Extracts bytes from a file or standard input based on specified options.
 
     Parameters:
-    - args (list): A list of command-line arguments, must contain options. If no file is given, 'cut' reads from standand input.
+    - args (list): A list of command-line arguments, must contain options.
+                   If no file is given, 'cut' reads from standand input.
     - out (deque): The deque to which the cut segments will be appended.
-    - virtual_input (deque, optional): A deque representing input received from piping or redirection.
+    - virtual_input (deque, optional): A deque representing input received
+                                       from piping or redirection.
 
     Returns:
     - out (deque): The updated deque after appending the cut segments.
@@ -25,7 +27,8 @@ def cut(args, out, virtual_input=None):
         options = args[1]
         file = args[-1]
     else:
-        raise ValueError(f"Invalid command line arguments: cut {' '.join(args)}")
+        raise ValueError(
+            f"Invalid command line arguments: cut {' '.join(args)}")
 
     if file:
         with open(file) as f:
@@ -51,7 +54,8 @@ def cut_helper(line, options_range):
     - options_range (str): The range of bytes to be extracted provided.
 
     Returns:
-    - str: The formatted string after applying the cut based on the specified options.
+    - str: The formatted string after applying the cut based on the
+           specified options.
     """
     segments = []
     options_range = merge(split_string_to_list(options_range))
@@ -95,7 +99,8 @@ def merge(intervals):
     Merge overlapping intervals into non-overlapping intervals.
 
     Parameters:
-    - intervals (list): A list of intervals, each interval is represented as a list, [a,b].
+    - intervals (list): A list of intervals,
+                        each interval is represented as a list, [a,b].
 
     Returns:
     - result (list): A list of merged intervals.

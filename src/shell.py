@@ -24,20 +24,20 @@ from commands.unsafe import unsafe
 parser = Parser()
 
 apps = {
-            "pwd": pwd,
-            "cd": cd,
-            "echo": echo,
-            "ls": ls,
-            "cat": cat,
-            "head": head,
-            "tail": tail,
-            "grep": grep,
-            "sort": sort,
-            "find": find,
-            "uniq": uniq,
-            "cut": cut,
-            "wc": wc
-        }
+    "pwd": pwd,
+    "cd": cd,
+    "echo": echo,
+    "ls": ls,
+    "cat": cat,
+    "head": head,
+    "tail": tail,
+    "grep": grep,
+    "sort": sort,
+    "find": find,
+    "uniq": uniq,
+    "cut": cut,
+    "wc": wc
+}
 
 
 def eval_single(command, virtual_input=None):
@@ -150,11 +150,13 @@ def main():
             if os.getcwd() != current_dir:
                 current_dir = os.getcwd()
                 autocomplete.update_autocomplete(current_dir)
-            
-            cmdline = session.prompt(f"{current_dir}> ",completer=autocomplete.get_word_completer(),
-                                    complete_while_typing=False, lexer=PygmentsLexer(ShellLexer))
+
+            cmdline = session.prompt(f"{current_dir}> ",
+                                     completer=autocomplete.get_completer(),
+                                     complete_while_typing=False,
+                                     lexer=PygmentsLexer(ShellLexer))
             history.append_string(cmdline)
-            
+
             if cmdline.lower() == 'exit':
                 break
 
