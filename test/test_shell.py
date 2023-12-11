@@ -216,9 +216,9 @@ class TestShell(unittest.TestCase):
 
     def test_find_current_dir(self):
         current_dir = os.getcwd()
-        # Get the output using os.walk
-        expected_result = ['./' + os.path.relpath(os.path.join(root, file), current_dir) + '\n' for root, dirs, files in
-                           os.walk(current_dir) for file in files if file.endswith('.txt')]
+        expected_result = ['./' + os.path.relpath(os.path.join(root, file), current_dir) + '\n' \
+                           for root, dirs, files in os.walk(current_dir) \
+                           for file in files if file.endswith('.txt')]
         expected_result.sort()
 
         out = eval("find -name '*.txt'")
@@ -252,7 +252,8 @@ class TestShell(unittest.TestCase):
         self.assertEqual(out.popleft(), "grepTest.txt:hihi\n")
         self.assertEqual(out.popleft(), "grepTest.txt:hihi my name\n")
         self.assertEqual(out.popleft(), "./grepTest/grepTest1.txt:hihi 1\n")
-        self.assertEqual(out.popleft(), "./grepTest/grepTest1.txt:hihi my name 1\n")
+        self.assertEqual(
+            out.popleft(), "./grepTest/grepTest1.txt:hihi my name 1\n")
         self.assertEqual(len(out), 0)
 
     def test_grep_noCmdArguments(self):
@@ -351,7 +352,7 @@ class TestShell(unittest.TestCase):
         filtered_out = [item for item in out if item not in to_remove]
 
         expected_out = [file + '\n' for file in os.listdir(current_dir)]
-        self.assertEqual(out, sorted(filtered_out))
+        self.assertEqual(filtered_out, sorted(expected_out))
 
     def test_ls_twoArg(self):
         with self.assertRaises(ValueError):

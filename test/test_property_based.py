@@ -13,20 +13,24 @@ from io import StringIO
 
 
 def random_string():
-    return st.from_regex(r'^[a-zA-Z0-9]+$', fullmatch=True).map(lambda x: f"{x}")
+    return st.from_regex(
+        r'^[a-zA-Z0-9]+$', fullmatch=True
+    ).map(lambda x: f"{x}")
 
 
 def cat_commands_strategy():
     return st.lists(
-        elements=st.from_regex(r'^[a-zA-Z0-9]+$', fullmatch=True).map(lambda x: f"{x}.txt"),
+        elements=st.from_regex(
+            r'^[a-zA-Z0-9]+$', fullmatch=True).map(lambda x: f"{x}.txt"),
         min_size=1,
         max_size=5,
-    ).map(lambda args: ['cat'] + args)  
+    ).map(lambda args: ['cat'] + args)
 
 
 def get_filenames_in_current_directory():
     current_directory = os.getcwd()
-    return [filename for filename in os.listdir(current_directory) if os.path.isfile(filename)]
+    return [filename for filename in os.listdir(current_directory) \
+        if os.path.isfile(filename)]
 
 
 @st.composite
@@ -34,29 +38,32 @@ def non_matching_strings(draw):
     filenames = get_filenames_in_current_directory()
 
     while True:
-        generated_string = draw(st.from_regex(r'^[a-zA-Z0-9]+$', fullmatch=True))
+        generated_string = draw(st.from_regex(
+            r'^[a-zA-Z0-9]+$', fullmatch=True))
         if all(filename not in generated_string for filename in filenames):
             return generated_string
+
 
 def create_random_file(file_name):
     # Write 10 random lines of text to the file
     with open(file_name, 'w') as file:
         for _ in range(10):
-            random_line = ''.join(random.choice(string.ascii_letters + string.digits + string.punctuation + ' ') for _ in range(10))
+            random_line = ''.join(random.choice(
+                string.ascii_letters + string.digits + string.punctuation + ' ') for _ in range(10))
             file.write(random_line + '\n')
 
 
 def cut_commands_strategy():
     def lines_strategy():
         return st.integers(min_value=2, max_value=100)
-    
-    filename_strategy = st.from_regex(r'^[a-zA-Z0-9]+\$', fullmatch=True).map(lambda x: f"{x}.txt")
-
+    filename_strategy = st.from_regex(
+        r'^[a-zA-Z0-9]+\$', fullmatch=True).map(lambda x: f"{x}.txt")
     return st.tuples(lines_strategy(), filename_strategy).map(lambda args: f"cut -b {args[0]} {args[1]}")
 
 
 def find_commands_strategy():
-    filename_strategy = st.from_regex(r'^[a-zA-Z0-9]+\.txt$', fullmatch=True).map(lambda x: f"{x}")
+    filename_strategy = st.from_regex(
+        r'^[a-zA-Z0-9]+\.txt$', fullmatch=True).map(lambda x: f"{x}")
     return st.builds(lambda filename: f"find . -name {filename}", filename_strategy)
 
 
@@ -66,40 +73,46 @@ def random_search_string():
 
 
 def grep_commands_strategy():
-    filename_strategy = st.from_regex(r'^[a-zA-Z0-9]+\$', fullmatch=True).map(lambda x: f"{x}")
+    filename_strategy = st.from_regex(
+        r'^[a-zA-Z0-9]+\$', fullmatch=True).map(lambda x: f"{x}")
     search_string_strategy = st.builds(random_search_string)
 
     return st.builds(lambda search_string, filename: f"grep {search_string} {filename}", search_string_strategy, filename_strategy)
 
 
 def head_commands_strategy():
-    filename_strategy = st.from_regex(r'^[a-zA-Z0-9]+\$', fullmatch=True).map(lambda x: f"{x}.txt")
+    filename_strategy = st.from_regex(
+        r'^[a-zA-Z0-9]+\$', fullmatch=True).map(lambda x: f"{x}.txt")
     randomNumber_strategy = st.integers(min_value=0, max_value=100)
 
     return st.builds(lambda randomnumber, filename: f"head -n {randomnumber} {filename}", randomNumber_strategy, filename_strategy)
 
 
 def sort_commands_strategy():
-    filename_strategy = st.from_regex(r'^[a-zA-Z0-9]+\$', fullmatch=True).map(lambda x: f"{x}.txt")
+    filename_strategy = st.from_regex(
+        r'^[a-zA-Z0-9]+\$', fullmatch=True).map(lambda x: f"{x}.txt")
 
     return st.builds(lambda filename: f"sort {filename}", filename_strategy)
 
 
 def tail_commands_strategy():
-    filename_strategy = st.from_regex(r'^[a-zA-Z0-9]+\$', fullmatch=True).map(lambda x: f"{x}.txt")
+    filename_strategy = st.from_regex(
+        r'^[a-zA-Z0-9]+\$', fullmatch=True).map(lambda x: f"{x}.txt")
     randomNumber_strategy = st.integers(min_value=0, max_value=100)
 
     return st.builds(lambda randomnumber, filename: f"tail -n {randomnumber} {filename}", randomNumber_strategy, filename_strategy)
 
 
 def uniq_commands_strategy():
-    filename_strategy = st.from_regex(r'^[a-zA-Z0-9]+\$', fullmatch=True).map(lambda x: f"{x}")
+    filename_strategy = st.from_regex(
+        r'^[a-zA-Z0-9]+\$', fullmatch=True).map(lambda x: f"{x}")
 
     return st.builds(lambda filename: f"uniq {filename}", filename_strategy)
 
 
 def wc_commands_strategy():
-    filename_strategy = st.from_regex(r'^[a-zA-Z0-9]+\.txt$', fullmatch=True).map(lambda x: f"{x}")
+    filename_strategy = st.from_regex(
+        r'^[a-zA-Z0-9]+\.txt$', fullmatch=True).map(lambda x: f"{x}")
 
     return st.builds(lambda filename: f"wc {filename}", filename_strategy)
 
@@ -175,7 +188,7 @@ class TestPropertyShell(unittest.TestCase):
     def test_cd(self, cd_args):
         initial_cwd = os.getcwd()
         if not os.path.exists(os.path.join(os.getcwd(), cd_args)):
-            # Check that cd raises an error if the directory does not exist 
+            # Check that cd raises an error if the directory does not exist
             # or invalid command line arguments are passed
             with self.assertRaises(FileNotFoundError) or self.assertRaises(ValueError):
                 eval(f"cd {cd_args}")
@@ -208,7 +221,8 @@ class TestPropertyShell(unittest.TestCase):
         eval_output = eval(f"echo {echo_args}")
 
         # Run the echo command in the command line and capture the output
-        process = subprocess.Popen(shlex.split(f"echo {echo_args}"), stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+        process = subprocess.Popen(shlex.split(
+            f"echo {echo_args}"), stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
         cmdline_output, _ = process.communicate()
 
         assert ''.join(list(eval_output)) == ''.join(list(cmdline_output))
@@ -256,7 +270,8 @@ class TestPropertyShell(unittest.TestCase):
         eval_output = eval(' '.join(cat_command))
 
         # Run the 'cat_command' in the command line and capture the output
-        process = subprocess.Popen(cat_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+        process = subprocess.Popen(
+            cat_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
         cmdline_output, _ = process.communicate()
         process.wait()
 
@@ -279,11 +294,13 @@ class TestPropertyShell(unittest.TestCase):
         eval_output = eval(cut_command)
 
         # Run the cut command using subprocess.run to get the expected output
-        process = subprocess.run(shlex.split(cut_command), capture_output=True, text=True)
+        process = subprocess.run(shlex.split(
+            cut_command), capture_output=True, text=True)
         expected_output_str = process.stdout
         expected_output_str = expected_output_str.replace("\n", "")
 
-        eval_output_without_newline = [s.replace("\n", "") for s in eval_output]
+        eval_output_without_newline = [
+            s.replace("\n", "") for s in eval_output]
 
         # Join the modified strings into one big string
         eval_output_str = "".join(eval_output_without_newline)
@@ -301,11 +318,13 @@ class TestPropertyShell(unittest.TestCase):
         eval_output = eval(find_command)
 
         # Run the find command in the command line and capture the output
-        process = subprocess.run(shlex.split(find_command), capture_output=True, text=True)
+        process = subprocess.run(shlex.split(
+            find_command), capture_output=True, text=True)
         expected_output_str = process.stdout
         expected_output_str = expected_output_str.replace("\n", "")
 
-        eval_output_without_newline = [s.replace("\n", "") for s in eval_output]
+        eval_output_without_newline = [
+            s.replace("\n", "") for s in eval_output]
 
         # Join the modified strings into one big string
         eval_output_str = "".join(eval_output_without_newline)
@@ -326,11 +345,13 @@ class TestPropertyShell(unittest.TestCase):
         eval_output = eval(grep_command)
 
         # Run the grep command in the command line and capture the output
-        process = subprocess.run(shlex.split(grep_command), capture_output=True, text=True)
+        process = subprocess.run(shlex.split(
+            grep_command), capture_output=True, text=True)
         expected_output_str = process.stdout
         expected_output_str = expected_output_str.replace("\n", "")
 
-        eval_output_without_newline = [s.replace("\n", "") for s in eval_output]
+        eval_output_without_newline = [
+            s.replace("\n", "") for s in eval_output]
 
         # Join the modified strings into one big string
         eval_output_str = "".join(eval_output_without_newline)
@@ -339,8 +360,8 @@ class TestPropertyShell(unittest.TestCase):
     @patch('sys.stdout', new_callable=StringIO)
     @given(grep_command=non_matching_strings())
     def test_grep_unsafe(self, grep_command, mock_stdout):
-        search_string = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(5))
-        
+        search_string = ''.join(random.choice(
+            string.ascii_letters + string.digits) for _ in range(5))
         eval(f"_grep {search_string} {grep_command}")
         result = mock_stdout.getvalue()
         self.assertIn("Errno 2", result)
@@ -353,11 +374,13 @@ class TestPropertyShell(unittest.TestCase):
         eval_output = eval(head_command)
 
         # Run the head command in the command line and capture the output
-        process = subprocess.run(shlex.split(head_command), capture_output=True, text=True)
+        process = subprocess.run(shlex.split(
+            head_command), capture_output=True, text=True)
         expected_output_str = process.stdout
         expected_output_str = expected_output_str.replace("\n", "")
 
-        eval_output_without_newline = [s.replace("\n", "") for s in eval_output]
+        eval_output_without_newline = [
+            s.replace("\n", "") for s in eval_output]
 
         # Join the modified strings into one big string
         eval_output_str = "".join(eval_output_without_newline)
@@ -380,11 +403,13 @@ class TestPropertyShell(unittest.TestCase):
         eval_output = eval(sort_command)
 
         # Run the sort command in the command line and capture the output
-        process = subprocess.run(shlex.split(sort_command), capture_output=True, text=True)
+        process = subprocess.run(shlex.split(
+            sort_command), capture_output=True, text=True)
         expected_output_str = process.stdout
         expected_output_str = expected_output_str.replace("\n", "")
 
-        eval_output_without_newline = [s.replace("\n", "") for s in eval_output]
+        eval_output_without_newline = [
+            s.replace("\n", "") for s in eval_output]
 
         # Join the modified strings into one big string
         eval_output_str = "".join(eval_output_without_newline)
@@ -405,11 +430,13 @@ class TestPropertyShell(unittest.TestCase):
         eval_output = eval(tail_command)
 
         # Run the tail command in the command line and capture the output
-        process = subprocess.run(shlex.split(tail_command), capture_output=True, text=True)
+        process = subprocess.run(shlex.split(
+            tail_command), capture_output=True, text=True)
         expected_output_str = process.stdout
         expected_output_str = expected_output_str.replace("\n", "")
 
-        eval_output_without_newline = [s.replace("\n", "") for s in eval_output]
+        eval_output_without_newline = [
+            s.replace("\n", "") for s in eval_output]
 
         # Join the modified strings into one big string
         eval_output_str = "".join(eval_output_without_newline)
@@ -431,11 +458,13 @@ class TestPropertyShell(unittest.TestCase):
         eval_output = eval(uniq_command)
 
         # Run the uniq command in the command line and capture the output
-        process = subprocess.run(shlex.split(uniq_command), capture_output=True, text=True)
+        process = subprocess.run(shlex.split(
+            uniq_command), capture_output=True, text=True)
         expected_output_str = process.stdout
         expected_output_str = expected_output_str.replace("\n", "")
 
-        eval_output_without_newline = [s.replace("\n", "") for s in eval_output]
+        eval_output_without_newline = [
+            s.replace("\n", "") for s in eval_output]
 
         # Join the modified strings into one big string
         eval_output_str = "".join(eval_output_without_newline)
@@ -456,14 +485,17 @@ class TestPropertyShell(unittest.TestCase):
         eval_output = eval(wc_command)
 
         # Run the wc command in the command line and capture the output
-        process = subprocess.run(shlex.split(wc_command), capture_output=True, text=True)
+        process = subprocess.run(shlex.split(
+            wc_command), capture_output=True, text=True)
         expected_output_str = process.stdout
-        expected_output_str = expected_output_str.replace("\n", "").replace(" ", "")
+        expected_output_str = expected_output_str.replace(
+            "\n", "").replace(" ", "")
 
-        eval_output_without_newline = [s.replace("\n", "").replace(" ", "") for s in eval_output]
+        eval_output_without_newline = [
+            s.replace("\n", "").replace(" ", "") for s in eval_output]
 
         # Join the modified strings into one big string
-        eval_output_str = "".join(eval_output_without_newline)+ filename
+        eval_output_str = "".join(eval_output_without_newline) + filename
         assert eval_output_str == expected_output_str
 
     @patch('sys.stdout', new_callable=StringIO)
