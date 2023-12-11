@@ -81,7 +81,7 @@ def grep_commands_strategy():
         r'^[a-zA-Z0-9]+\$', fullmatch=True).map(lambda x: f"{x}")
     search_string_strategy = st.builds(random_search_string)
 
-    return st.builds(lambda search_string, filename: \
+    return st.builds(lambda search_string, filename:
                      f"grep {search_string} {filename}",
                      search_string_strategy, filename_strategy)
 
@@ -91,7 +91,7 @@ def head_commands_strategy():
         r'^[a-zA-Z0-9]+\$', fullmatch=True).map(lambda x: f"{x}.txt")
     randomNumber_strategy = st.integers(min_value=0, max_value=100)
 
-    return st.builds(lambda randomnumber, filename: \
+    return st.builds(lambda randomnumber, filename:
                      f"head -n {randomnumber} {filename}",
                      randomNumber_strategy, filename_strategy)
 
@@ -108,7 +108,7 @@ def tail_commands_strategy():
         r'^[a-zA-Z0-9]+\$', fullmatch=True).map(lambda x: f"{x}.txt")
     randomNumber_strategy = st.integers(min_value=0, max_value=100)
 
-    return st.builds(lambda randomnumber, filename: \
+    return st.builds(lambda randomnumber, filename:
                      f"tail -n {randomnumber} {filename}",
                      randomNumber_strategy, filename_strategy)
 
@@ -245,13 +245,13 @@ class TestPropertyShell(unittest.TestCase):
     def test_pwd(self, pwd_args):
         if len(pwd_args) > 0:
             with self.assertRaises(ValueError) or \
-                self.assertRaises(FileNotFoundError):
+                 self.assertRaises(FileNotFoundError):
                 eval_output = eval(f"pwd {pwd_args}")
         else:
             eval_output = eval(pwd_args)
             # Run the 'pwd command' in the command line and capture the output
             process = subprocess.Popen(shlex.split(f"pwd {pwd_args}"),
-                                       stdout=subprocess.PIPE, 
+                                       stdout=subprocess.PIPE,
                                        stderr=subprocess.PIPE,
                                        universal_newlines=True)
             cmdline_output, _ = process.communicate()
@@ -271,7 +271,7 @@ class TestPropertyShell(unittest.TestCase):
             eval_output = eval(pwd_args)
             # Run the 'pwd command' in the command line and capture the output
             process = subprocess.Popen(shlex.split(f"pwd {pwd_args}"),
-                                       stdout=subprocess.PIPE, 
+                                       stdout=subprocess.PIPE,
                                        stderr=subprocess.PIPE,
                                        universal_newlines=True)
             cmdline_output, _ = process.communicate()
