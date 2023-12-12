@@ -42,6 +42,6 @@ class ShellLexer(RegexLexer):
         'data': [
             (r'(?s)"(\\\\|\\.|[^"\\])*"', String.Double),
             (r"(?s)'(\\\\|\\.|[^'\\])*'", String.Single),
-            (r'-[a-zA-Z]+', Comment),
+            (r'-[a-zA-Z]+', Comment)
         ],
     }
