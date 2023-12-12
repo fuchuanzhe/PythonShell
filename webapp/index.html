@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COMP0010 Shell</title>
+    <script src="https://unpkg.com/vue@next"></script>
+</head>
+<body>
+    <div id="app">
+        <h1>
+            Hi {{ ip }}
+        </h1>
+        <p>
+            Autocomplete and history are not supported on our web interface. </br>
+            Please use the docker CLI for a better experience.
+            </br> </br>
+            Welcome to the COMP0010 Shell. </br>
+        </p>
+        <p style="white-space: pre-line">
+            {{ history }}
+        </p>
+        <form @submit.prevent>
+            <label for="command">>>></label>
+            <input type="text" v-model="new_command" @keyup.enter="execute" 
+            style="font-family: monospace; background-color: black; color: white; border:0cap; outline: none; font-size: 1.3rem; width: 80%;" autofocus>
+        </form>
+        <p></p>
+        <button @click="reset">New Session</button>
+
+
+
+    </div>
+
+    <script>
+        // Your Vue app logic goes here
+        const app = Vue.createApp({
+            data() {
+                return {
+                    ip: 'Loading...',
+                    history: 'loading...',
+                    new_command: ''
+                }
+            },
+            methods: {
+                async getIp() {
+                    const response = await fetch('/get-ip');
+                    const data = await response.json();
+                    this.ip = data.ip;
+                },
+                getHistory() {
+                    fetch('/get-history')
+                        .then(response => response.json())
+                        .then(data => {
+                            this.history = data.history;
+                        }).catch(err => {
+                            alert(err);
+                        })
+                },
+                execute() {
+                    const command = this.new_command;
+                    this.new_command = '';
+                    fetch('/execute', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ command })
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log(data.result);
+                        })
+                        .then(() => {
+                            this.getHistory();
+                        })
+                        .catch(err => {
+                            alert(err);
+                        })
+
+
+                },
+                reset() {
+                    fetch('/reset')
+                        .then(response => response.json())
+                        .then(data => {
+                            console.log(data.result);
+                        })
+                        .then(() => {
+                            this.getHistory();
+                        })
+                        .catch(err => {
+                            alert(err);
+                        })
+                }
+
+            },
+            mounted() {
+                this.getIp();
+                this.getHistory();
+            }
+        });
+
+        app.mount('#app');
+    </script>
+    <style>
+        body {
+            font-family: monospace;
+            background-color: black;
+            color: white;
+            font-size: 1.2rem;
+        }
+        @keyframes cursor-blink {
+                    0% {
+                        opacity: 1;
+                    }
+                    50% {
+                        opacity: 0;
+                    }
+                    100% {
+                        opacity: 1;
+                    }
+                }
+
+        .flash-cursor {
+            display: inline-block;
+            animation: cursor-blink 1s infinite;
+        }
+    </style>
+</body>
+</html>

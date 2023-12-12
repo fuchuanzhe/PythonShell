@@ -134,13 +134,37 @@ def main():
     args_num = len(sys.argv) - 1
 
     if args_num > 0:
-        if args_num != 2:
-            raise ValueError("Wrong number of command line arguments")
-        if sys.argv[1] != "-c":
+        # print(sys.argv)
+        if sys.argv[1] == "-c":
+            if args_num != 2:
+                raise ValueError("Wrong number of command line arguments")
+            out = eval(sys.argv[2])
+            while len(out) > 0:
+                print(out.popleft(), end="")
+        elif sys.argv[1] == "-w":
+            # web interface mode
+            if args_num != 3:
+                raise ValueError("Wrong number of command line arguments")
+            # execute previous command
+            if sys.argv[2]:
+                for c in sys.argv[2].split(';'):
+                    if c:
+                        try:
+                            eval(c.strip())
+                        except Exception as e:
+                            pass
+            if sys.argv[3]:
+                try:
+                    out = eval(sys.argv[3])
+                    while len(out) > 0:
+                        print(out.popleft(), end="")
+                except Exception as e:
+                    print("Error:", e)
+            else:
+                print("")
+            
+        else:
             raise ValueError(f"Unexpected command line argument {sys.argv[1]}")
-        out = eval(sys.argv[2])
-        while len(out) > 0:
-            print(out.popleft(), end="")
     else:
         autocomplete = Autocomplete(apps, os.getcwd())
         history = autocomplete.get_history()
