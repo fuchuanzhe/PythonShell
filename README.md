@@ -1,10 +1,63 @@
 [![Open in Codespaces](https://classroom.github.com/assets/launch-codespace-7f7980b617ed060a017424585567c406b6ee15c891e84e1186181d67ecf80aa0.svg)](https://classroom.github.com/open-in-codespaces?assignment_repo_id=12422827)
 # COMP0010 Shell
 
+## 🤩 Try it here: [COMP0010 Shell Web](http://34.142.72.164:8000/)
+
 COMP0010 Shell is a [shell](https://en.wikipedia.org/wiki/Shell_(computing)) created for educational purposes. 
 Similarly to other shells, it provides a [REPL](https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop), an interactive environment that allows users to execute commands. COMP0010 Shell has a simple language for specifying commands that resembles [Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell)). This language allows, for example, calling applications and connecting the output of one application to the input of another application through a [pipeline](https://en.wikipedia.org/wiki/Pipeline_(Unix)). COMP0010 Shell also provides its own implementations of widely-used UNIX applications for file system and text manipulation: [echo](https://en.wikipedia.org/wiki/Echo_(command)), [ls](https://en.wikipedia.org/wiki/Ls), [cat](https://en.wikipedia.org/wiki/Cat_(Unix)), etc. 
 
-## Executing & Testing Shell
+# Additional Features
+The latest COMP0010 Shell includes several features:
+1. Parsing using Lark
+2. Autocompletion
+2. Partial History Matching
+3. Syntax Highlighting
+4. Example-based Testing
+5. Property-based Testing
+6. Support for extra commands such as wc.
+7. Web interactive interface.
+
+## Lark
+
+COMP0010 Shell uses [Lark](https://lark-parser.readthedocs.io/en/stable/) to create a robust and flexible parser. This parser is designed to interpret shell commands in adherence to a predefined grammar, effectively managing different elements such as quoted strings, redirection operators, and pipes.
+
+The parser class `src/lark_parser.py` includes both the grammar rules and the Lark parser instance. The grammar is defined using regular expression.
+
+## Autocompletion
+
+COMP0010 Shell includes an autocompletion feature using [Python Prompt Toolkit](https://python-prompt-toolkit.readthedocs.io/en/master/index.html). The autocompletion is designed to facilitate command input by suggesting and completing words as the user types. 
+
+The first [Tab] press fills in the common part of all completions and shows all the completions in a menu. This helps the user quickly see the available options. Any following Tab press cycles through all the possible completions, allowing the user to choose the desired option.
+
+## Partial History Matching
+
+COMP0010 Shell includes partial string matching for command history using [Python Prompt Toolkit](https://python-prompt-toolkit.readthedocs.io/en/master/index.html). This allows users to type input, and by using the up and down arrow key, they can filter the command history to show only items starting with the given input text.
+
+## Example-based Testing
+COMP0010 Shell has been tested extensively, using the [Unit Test Framework](https://docs.python.org/3/library/unittest.html), by 117 example-based tests in `test/test_shell.py`. Such tests are beneficial as they test for explicit scenarios and edge cases known to the programmer. These tests, combined with Property Based Testing, has achieved 93% in code coverage. Tests include tests for redirection, pipe and command substitution. 
+
+## Property Based Testing
+COMP0010 Shell has 25 property-based tests in `test/test_property_based.py` to supplement the example-based tests. These property-based tests use the [Unit Test Framework](https://docs.python.org/3/library/unittest.html), [Hypothesis](https://hypothesis.readthedocs.io/en/latest/) library, as well as [Subprocess](https://docs.python.org/3/library/subprocess.html) and [Shlex](https://docs.python.org/3/library/shlex.html). Property-based tests are beneficial as they test against a large randomly generated input space and can uncover edge cases unknown to the programmer. 
+
+## Syntax Highlighting
+
+COMP0010 Shell includes input syntax highlighting using [Pygments](https://pygments.org). The format and colours of the keywords are defined in regex in `src/shell_lexer.py`.
+
+1. Commands: The command keyword is formatted in bold and colored in green.
+2. Operator: The operator is colored in grey. (eg. redirection operator, piping operator and command substitution operator)
+3. Quotations: The text enclosed within quotes is colored in red.
+5. Flags: The flag is formatted in italic and colored in greenish-grey.
+
+## Web Interactive Interface    
+![Web interface](web_interface.png) 
+COMP0010 Shell has a web interactive interface using [Vue](https://vuejs.org) and [FastAPI](https://fastapi.tiangolo.com). The web interface is hosted on Google Cloud Platform and can be accessed [here](http://34.142.72.164:8000/). The web interface allows users to input commands and see the output without having to install the shell locally.
+
+The web interface is designed to be user-friendly and intuitive. The interface is divided into three sections: the input section, the output section, and the history section. The input section is where users can input commands. The output section is where the output of the commands will be displayed. The history section is where the command history will be displayed.
+
+There are three main components in the web interface under the hood: the frontend, the backend, and the shell. The frontend is built using Vue and is hosted on Google Cloud Platform. The backend is built using FastAPI and is hosted on Google Cloud Platform. The shell is built using Python and is hosted on Google Cloud Platform. The frontend communicates with the backend using HTTP requests. The backend manages the shell session associated with each user and communicates with the shell using HTTP requests. The shell is the same shell that is used in the command line interface.
+
+
+# Executing & Testing Shell
 
 COMP0010 Shell can be executed in a Docker container. To build a container image (let's call it `shell`), run
 
@@ -236,7 +289,7 @@ Outputs the current working directory followed by a newline.
 
 Changes the current working directory.
 
-    cd PATH
+    cd [PATH]
 
 - `PATH` is a relative path to the target directory.
 
@@ -293,7 +346,7 @@ Searches for lines containing a match to the specified pattern. The output of th
 
 Cuts out sections from each line of a given file or stdin and prints the result to stdout.
 
-    cut OPTIONS [FILE]
+    cut [OPTIONS] [FILE]
 
 - `OPTION` specifies the bytes to extract from each line:
     - `-b 1,2,3` extracts 1st, 2nd and 3rd bytes.
@@ -328,6 +381,20 @@ Sorts the contents of a file/stdin line by line and prints the result to stdout.
 
 - `OPTIONS`:
     - `-r` sorts lines in reverse order
+    - `-o` for output to file 'sorted.txt'
+    - `-n` for numerical sort
+- `FILE` is the name of the file. If not specified, uses stdin.
+
+## wc
+
+Count the lines, words and byte counts in files or standard input.
+
+    wc [OPTIONS] [FILE]
+
+- `OPTIONS`:
+    - `-l` outputs only the line count
+    - `-w` outputs only the word count
+    - `-m` outputs only the byte count
 - `FILE` is the name of the file. If not specified, uses stdin.
 
 ## Unsafe applications
