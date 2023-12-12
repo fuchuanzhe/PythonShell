@@ -1,6 +1,8 @@
 [![Open in Codespaces](https://classroom.github.com/assets/launch-codespace-7f7980b617ed060a017424585567c406b6ee15c891e84e1186181d67ecf80aa0.svg)](https://classroom.github.com/open-in-codespaces?assignment_repo_id=12422827)
 # COMP0010 Shell
 
+## 🤩 Try it here: [COMP0010 Shell Web](http://34.142.72.164:8000/)
+
 COMP0010 Shell is a [shell](https://en.wikipedia.org/wiki/Shell_(computing)) created for educational purposes. 
 Similarly to other shells, it provides a [REPL](https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop), an interactive environment that allows users to execute commands. COMP0010 Shell has a simple language for specifying commands that resembles [Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell)). This language allows, for example, calling applications and connecting the output of one application to the input of another application through a [pipeline](https://en.wikipedia.org/wiki/Pipeline_(Unix)). COMP0010 Shell also provides its own implementations of widely-used UNIX applications for file system and text manipulation: [echo](https://en.wikipedia.org/wiki/Echo_(command)), [ls](https://en.wikipedia.org/wiki/Ls), [cat](https://en.wikipedia.org/wiki/Cat_(Unix)), etc. 
 
@@ -13,6 +15,7 @@ The latest COMP0010 Shell includes several features:
 4. Example-based Testing
 5. Property-based Testing
 6. Support for extra commands such as wc.
+7. Web interactive interface.
 
 ## Lark
 
@@ -44,6 +47,15 @@ COMP0010 Shell includes input syntax highlighting using [Pygments](https://pygme
 2. Operator: The operator is colored in grey. (eg. redirection operator, piping operator and command substitution operator)
 3. Quotations: The text enclosed within quotes is colored in red.
 5. Flags: The flag is formatted in italic and colored in greenish-grey.
+
+## Web Interactive Interface    
+![Web interface](web_interface.png) 
+COMP0010 Shell has a web interactive interface using [Vue](https://vuejs.org) and [FastAPI](https://fastapi.tiangolo.com). The web interface is hosted on Google Cloud Platform and can be accessed [here](http://34.142.72.164:8000/). The web interface allows users to input commands and see the output without having to install the shell locally.
+
+The web interface is designed to be user-friendly and intuitive. The interface is divided into three sections: the input section, the output section, and the history section. The input section is where users can input commands. The output section is where the output of the commands will be displayed. The history section is where the command history will be displayed.
+
+There are three main components in the web interface under the hood: the frontend, the backend, and the shell. The frontend is built using Vue and is hosted on Google Cloud Platform. The backend is built using FastAPI and is hosted on Google Cloud Platform. The shell is built using Python and is hosted on Google Cloud Platform. The frontend communicates with the backend using HTTP requests. The backend manages the shell session associated with each user and communicates with the shell using HTTP requests. The shell is the same shell that is used in the command line interface.
+
 
 # Executing & Testing Shell
 
